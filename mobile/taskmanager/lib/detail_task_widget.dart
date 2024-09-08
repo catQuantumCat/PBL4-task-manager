@@ -15,7 +15,6 @@ class _DetailTaskWidgetState extends State<DetailTaskWidget> {
 
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
     isChecked = widget.task.status;
   }

@@ -6,7 +6,7 @@ final List<TaskModel> dummyData = [
     name: 'Task 1',
     description: 'Description for Task 1',
     createTime: DateTime.now(),
-    deadTime: DateTime.now().add(Duration(days: 1)),
+    deadTime: DateTime.now().add(const Duration(days: 1)),
     status: false,
   ),
   TaskModel(
@@ -14,7 +14,7 @@ final List<TaskModel> dummyData = [
     name: 'Task 2',
     description: 'Description for Task 2',
     createTime: DateTime.now(),
-    deadTime: DateTime.now().add(Duration(days: 2)),
+    deadTime: DateTime.now().add(const Duration(days: 2)),
     status: true,
   ),
   TaskModel(
@@ -22,7 +22,7 @@ final List<TaskModel> dummyData = [
     name: 'Task 3',
     description: 'Description for Task 3',
     createTime: DateTime.now(),
-    deadTime: DateTime.now().add(Duration(days: 3)),
+    deadTime: DateTime.now().add(const Duration(days: 3)),
     status: false,
   ),
   TaskModel(
@@ -30,7 +30,7 @@ final List<TaskModel> dummyData = [
     name: 'Task 4',
     description: 'Description for Task 4',
     createTime: DateTime.now(),
-    deadTime: DateTime.now().add(Duration(days: 4)),
+    deadTime: DateTime.now().add(const Duration(days: 4)),
     status: true,
   ),
   TaskModel(
@@ -38,7 +38,7 @@ final List<TaskModel> dummyData = [
     name: 'Task 5',
     description: 'Description for Task 5',
     createTime: DateTime.now(),
-    deadTime: DateTime.now().add(Duration(days: 5)),
+    deadTime: DateTime.now().add(const Duration(days: 5)),
     status: false,
   ),
   TaskModel(
@@ -46,7 +46,7 @@ final List<TaskModel> dummyData = [
     name: 'Task 6',
     description: 'Description for Task 6',
     createTime: DateTime.now(),
-    deadTime: DateTime.now().add(Duration(days: 6)),
+    deadTime: DateTime.now().add(const Duration(days: 6)),
     status: true,
   ),
   TaskModel(
@@ -54,7 +54,7 @@ final List<TaskModel> dummyData = [
     name: 'Task 7',
     description: 'Description for Task 7',
     createTime: DateTime.now(),
-    deadTime: DateTime.now().add(Duration(days: 7)),
+    deadTime: DateTime.now().add(const Duration(days: 7)),
     status: false,
   ),
   TaskModel(
@@ -62,7 +62,7 @@ final List<TaskModel> dummyData = [
     name: 'Task 8',
     description: 'Description for Task 8',
     createTime: DateTime.now(),
-    deadTime: DateTime.now().add(Duration(days: 8)),
+    deadTime: DateTime.now().add(const Duration(days: 8)),
     status: true,
   ),
   TaskModel(
@@ -70,7 +70,7 @@ final List<TaskModel> dummyData = [
     name: 'Task 9',
     description: 'Description for Task 9',
     createTime: DateTime.now(),
-    deadTime: DateTime.now().add(Duration(days: 9)),
+    deadTime: DateTime.now().add(const Duration(days: 9)),
     status: false,
   ),
   TaskModel(
@@ -78,7 +78,7 @@ final List<TaskModel> dummyData = [
     name: 'Task 10',
     description: 'Description for Task 10',
     createTime: DateTime.now(),
-    deadTime: DateTime.now().add(Duration(days: 10)),
+    deadTime: DateTime.now().add(const Duration(days: 10)),
     status: true,
   ),
 ];

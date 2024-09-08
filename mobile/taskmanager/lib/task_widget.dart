@@ -20,7 +20,6 @@ class _TaskWidgetState extends State<TaskWidget> {
 
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
     _taskStatus = widget.task.status;
   }
