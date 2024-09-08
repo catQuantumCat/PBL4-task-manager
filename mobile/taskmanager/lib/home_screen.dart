@@ -1,13 +1,15 @@
 import 'package:flutter/material.dart';
-import 'detail_task_widget.dart';
+import 'package:taskmanager/data/dummy_data.dart';
 import 'task_widget.dart';
 
 class HomeScreen extends StatelessWidget {
   const HomeScreen({super.key});
 
+  get builder => null;
+
   @override
   Widget build(BuildContext context) {
-    final dummydata = List<String>.generate(10, (i) => 'Item ${i + 1}');
+    final dummydata = dummyData;
 
     return Scaffold(
       appBar: AppBar(
@@ -15,10 +17,8 @@ class HomeScreen extends StatelessWidget {
           backgroundColor: Colors.blueAccent),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
-          showModalBottomSheet(
-            context: context,
-            builder: (BuildContext contex) => DetailTaskWidget(),
-          );
+          //TODO
+          print("pressed");
         },
         child: const Icon(Icons.add),
       ),
@@ -43,9 +43,9 @@ class HomeScreen extends StatelessWidget {
           onDismissed: (_) {
             dummydata.removeAt(index);
           },
-          key: Key(dummydata[index]),
+          key: Key(dummydata[index].name),
           child: TaskWidget(
-            title: dummydata[index],
+            task: dummydata[index],
           ),
         ),
         padding: const EdgeInsets.symmetric(
