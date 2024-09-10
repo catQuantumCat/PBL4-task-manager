@@ -1,7 +1,7 @@
 // ignore_for_file: public_member_api_docsort_constructors_first
 import 'package:flutter/material.dart';
 import 'package:taskmanager/data/task_model.dart';
-import 'package:taskmanager/detail_task_widget.dart';
+import 'package:taskmanager/presentation/home/widget/detail_task_widget.dart';
 
 class TaskWidget extends StatefulWidget {
   final TaskModel task;
@@ -26,10 +26,7 @@ class _TaskWidgetState extends State<TaskWidget> {
 
   void _showTaskSheet() {
     showModalBottomSheet(
-        // showDragHandle: true,
         isScrollControlled: true,
-
-        // enableDrag: true,
         context: context,
         builder: (BuildContext context) => DetailTaskWidget(
               task: widget.task,
