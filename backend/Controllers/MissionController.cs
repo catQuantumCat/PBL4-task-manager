@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using backend.Data;
+using backend.Dtos.Mission;
 using backend.Mappers;
 using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
@@ -38,6 +39,15 @@ namespace backend.Controllers
             }
 
             return Ok(mission.toMissionDto());
+        }
+
+        [HttpPost]
+        public IActionResult Create([FromBody] CreateRequestMissionDto missionDto)
+        {
+            var missionModel = missionDto.toMissionFromCreateDto();
+            _context.Missions.Add(missionModel);
+            _context.SaveChanges();
+            return CreatedAtAction(nameof(GetById), new { id = missionModel.Id }, missionModel.toMissionDto());
         }
     }
 }

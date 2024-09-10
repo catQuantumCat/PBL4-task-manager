@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using backend.Dtos;
+using backend.Dtos.User;
 using backend.Models;
 
 namespace backend.Mappers
@@ -18,5 +19,14 @@ namespace backend.Mappers
                 Password = user.Password,
             };
         }    
+
+        public static User toUserFromCreateDto(this CreateRequeseUserDto createRequeseUserDto) 
+        {
+            return new User
+            {
+                Username = createRequeseUserDto.Username,
+                Password = createRequeseUserDto.Password,
+            };
+        } 
     }
 }

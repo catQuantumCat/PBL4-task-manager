@@ -12,6 +12,6 @@ namespace backend.Dtos
         public string Discription { get; set; } = string.Empty;
         public DateTime CreateDate { get; set; } = DateTime.Now;
         public DateTime DeadDate { get; set; } = DateTime.Now;
-        public bool Status { get; set; }
+        public bool Status { get; set; } = false;
     }
 }
