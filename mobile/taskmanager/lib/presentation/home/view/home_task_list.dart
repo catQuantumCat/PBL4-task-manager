@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:taskmanager/presentation/home/bloc/home_bloc.dart';
+import 'package:taskmanager/presentation/home/bloc/list_home.bloc.dart';
 import 'package:taskmanager/presentation/home/widget/task_widget.dart';
 
 class HomeTaskList extends StatelessWidget {

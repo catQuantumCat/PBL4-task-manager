@@ -1,4 +1,4 @@
-part of "home_bloc.dart";
+part of "list_home.bloc.dart";
 
 enum HomeStatus {
   initial,

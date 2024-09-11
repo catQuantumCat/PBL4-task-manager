@@ -7,8 +7,8 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 
 import 'package:dio/dio.dart';
 
-part 'home_state.dart';
-part 'home_event.dart';
+part 'list_state.bloc.dart';
+part 'list_home.event.dart';
 
 class ListHomeBloc extends Bloc<ListHomeEvent, ListHomeState> {
   ListHomeBloc() : super(const ListHomeState()) {
