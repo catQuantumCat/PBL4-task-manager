@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:taskmanager/presentation/home/bloc/list_home.bloc.dart';
+import 'package:taskmanager/presentation/home/bloc/list/list_home.bloc.dart';
 import 'package:taskmanager/presentation/home/view/home_task_list.dart';
 import 'package:taskmanager/presentation/home/widget/new_task_widget.dart';
 

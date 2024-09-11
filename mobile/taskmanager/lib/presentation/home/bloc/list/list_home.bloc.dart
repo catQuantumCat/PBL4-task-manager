@@ -7,7 +7,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 
 import 'package:dio/dio.dart';
 
-part 'list_state.bloc.dart';
+part 'list_home.state.dart';
 part 'list_home.event.dart';
 
 class ListHomeBloc extends Bloc<ListHomeEvent, ListHomeState> {
@@ -17,9 +17,11 @@ class ListHomeBloc extends Bloc<ListHomeEvent, ListHomeState> {
   }
 
   void _fetchList(FetchTaskList event, Emitter<ListHomeState> emit) async {
-    final dio = Dio(BaseOptions(
-      responseType: ResponseType.plain,
-    ));
+    final dio = Dio(
+      BaseOptions(
+        responseType: ResponseType.plain,
+      ),
+    );
     emit(state.copyWith(status: HomeStatus.loading));
 
     final List<TaskModel> taskList = [];

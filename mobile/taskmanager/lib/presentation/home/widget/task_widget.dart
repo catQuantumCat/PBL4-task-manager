@@ -1,7 +1,10 @@
 // ignore_for_file: public_member_api_docsort_constructors_first
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
 import 'package:taskmanager/data/task_model.dart';
+import 'package:taskmanager/presentation/home/bloc/detail/detail_home.bloc.dart';
+import 'package:taskmanager/presentation/home/bloc/list/list_home.bloc.dart';
 import 'package:taskmanager/presentation/home/widget/detail_task_widget.dart';
 
 class TaskWidget extends StatefulWidget {
@@ -27,12 +30,17 @@ class _TaskWidgetState extends State<TaskWidget> {
 
   void _showTaskSheet() {
     showModalBottomSheet(
-        isScrollControlled: true,
-        enableDrag: true,
-        context: context,
-        builder: (BuildContext context) => DetailTaskWidget(
-              task: widget.task,
-            ));
+      isScrollControlled: true,
+      enableDrag: true,
+      context: context,
+      builder: (BuildContext context) => DetailTaskWidget(
+        task: widget.task,
+      ),
+    ).whenComplete(() {
+      if (context.mounted) {
+        context.read<ListHomeBloc>().add(FetchTaskList());
+      }
+    });
   }
 
   void changeTaskStatus(value) {
@@ -45,7 +53,7 @@ class _TaskWidgetState extends State<TaskWidget> {
   @override
   Widget build(BuildContext context) {
     return ListTile(
-      onTap: () => _showTaskSheet(),
+      onTap: _showTaskSheet,
       leading: Transform.scale(
         scale: 1.5,
         child: Checkbox(
