@@ -1,5 +1,6 @@
 // ignore_for_file: public_member_api_docsort_constructors_first
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:taskmanager/data/task_model.dart';
 import 'package:taskmanager/presentation/home/widget/detail_task_widget.dart';
 
@@ -27,6 +28,7 @@ class _TaskWidgetState extends State<TaskWidget> {
   void _showTaskSheet() {
     showModalBottomSheet(
         isScrollControlled: true,
+        enableDrag: true,
         context: context,
         builder: (BuildContext context) => DetailTaskWidget(
               task: widget.task,
@@ -54,8 +56,9 @@ class _TaskWidgetState extends State<TaskWidget> {
               changeTaskStatus(newVal);
             }),
       ),
-      title: Text(widget.task.name),
-      subtitle: Text(widget.task.deadTime.toString()),
+      title: Text(widget.task.missionName),
+      subtitle:
+          Text(DateFormat("dd/MM/yyyy | HH:mm").format(widget.task.deadDate)),
       trailing: const Icon(Icons.chevron_right),
     );
   }

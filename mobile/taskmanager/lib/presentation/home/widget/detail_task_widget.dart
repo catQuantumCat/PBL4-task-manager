@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:taskmanager/data/task_model.dart';
 
 class DetailTaskWidget extends StatefulWidget {
@@ -19,10 +20,6 @@ class _DetailTaskWidgetState extends State<DetailTaskWidget> {
     isChecked = widget.task.status;
   }
 
-  void _closeDetailTask(context) {
-    Navigator.pop(context);
-  }
-
   void _changeTaskStatus(newValue) {
     widget.task.editStatus(newValue);
     setState(() {
@@ -37,9 +34,9 @@ class _DetailTaskWidgetState extends State<DetailTaskWidget> {
       expand: false,
       maxChildSize: 0.95,
       minChildSize: 0.6,
-      initialChildSize: 0.6,
+      initialChildSize: 0.601,
       snap: true,
-      snapSizes: const [0.6, 0.95],
+      snapSizes: const [0.601, 0.95],
       builder: (context, scrollController) => ListView(
         controller: scrollController,
         padding: const EdgeInsets.fromLTRB(20, 0, 20, 20),
@@ -61,7 +58,8 @@ class _DetailTaskWidgetState extends State<DetailTaskWidget> {
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              Text(widget.task.deadTime.toString()),
+              Text(DateFormat("dd/MM/yyyy | HH:mm")
+                  .format(widget.task.createDate)),
               Wrap(
                 spacing: 12,
                 children: [
@@ -101,7 +99,7 @@ class _DetailTaskWidgetState extends State<DetailTaskWidget> {
                     _changeTaskStatus(value!);
                   }),
               Expanded(
-                  child: Text(widget.task.name,
+                  child: Text(widget.task.missionName,
                       style: const TextStyle(
                           fontSize: 24, fontWeight: FontWeight.w500))),
             ],
@@ -113,7 +111,7 @@ class _DetailTaskWidgetState extends State<DetailTaskWidget> {
               const Icon(Icons.access_time_filled, size: 24),
               const SizedBox(width: 8),
               Text(
-                widget.task.deadTime.toString(),
+                DateFormat("dd/MM/yyyy | HH:mm").format(widget.task.deadDate),
                 style: const TextStyle(fontSize: 16),
               ),
             ],
@@ -133,7 +131,7 @@ class _DetailTaskWidgetState extends State<DetailTaskWidget> {
               border: OutlineInputBorder(),
               filled: true,
             ),
-            initialValue: widget.task.description,
+            initialValue: widget.task.discription,
             readOnly: true,
           )
         ],

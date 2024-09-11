@@ -6,14 +6,15 @@ enum HomeStatus {
   success,
 }
 
-class HomeState extends Equatable {
+class ListHomeState extends Equatable {
   final List<TaskModel> taskList;
   final HomeStatus status;
 
-  const HomeState({this.taskList = const [], this.status = HomeStatus.initial});
+  const ListHomeState(
+      {this.taskList = const [], this.status = HomeStatus.initial});
 
-  HomeState copyWith({List<TaskModel>? taskList, HomeStatus? status}) {
-    return HomeState(
+  ListHomeState copyWith({List<TaskModel>? taskList, HomeStatus? status}) {
+    return ListHomeState(
         taskList: taskList ?? this.taskList, status: status ?? this.status);
   }
 

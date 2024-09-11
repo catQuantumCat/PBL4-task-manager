@@ -8,7 +8,7 @@ class HomeTaskList extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return BlocBuilder<HomeBloc, HomeState>(
+    return BlocBuilder<ListHomeBloc, ListHomeState>(
       builder: (context, state) {
         switch (state.status) {
           case HomeStatus.initial:
@@ -35,11 +35,11 @@ class HomeTaskList extends StatelessWidget {
                 ),
                 onDismissed: (_) {
                   context
-                      .read<HomeBloc>()
+                      .read<ListHomeBloc>()
                       .add(RemoveOneTask(taskToRemoveIndex: index));
-                  context.read<HomeBloc>().add(FetchTaskList());
+                  context.read<ListHomeBloc>().add(FetchTaskList());
                 },
-                key: Key(state.taskList[index].name),
+                key: Key(state.taskList[index].missionName),
                 child: TaskWidget(
                   task: state.taskList[index],
                 ),

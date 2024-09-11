@@ -2,11 +2,19 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:taskmanager/presentation/home/bloc/home_bloc.dart';
 import 'package:taskmanager/presentation/home/view/home_task_list.dart';
+import 'package:taskmanager/presentation/home/widget/new_task_widget.dart';
 
 class HomeScreen extends StatelessWidget {
   const HomeScreen({super.key});
 
   get builder => null;
+
+  void _showTaskSheet(context) {
+    showModalBottomSheet(
+        isScrollControlled: true,
+        context: context,
+        builder: (BuildContext context) => const NewTaskWidget());
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -17,12 +25,12 @@ class HomeScreen extends StatelessWidget {
       floatingActionButton: FloatingActionButton(
         onPressed: () {
           //TODO
-          print("pressed");
+          _showTaskSheet(context);
         },
         child: const Icon(Icons.add),
       ),
       body: BlocProvider(
-        create: (context) => HomeBloc()..add(FetchTaskList()),
+        create: (context) => ListHomeBloc()..add(FetchTaskList()),
         child: const HomeTaskList(),
       ),
     );
