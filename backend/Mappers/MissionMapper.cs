@@ -14,12 +14,12 @@ namespace backend.Mappers
         {
             return new MissionDto
             {
-                Id = missionModel.Id,
-                MissionName = missionModel.MissionName,
-                Discription = missionModel.Discription,
-                CreateDate = missionModel.CreateDate,
-                DeadDate = missionModel.DeadDate,
-                Status = missionModel.Status,
+                id = missionModel.Id,
+                name = missionModel.MissionName,
+                description = missionModel.Description,
+                createTime = missionModel.CreateDate,
+                deadTime = missionModel.DeadDate,
+                status = missionModel.Status,
             };
         }
 
@@ -27,11 +27,11 @@ namespace backend.Mappers
         {
             return new Mission
             {
-                MissionName = createDto.MissionName,
-                Discription = createDto.Discription,
-                CreateDate = createDto.CreateDate,
-                DeadDate = createDto.DeadDate,
-                Status = createDto.Status,  
+                MissionName = createDto.name,
+                Description = createDto.description,
+                CreateDate = createDto.createTime,
+                DeadDate = createDto.deadTime,
+                Status = createDto.status,  
             };
         } 
     }
