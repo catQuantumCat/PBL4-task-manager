@@ -49,5 +49,41 @@ namespace backend.Controllers
             _context.SaveChanges();
             return CreatedAtAction(nameof(GetById), new {id = user.Id}, user.toUserDto());    
         }
+
+        [HttpPut]
+        [Route("{id}")]
+        public IActionResult Update ([FromRoute] int id,[FromBody] UpdateRequestUserDto updateRequestUserDto)
+        {
+            var userModel = _context.Users.FirstOrDefault(x => x.Id == id);
+
+            if(userModel == null)
+            {
+                return NotFound();
+            }
+
+            userModel.Username = updateRequestUserDto.Username;
+            userModel.Password = updateRequestUserDto.Password;
+
+            _context.SaveChanges();
+
+            return Ok(userModel.toUserDto());
+        }
+
+        [HttpDelete]
+        [Route("{id}")]
+        public IActionResult Delete([FromRoute] int id)
+        {
+            var userModel = _context.Users.FirstOrDefault(x => x.Id == id);
+
+            if(userModel == null)
+            {
+                return NotFound();
+            }
+
+            _context.Users.Remove(userModel);
+            _context.SaveChanges();
+
+            return NoContent();
+        }
     }
 }
