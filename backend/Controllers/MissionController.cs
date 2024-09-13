@@ -24,8 +24,15 @@ namespace backend.Controllers
         public IActionResult GetAll()
         {
             var mission = _context.Missions.ToList()
-            .Select(s => s.toMissionDto());
-            return Ok(mission);
+            .Select(s => s.toMissionDto()).ToList();
+
+            var result = new 
+            {
+                Count = mission.Count,
+                Data = mission
+            };
+
+            return Ok(result);
         }
 
         [HttpGet("{id}")]
