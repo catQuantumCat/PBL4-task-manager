@@ -1,7 +1,6 @@
 import 'dart:convert';
 
 import 'package:equatable/equatable.dart';
-import 'package:taskmanager/data/dummy_data.dart';
 import 'package:taskmanager/data/task_model.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -24,16 +23,15 @@ class ListHomeBloc extends Bloc<ListHomeEvent, ListHomeState> {
     );
     emit(state.copyWith(status: HomeStatus.loading));
 
-    final List<TaskModel> taskList = [];
+    List<TaskModel> taskList = [];
 
     try {
       final res = await dio.get("http://10.0.2.2:5245/backend/mission");
+      final data = jsonDecode(res.data);
 
-      final data = jsonDecode(res.data.toString());
-
-      for (var i in data) {
-        taskList.add(TaskModel.fromJson(i));
-      }
+      taskList = (data["data"]).map<TaskModel>((task) {
+        return TaskModel.fromJson(task);
+      }).toList();
     } catch (e) {
       print('Error occurred while fetching task list: $e');
     }
@@ -42,6 +40,13 @@ class ListHomeBloc extends Bloc<ListHomeEvent, ListHomeState> {
   }
 
   void _removeTask(RemoveOneTask event, Emitter<ListHomeState> emit) async {
-    dummyData.removeAt(event.taskToRemoveIndex);
+    final dio = Dio();
+    try {
+      await dio.delete(
+          "http://10.0.2.2:5245/backend/mission/${event.taskToRemoveIndex}");
+    } catch (e) {
+      print(e);
+    }
+    add(FetchTaskList());
   }
 }

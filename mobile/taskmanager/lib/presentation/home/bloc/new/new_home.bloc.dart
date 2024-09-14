@@ -66,12 +66,16 @@ class NewHomeBloc extends Bloc<NewHomeEvent, NewHomeState> {
         data: data,
       );
 
+      // final response = await dio
+      //     .post("https://fnnprdph-5245.asse.devtunnels.ms/backend/mission", data: data);
+
       if (response.statusCode! >= 200 && response.statusCode! <= 299) {
         emit(state.copyWith(status: NewHomeStatus.success));
       } else {
         emit(state.copyWith(status: NewHomeStatus.failure));
       }
     } catch (e) {
+      print(e);
       emit(state.copyWith(status: NewHomeStatus.failure));
     }
   }

@@ -36,10 +36,9 @@ class HomeTaskList extends StatelessWidget {
                 onDismissed: (_) {
                   context
                       .read<ListHomeBloc>()
-                      .add(RemoveOneTask(taskToRemoveIndex: index));
-                  context.read<ListHomeBloc>().add(FetchTaskList());
+                      .add(RemoveOneTask(taskToRemoveIndex: state.taskList[index].id));
                 },
-                key: Key(state.taskList[index].missionName),
+                key: Key(state.taskList[index].name),
                 child: TaskTileWidget(
                   task: state.taskList[index],
                 ),

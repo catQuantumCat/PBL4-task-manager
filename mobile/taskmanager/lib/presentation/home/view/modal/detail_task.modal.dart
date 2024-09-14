@@ -65,7 +65,7 @@ class _DetailTaskModalState extends State<DetailTaskModal> {
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
                 Text(DateFormat("dd/MM/yyyy | HH:mm")
-                    .format(widget.task.createDate)),
+                    .format(widget.task.createTime)),
                 Wrap(
                   children: [
                     IconButton.filled(
@@ -106,7 +106,7 @@ class _DetailTaskModalState extends State<DetailTaskModal> {
                       _changeTaskStatus(value!);
                     }),
                 Expanded(
-                    child: Text(widget.task.missionName,
+                    child: Text(widget.task.name,
                         style: const TextStyle(
                             fontSize: 24, fontWeight: FontWeight.w500))),
               ],
@@ -118,7 +118,7 @@ class _DetailTaskModalState extends State<DetailTaskModal> {
                 const Icon(Icons.access_time_filled, size: 24),
                 const SizedBox(width: 8),
                 Text(
-                  DateFormat("dd/MM/yyyy | HH:mm").format(widget.task.deadDate),
+                  DateFormat("dd/MM/yyyy | HH:mm").format(widget.task.deadTime),
                   style: const TextStyle(fontSize: 16),
                 ),
               ],
@@ -138,7 +138,7 @@ class _DetailTaskModalState extends State<DetailTaskModal> {
                 border: OutlineInputBorder(),
                 filled: true,
               ),
-              initialValue: widget.task.discription,
+              initialValue: widget.task.description,
               readOnly: true,
             )
           ],

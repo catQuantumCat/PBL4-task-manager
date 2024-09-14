@@ -62,9 +62,9 @@ class _TaskTileWidgetState extends State<TaskTileWidget> {
               changeTaskStatus(newVal);
             }),
       ),
-      title: Text(widget.task.missionName),
+      title: Text(widget.task.name),
       subtitle:
-          Text(DateFormat("dd/MM/yyyy | HH:mm").format(widget.task.deadDate)),
+          Text(DateFormat("dd/MM/yyyy | HH:mm").format(widget.task.deadTime)),
       trailing: const Icon(Icons.chevron_right),
     );
   }
