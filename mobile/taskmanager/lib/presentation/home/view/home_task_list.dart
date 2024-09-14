@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:taskmanager/presentation/home/bloc/list/list_home.bloc.dart';
-import 'package:taskmanager/presentation/home/widget/task_widget.dart';
+import 'package:taskmanager/presentation/home/view/widget/task_tile.widget.dart';
 
 class HomeTaskList extends StatelessWidget {
   const HomeTaskList({super.key});
@@ -40,7 +40,7 @@ class HomeTaskList extends StatelessWidget {
                   context.read<ListHomeBloc>().add(FetchTaskList());
                 },
                 key: Key(state.taskList[index].missionName),
-                child: TaskWidget(
+                child: TaskTileWidget(
                   task: state.taskList[index],
                 ),
               ),

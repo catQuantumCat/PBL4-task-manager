@@ -3,23 +3,22 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
 import 'package:taskmanager/data/task_model.dart';
-import 'package:taskmanager/presentation/home/bloc/detail/detail_home.bloc.dart';
 import 'package:taskmanager/presentation/home/bloc/list/list_home.bloc.dart';
-import 'package:taskmanager/presentation/home/widget/detail_task_widget.dart';
+import 'package:taskmanager/presentation/home/view/modal/detail_task.modal.dart';
 
-class TaskWidget extends StatefulWidget {
+class TaskTileWidget extends StatefulWidget {
   final TaskModel task;
 
-  const TaskWidget({
+  const TaskTileWidget({
     super.key,
     required this.task,
   });
 
   @override
-  State<TaskWidget> createState() => _TaskWidgetState();
+  State<TaskTileWidget> createState() => _TaskTileWidgetState();
 }
 
-class _TaskWidgetState extends State<TaskWidget> {
+class _TaskTileWidgetState extends State<TaskTileWidget> {
   late bool _taskStatus;
 
   @override
@@ -33,13 +32,12 @@ class _TaskWidgetState extends State<TaskWidget> {
       isScrollControlled: true,
       enableDrag: true,
       context: context,
-      builder: (BuildContext context) => DetailTaskWidget(
+      builder: (BuildContext context) => DetailTaskModal(
         task: widget.task,
       ),
     ).whenComplete(() {
-      if (context.mounted) {
-        context.read<ListHomeBloc>().add(FetchTaskList());
-      }
+      if (!mounted) return;
+      context.read<ListHomeBloc>().add(FetchTaskList());
     });
   }
 

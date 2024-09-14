@@ -1,10 +1,9 @@
-// ignore_for_file: public_member_api_docs, sort_constructors_first
-import 'dart:convert';
+import 'package:taskmanager/data/dtos/task.dto.dart';
 
 class TaskModel {
   final int id;
   final String missionName;
-  final String discription;
+  final String? discription;
   final DateTime createDate;
   final DateTime deadDate;
   bool status;
@@ -12,7 +11,7 @@ class TaskModel {
   TaskModel({
     required this.id,
     required this.missionName,
-    this.discription = "No description",
+    this.discription,
     required this.createDate,
     required this.deadDate,
     required this.status,
@@ -22,16 +21,14 @@ class TaskModel {
     status = newStatus;
   }
 
-  // Map<String, dynamic> toJson() {
-  //   return {
-  //     'id': id,
-  //     'missionName': missionName,
-  //     'discription': discription,
-  //     'createDate': createDate.toIso8601String(),
-  //     'deadDate': deadDate.toIso8601String(),
-  //     'status': status,
-  //   };
-  // }
+  TaskDTO toResponse() {
+    return TaskDTO(
+        missionName: missionName,
+        discription: discription,
+        createDate: createDate,
+        deadDate: deadDate,
+        status: status);
+  }
 
   TaskModel.fromJson(Map<String, dynamic> json)
       : id = json['id'] as int,

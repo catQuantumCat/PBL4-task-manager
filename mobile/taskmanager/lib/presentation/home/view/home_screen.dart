@@ -1,19 +1,30 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:taskmanager/presentation/home/bloc/list/list_home.bloc.dart';
+import 'package:taskmanager/presentation/home/bloc/new/new_home.bloc.dart';
 import 'package:taskmanager/presentation/home/view/home_task_list.dart';
-import 'package:taskmanager/presentation/home/widget/new_task_widget.dart';
+import 'package:taskmanager/presentation/home/view/modal/new_task.modal.dart';
 
-class HomeScreen extends StatelessWidget {
+class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
 
-  get builder => null;
+  @override
+  State<HomeScreen> createState() => _HomeScreenState();
+}
 
-  void _showTaskSheet(context) {
+class _HomeScreenState extends State<HomeScreen> {
+  void _showTaskSheet() {
     showModalBottomSheet(
         isScrollControlled: true,
         context: context,
-        builder: (BuildContext context) => const NewTaskWidget());
+        builder: (BuildContext context) => BlocProvider(
+              create: (context) => NewHomeBloc(),
+              child: const NewTaskModal(),
+            )).then((val) {
+      if (mounted && val == "success") {
+        context.read<ListHomeBloc>().add(FetchTaskList());
+      }
+    });
   }
 
   @override
@@ -24,15 +35,11 @@ class HomeScreen extends StatelessWidget {
           backgroundColor: Colors.blueAccent),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
-          //TODO
-          _showTaskSheet(context);
+          _showTaskSheet();
         },
         child: const Icon(Icons.add),
       ),
-      body: BlocProvider(
-        create: (context) => ListHomeBloc()..add(FetchTaskList()),
-        child: const HomeTaskList(),
-      ),
+      body: const HomeTaskList(),
     );
   }
 }

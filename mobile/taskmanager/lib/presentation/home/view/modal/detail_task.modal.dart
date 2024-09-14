@@ -5,16 +5,16 @@ import 'package:taskmanager/presentation/home/bloc/detail/detail_home.bloc.dart'
 
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-class DetailTaskWidget extends StatefulWidget {
-  const DetailTaskWidget({super.key, required this.task});
+class DetailTaskModal extends StatefulWidget {
+  const DetailTaskModal({super.key, required this.task});
 
   final TaskModel task;
 
   @override
-  State<DetailTaskWidget> createState() => _DetailTaskWidgetState();
+  State<DetailTaskModal> createState() => _DetailTaskModalState();
 }
 
-class _DetailTaskWidgetState extends State<DetailTaskWidget> {
+class _DetailTaskModalState extends State<DetailTaskModal> {
   late bool isChecked;
 
   @override
