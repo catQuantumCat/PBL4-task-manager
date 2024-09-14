@@ -13,6 +13,7 @@ class ListHomeBloc extends Bloc<ListHomeEvent, ListHomeState> {
   ListHomeBloc() : super(const ListHomeState()) {
     on<FetchTaskList>(_fetchList);
     on<RemoveOneTask>(_removeTask);
+    on<ListHomeCheckTask>(_editTask);
   }
 
   void _fetchList(FetchTaskList event, Emitter<ListHomeState> emit) async {
@@ -48,5 +49,18 @@ class ListHomeBloc extends Bloc<ListHomeEvent, ListHomeState> {
       print(e);
     }
     add(FetchTaskList());
+  }
+
+  void _editTask(ListHomeCheckTask event, Emitter<ListHomeState> emit) async {
+    final dio = Dio();
+    final data = event.task.toResponse(status: event.taskStatus);
+
+    try {
+      await dio.put("http://10.0.2.2:5245/backend/mission/${event.task.id}",
+          data: data.toJson());
+    } catch (e) {
+      print(e);
+    }
+    // add(FetchTaskList());
   }
 }

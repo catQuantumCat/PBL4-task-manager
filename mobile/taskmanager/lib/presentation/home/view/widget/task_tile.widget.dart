@@ -59,6 +59,8 @@ class _TaskTileWidgetState extends State<TaskTileWidget> {
             visualDensity: VisualDensity.compact,
             value: _taskStatus,
             onChanged: (newVal) {
+              context.read<ListHomeBloc>().add(
+                  ListHomeCheckTask(task: widget.task, taskStatus: newVal!));
               changeTaskStatus(newVal);
             }),
       ),

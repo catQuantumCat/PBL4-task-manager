@@ -24,13 +24,18 @@ class TaskModel {
     status = newStatus;
   }
 
-  TaskDTO toResponse() {
+  TaskDTO toResponse(
+      {String? name,
+      String? description,
+      DateTime? createTime,
+      DateTime? deadTime,
+      bool? status}) {
     return TaskDTO(
-        name: name,
-        description: description,
-        createTime: createTime,
-        deadTime: deadTime,
-        status: status);
+        name: name ?? this.name,
+        description: description ?? this.description,
+        createTime: createTime ?? this.createTime,
+        deadTime: deadTime ?? this.deadTime,
+        status: status ?? this.status);
   }
 
   Map<String, dynamic> toMap() {
