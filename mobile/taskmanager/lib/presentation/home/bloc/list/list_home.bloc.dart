@@ -53,10 +53,15 @@ class ListHomeBloc extends Bloc<ListHomeEvent, ListHomeState> {
 
   void _editTask(ListHomeCheckTask event, Emitter<ListHomeState> emit) async {
     final dio = Dio();
-    final data = event.task.toResponse(status: event.taskStatus);
+    
+    final TaskModel task = state.taskList.firstWhere((task) {
+      return task.id == event.taskId;
+    });
+
+    final data = task.toResponse(status: event.taskStatus);
 
     try {
-      await dio.put("http://10.0.2.2:5245/backend/mission/${event.task.id}",
+      await dio.put("http://10.0.2.2:5245/backend/mission/${event.taskId}",
           data: data.toJson());
     } catch (e) {
       print(e);

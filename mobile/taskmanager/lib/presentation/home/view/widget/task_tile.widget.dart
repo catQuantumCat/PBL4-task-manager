@@ -60,7 +60,7 @@ class _TaskTileWidgetState extends State<TaskTileWidget> {
             value: _taskStatus,
             onChanged: (newVal) {
               context.read<ListHomeBloc>().add(
-                  ListHomeCheckTask(task: widget.task, taskStatus: newVal!));
+                  ListHomeCheckTask(taskId: widget.task.id, taskStatus: newVal!));
               changeTaskStatus(newVal);
             }),
       ),

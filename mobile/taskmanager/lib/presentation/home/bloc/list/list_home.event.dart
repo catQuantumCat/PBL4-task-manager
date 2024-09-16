@@ -17,11 +17,12 @@ class RemoveOneTask extends ListHomeEvent {
 }
 
 class ListHomeCheckTask extends ListHomeEvent {
-  final TaskModel task;
   final bool taskStatus;
+  final int taskId;
 
-  const ListHomeCheckTask({required this.task, required this.taskStatus});
+  const ListHomeCheckTask({required this.taskId, required this.taskStatus});
+
 
   @override
-  List<Object?> get props => [task];
+  List<Object?> get props => [taskId];
 }
