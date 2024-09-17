@@ -62,4 +62,22 @@ class TaskModel {
   }
 
   String toJson() => json.encode(toMap());
+
+  TaskModel copyWith({
+    int? id,
+    String? name,
+    String? description,
+    DateTime? createTime,
+    DateTime? deadTime,
+    bool? status,
+  }) {
+    return TaskModel(
+      id: id ?? this.id,
+      name: name ?? this.name,
+      description: description ?? this.description,
+      createTime: createTime ?? this.createTime,
+      deadTime: deadTime ?? this.deadTime,
+      status: status ?? this.status,
+    );
+  }
 }

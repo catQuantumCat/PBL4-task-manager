@@ -6,7 +6,6 @@ extension DatetimeExtension on DateTime {
     return copyWith(hour: time.hour, minute: time.minute);
   }
 
-
   String relativeToToday() {
     final DateTime today = DateTime.now();
     if (DateUtils.isSameDay(this, today)) {
@@ -18,6 +17,10 @@ extension DatetimeExtension on DateTime {
     }
 
     return DateFormat("d MMM").format(this);
+  }
+
+  String currentTimeString() {
+    return "${hour.toString().padLeft(2, '0')}:${minute.toString().padLeft(2, '0')}";
   }
 
   bool isSameDate(DateTime incomingDate) {
