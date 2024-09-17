@@ -12,7 +12,7 @@ using backend.Data;
 namespace backend.Migrations
 {
     [DbContext(typeof(ApplicationDBContext))]
-    [Migration("20240909112221_init")]
+    [Migration("20240913152702_init")]
     partial class init
     {
         /// <inheritdoc />
@@ -39,8 +39,7 @@ namespace backend.Migrations
                     b.Property<DateTime>("DeadDate")
                         .HasColumnType("datetime2");
 
-                    b.Property<string>("Discription")
-                        .IsRequired()
+                    b.Property<string>("Description")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("MissionName")

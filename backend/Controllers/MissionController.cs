@@ -7,6 +7,7 @@ using backend.Dtos.Mission;
 using backend.Mappers;
 using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Identity.Client;
 
 namespace backend.Controllers
 {
@@ -24,8 +25,15 @@ namespace backend.Controllers
         public IActionResult GetAll()
         {
             var mission = _context.Missions.ToList()
-            .Select(s => s.toMissionDto());
-            return Ok(mission);
+            .Select(s => s.toMissionDto()).ToList();
+
+            var result = new 
+            {
+                Count = mission.Count,
+                Data = mission
+            };
+
+            return Ok(result);
         }
 
         [HttpGet("{id}")]
@@ -48,6 +56,44 @@ namespace backend.Controllers
             _context.Missions.Add(missionModel);
             _context.SaveChanges();
             return CreatedAtAction(nameof(GetById), new { id = missionModel.Id }, missionModel.toMissionDto());
+        }
+
+        [HttpPut]
+        [Route("{id}")]
+        public IActionResult Update([FromRoute] int id, [FromBody] UpdateRequestMissionDto updateRequestMissionDto)
+        {
+            var missionModel = _context.Missions.FirstOrDefault(x => x.Id == id);
+            
+            if(missionModel == null)
+            {
+                return NotFound();
+            }
+
+            missionModel.MissionName = updateRequestMissionDto.name;
+            missionModel.Description = updateRequestMissionDto.description;
+            missionModel.DeadDate = updateRequestMissionDto.deadTime;
+            missionModel.Status = updateRequestMissionDto.status;
+
+            _context.SaveChanges();
+
+            return Ok(missionModel.toMissionDto());
+        }
+
+        [HttpDelete]
+        [Route("{id}")]
+        public IActionResult Delete([FromRoute] int id)
+        {
+            var missionModel = _context.Missions.FirstOrDefault(x => x.Id == id);
+
+            if(missionModel == null)
+            {
+                return NotFound();
+            }
+
+            _context.Missions.Remove(missionModel);
+            _context.SaveChanges();
+
+            return NoContent(); 
         }
     }
 }

@@ -36,8 +36,7 @@ namespace backend.Migrations
                     b.Property<DateTime>("DeadDate")
                         .HasColumnType("datetime2");
 
-                    b.Property<string>("Discription")
-                        .IsRequired()
+                    b.Property<string>("Description")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("MissionName")
