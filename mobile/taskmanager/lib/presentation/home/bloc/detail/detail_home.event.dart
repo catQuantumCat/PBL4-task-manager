@@ -2,7 +2,6 @@ part of 'detail_home.bloc.dart';
 
 abstract class DetailHomeEvent extends Equatable {
   @override
-  // TODO: implement props
   List<Object?> get props => [];
 }
 
@@ -29,4 +28,24 @@ class DetailHomeEditTask extends DetailHomeEvent {
 
   @override
   List<Object?> get props => [date, time];
+}
+
+class DetailHomeOpenEdit extends DetailHomeEvent {
+  @override
+  List<Object?> get props => [];
+}
+
+class DetailHomeCancelEdit extends DetailHomeEvent {
+  @override
+  List<Object?> get props => [];
+}
+
+class DetailHomeSaveEdit extends DetailHomeEvent {
+  final String? taskName;
+  final String? taskDescription;
+
+  DetailHomeSaveEdit({required this.taskName, required this.taskDescription});
+
+  @override
+  List<Object?> get props => [taskName, taskDescription];
 }
