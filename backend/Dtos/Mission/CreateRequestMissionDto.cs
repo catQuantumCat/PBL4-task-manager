@@ -7,10 +7,10 @@ namespace backend.Dtos.Mission
 {
     public class CreateRequestMissionDto
     {
-        public string MissionName { get; set; } = string.Empty;
-        public string Discription { get; set; } = string.Empty;
-        public DateTime CreateDate { get; set; } = DateTime.Now;
-        public DateTime DeadDate { get; set; } = DateTime.Now;
-        public bool Status { get; set; } = false;
+        public required string name { get; set; }
+        public string? description { get; set; } = string.Empty;
+        public DateTime createTime { get; set; } = DateTime.Now;
+        public DateTime deadTime { get; set; } = DateTime.Now;
+        public bool status { get; set; } = false;
     }
 }
