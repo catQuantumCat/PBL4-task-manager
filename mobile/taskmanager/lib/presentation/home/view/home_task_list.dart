@@ -12,6 +12,10 @@ class HomeTaskList extends StatelessWidget {
       builder: (context, state) {
         switch (state.status) {
           case HomeStatus.initial:
+          case HomeStatus.failed:
+            return const Center(
+              child: Text("Fetching data failed "),
+            );
           case HomeStatus.loading:
             return const Center(child: CircularProgressIndicator());
           case HomeStatus.success:
@@ -34,9 +38,8 @@ class HomeTaskList extends StatelessWidget {
                   ),
                 ),
                 onDismissed: (_) {
-                  context
-                      .read<ListHomeBloc>()
-                      .add(RemoveOneTask(taskToRemoveIndex: state.taskList[index].id));
+                  context.read<ListHomeBloc>().add(RemoveOneTask(
+                      taskToRemoveIndex: state.taskList[index].id));
                 },
                 key: Key(state.taskList[index].name),
                 child: TaskTileWidget(

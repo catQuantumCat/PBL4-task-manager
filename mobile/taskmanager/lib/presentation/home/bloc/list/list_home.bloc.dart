@@ -1,7 +1,9 @@
-import 'dart:convert';
+import 'dart:developer';
 
 import 'package:equatable/equatable.dart';
 import 'package:taskmanager/common/api_constant.dart';
+import 'package:taskmanager/data/datasources/task/remote/task_remote.datasource.dart';
+import 'package:taskmanager/data/repositories/task.repository.dart';
 import 'package:taskmanager/data/task_model.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -17,28 +19,18 @@ class ListHomeBloc extends Bloc<ListHomeEvent, ListHomeState> {
     on<ListHomeCheckTask>(_editTask);
   }
 
+  final repository = TaskRepository(dataSource: TaskRemoteDataSource());
+
   void _fetchList(FetchTaskList event, Emitter<ListHomeState> emit) async {
-    final dio = Dio(
-      BaseOptions(
-        responseType: ResponseType.plain,
-      ),
-    );
     emit(state.copyWith(status: HomeStatus.loading));
 
-    List<TaskModel> taskList = [];
-
     try {
-      final res = await dio.get("${ApiConstant.api_const}");
-      final data = jsonDecode(res.data);
-
-      taskList = (data["data"]).map<TaskModel>((task) {
-        return TaskModel.fromJson(task);
-      }).toList();
+      final taskList = await repository.getTaskList();
+      emit(state.copyWith(status: HomeStatus.success, taskList: taskList));
     } catch (e) {
-      print('Error occurred while fetching task list: $e');
+      log(e.toString());
+      emit(state.copyWith(status: HomeStatus.failed));
     }
-
-    emit(state.copyWith(status: HomeStatus.success, taskList: taskList));
   }
 
   void _removeTask(RemoveOneTask event, Emitter<ListHomeState> emit) async {
@@ -52,23 +44,17 @@ class ListHomeBloc extends Bloc<ListHomeEvent, ListHomeState> {
   }
 
   void _editTask(ListHomeCheckTask event, Emitter<ListHomeState> emit) async {
-    final dio = Dio();
-
     final TaskModel task = state.taskList.firstWhere((task) {
       return task.id == event.taskId;
     });
 
     final data = task.toResponse(status: event.taskStatus);
 
-    print(data);
-    print(data.toJson());
-
     try {
-      await dio.put("${ApiConstant.api_const}${event.taskId}",
-          data: data.toJson());
+      repository.editTask(data, event.taskId);
+      emit(state.copyWith(status: HomeStatus.success));
     } catch (e) {
-      print(e);
+      emit(state.copyWith(status: HomeStatus.failed));
     }
-    // add(FetchTaskList());
   }
 }
