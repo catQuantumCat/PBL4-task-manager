@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:taskmanager/common/datetime_extension.dart';
 import 'package:taskmanager/data/task_model.dart';
+import 'package:taskmanager/common/api_constant.dart';
 part 'detail_home.event.dart';
 part 'detail_home.state.dart';
 
@@ -44,7 +45,7 @@ class DetailHomeBloc extends Bloc<DetailHomeEvent, DetailHomeState> {
     final dio = Dio();
     emit(state.copyWith(status: DetailHomeStatus.loading));
     try {
-      await dio.put("http://10.0.2.2:5245/backend/mission/${state.task!.id}",
+      await dio.put("${ApiConstant.api_const}${state.task!.id}",
           data: data.toResponse().toJson());
     } catch (e) {
       print(e);
@@ -79,7 +80,7 @@ class DetailHomeBloc extends Bloc<DetailHomeEvent, DetailHomeState> {
     final dio = Dio();
 
     try {
-      await dio.put("http://10.0.2.2:5245/backend/mission/${state.task!.id}",
+      await dio.put("${ApiConstant.api_const}${state.task!.id}",
           data: data.toResponse().toJson());
     } catch (e) {
       print(e);

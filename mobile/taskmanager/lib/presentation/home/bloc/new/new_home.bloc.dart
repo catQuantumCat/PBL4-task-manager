@@ -2,6 +2,7 @@ import 'package:dio/dio.dart';
 import 'package:equatable/equatable.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:taskmanager/common/api_constant.dart';
 import 'package:taskmanager/data/dtos/task.dto.dart';
 import 'package:taskmanager/common/datetime_extension.dart';
 import 'package:taskmanager/common/timeofday_extension.dart';
@@ -55,14 +56,14 @@ class NewHomeBloc extends Bloc<NewHomeEvent, NewHomeState> {
     final newState = state.copyWith(
         status: NewHomeStatus.loading,
         missionName: event.missionName,
-        discription: event.discription);
+        description: event.description!.isEmpty ? null : event.description!);
 
     emit(newState);
     try {
       final dio = Dio();
       final data = state.toDTO().toJson();
       final response = await dio.post(
-        "http://10.0.2.2:5245/backend/mission",
+        "${ApiConstant.api_const}",
         data: data,
       );
 

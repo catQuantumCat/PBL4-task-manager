@@ -127,7 +127,7 @@ class _NewTaskModalState extends State<NewTaskModal> {
                     onPressed: () {
                       context.read<NewHomeBloc>().add(NewHomeSubmitTapped(
                           missionName: taskFieldController.text,
-                          discription: descriptionFieldController.text));
+                          description: descriptionFieldController.text));
                     },
                     icon: const Icon(Icons.add))
               ],

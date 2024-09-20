@@ -24,11 +24,11 @@ class NewHomeTimeTapped extends NewHomeEvent {
 
 class NewHomeSubmitTapped extends NewHomeEvent {
   final String? missionName;
-  final String? discription;
+  final String? description;
 
   const NewHomeSubmitTapped(
-      {required this.missionName, required this.discription});
+      {required this.missionName, required this.description});
 
   @override
-  List<Object?> get props => [missionName, discription];
+  List<Object?> get props => [missionName, description];
 }
