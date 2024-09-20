@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:equatable/equatable.dart';
+import 'package:taskmanager/common/api_constant.dart';
 import 'package:taskmanager/data/task_model.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -27,7 +28,7 @@ class ListHomeBloc extends Bloc<ListHomeEvent, ListHomeState> {
     List<TaskModel> taskList = [];
 
     try {
-      final res = await dio.get("http://10.0.2.2:5245/backend/mission");
+      final res = await dio.get("${ApiConstant.api_const}");
       final data = jsonDecode(res.data);
 
       taskList = (data["data"]).map<TaskModel>((task) {
@@ -43,8 +44,7 @@ class ListHomeBloc extends Bloc<ListHomeEvent, ListHomeState> {
   void _removeTask(RemoveOneTask event, Emitter<ListHomeState> emit) async {
     final dio = Dio();
     try {
-      await dio.delete(
-          "http://10.0.2.2:5245/backend/mission/${event.taskToRemoveIndex}");
+      await dio.delete("${ApiConstant.api_const}${event.taskToRemoveIndex}");
     } catch (e) {
       print(e);
     }
@@ -53,15 +53,18 @@ class ListHomeBloc extends Bloc<ListHomeEvent, ListHomeState> {
 
   void _editTask(ListHomeCheckTask event, Emitter<ListHomeState> emit) async {
     final dio = Dio();
-    
+
     final TaskModel task = state.taskList.firstWhere((task) {
       return task.id == event.taskId;
     });
 
     final data = task.toResponse(status: event.taskStatus);
 
+    print(data);
+    print(data.toJson());
+
     try {
-      await dio.put("http://10.0.2.2:5245/backend/mission/${event.taskId}",
+      await dio.put("${ApiConstant.api_const}${event.taskId}",
           data: data.toJson());
     } catch (e) {
       print(e);

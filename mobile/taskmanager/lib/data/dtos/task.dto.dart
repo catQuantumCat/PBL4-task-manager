@@ -46,6 +46,6 @@ class TaskDTO {
 
   @override
   String toString() {
-    return 'TaskResponseDTO(missionName: $name, discription: $description, createDate: $createTime, deadDate: $deadTime, status: $status)';
+    return 'TaskResponseDTO(missionName: $name, description: $description, createDate: $createTime, deadDate: $deadTime, status: $status)';
   }
 }

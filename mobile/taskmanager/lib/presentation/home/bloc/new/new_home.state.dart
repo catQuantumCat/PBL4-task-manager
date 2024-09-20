@@ -9,11 +9,11 @@ class NewHomeState extends Equatable {
   final String dateLabel;
   final String timeLabel;
   final String? missionName;
-  final String? discription;
+  final String? description;
 
   @override
   List<Object?> get props =>
-      [status, date, dateLabel, timeLabel, missionName, discription];
+      [status, date, dateLabel, timeLabel, missionName, description];
 
   const NewHomeState({
     required this.status,
@@ -22,7 +22,7 @@ class NewHomeState extends Equatable {
     required this.dateLabel,
     required this.timeLabel,
     this.missionName,
-    this.discription,
+    this.description,
   });
 
   NewHomeState.initial()
@@ -40,7 +40,7 @@ class NewHomeState extends Equatable {
       String? dateLabel,
       String? timeLabel,
       String? missionName,
-      String? discription}) {
+      String? description}) {
     return NewHomeState(
         status: status ?? this.status,
         date: date ?? this.date,
@@ -48,7 +48,7 @@ class NewHomeState extends Equatable {
         dateLabel: dateLabel ?? this.dateLabel,
         timeLabel: timeLabel ?? this.timeLabel,
         missionName: missionName ?? this.missionName,
-        discription: discription ?? this.discription);
+        description: description ?? this.description);
   }
 
   TaskDTO toDTO() {
@@ -58,7 +58,7 @@ class NewHomeState extends Equatable {
 
     return TaskDTO(
         name: missionName!,
-        description: discription,
+        description: description,
         createTime: DateTime.now(),
         deadTime: date.at(time),
         status: false);
