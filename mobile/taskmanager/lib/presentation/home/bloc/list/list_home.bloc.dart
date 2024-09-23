@@ -1,13 +1,10 @@
 import 'dart:developer';
 
 import 'package:equatable/equatable.dart';
-import 'package:taskmanager/common/api_constant.dart';
 import 'package:taskmanager/data/datasources/task/remote/task_remote.datasource.dart';
 import 'package:taskmanager/data/repositories/task.repository.dart';
 import 'package:taskmanager/data/task_model.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-
-import 'package:dio/dio.dart';
 
 part 'list_home.state.dart';
 part 'list_home.event.dart';
@@ -34,13 +31,13 @@ class ListHomeBloc extends Bloc<ListHomeEvent, ListHomeState> {
   }
 
   void _removeTask(RemoveOneTask event, Emitter<ListHomeState> emit) async {
-    final dio = Dio();
     try {
-      await dio.delete("${ApiConstant.api_const}${event.taskToRemoveIndex}");
+      await repository.deleteTask(event.taskToRemoveIndex);
+      add(FetchTaskList());
     } catch (e) {
-      print(e);
+      log(e.toString());
+      emit(state.copyWith(status: HomeStatus.failed));
     }
-    add(FetchTaskList());
   }
 
   void _editTask(ListHomeCheckTask event, Emitter<ListHomeState> emit) async {

@@ -57,10 +57,11 @@ class NewHomeState extends Equatable {
     }
 
     return TaskDTO(
-        name: missionName!,
-        description: description,
-        createTime: DateTime.now(),
-        deadTime: date.at(time),
-        status: false);
+      name: missionName!,
+      description: description,
+      createTime: DateTime.now(),
+      deadTime: date.at(time),
+      status: false,
+    );
   }
 }

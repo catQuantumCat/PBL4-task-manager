@@ -19,4 +19,14 @@ class TaskRemoteDataSource {
         await _dio.put("${ApiConstant.api_const}/$taskId", data: task.toJson());
     return TaskModel.fromJson(response.data);
   }
+
+  Future<void> deleteTask(int taskID) async {
+    await _dio.delete("${ApiConstant.api_const}/$taskID");
+  }
+
+  Future<TaskModel> createTask(TaskDTO task) async {
+    final response =
+        await _dio.post(ApiConstant.api_const, data: task.toJson());
+    return TaskModel.fromJson(response.data);
+  }
 }

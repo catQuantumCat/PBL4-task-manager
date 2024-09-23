@@ -1,7 +1,6 @@
 import 'package:taskmanager/data/datasources/task/remote/task_remote.datasource.dart';
+import 'package:taskmanager/data/dtos/task.dto.dart';
 import 'package:taskmanager/data/task_model.dart';
-
-import '../dtos/task.dto.dart';
 
 class TaskRepository {
   final TaskRemoteDataSource _dataSource;
@@ -15,5 +14,13 @@ class TaskRepository {
 
   Future<TaskModel> editTask(TaskDTO task, int taskId) {
     return _dataSource.editTask(task, taskId);
+  }
+
+  Future<void> deleteTask(int taskID) {
+    return _dataSource.deleteTask(taskID);
+  }
+
+  Future<TaskModel> createTask(TaskDTO task) {
+    return _dataSource.createTask(task);
   }
 }

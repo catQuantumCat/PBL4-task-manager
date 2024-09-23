@@ -1,15 +1,18 @@
-import 'package:dio/dio.dart';
+import 'dart:developer';
+
 import 'package:equatable/equatable.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:taskmanager/common/api_constant.dart';
+import 'package:taskmanager/data/datasources/task/remote/task_remote.datasource.dart';
 import 'package:taskmanager/data/dtos/task.dto.dart';
 import 'package:taskmanager/common/datetime_extension.dart';
 import 'package:taskmanager/common/timeofday_extension.dart';
+import 'package:taskmanager/data/repositories/task.repository.dart';
 part 'new_home.event.dart';
 part 'new_home.state.dart';
 
 class NewHomeBloc extends Bloc<NewHomeEvent, NewHomeState> {
+  final repository = TaskRepository(dataSource: TaskRemoteDataSource());
   NewHomeBloc() : super(NewHomeState.initial()) {
     on<NewHomeDateTapped>(_onDateTapped);
     on<NewHomeTimeTapped>(_onTimeTapped);
@@ -41,7 +44,7 @@ class NewHomeBloc extends Bloc<NewHomeEvent, NewHomeState> {
     if (newTime.isSameTimeFromDate(state.date)) {
       return;
     }
-
+    
     final newState =
         state.copyWith(time: newTime, timeLabel: newTime.toLabel());
     emit(newState);
@@ -53,30 +56,18 @@ class NewHomeBloc extends Bloc<NewHomeEvent, NewHomeState> {
       return;
     }
 
-    final newState = state.copyWith(
+    emit(state.copyWith(
         status: NewHomeStatus.loading,
         missionName: event.missionName,
-        description: event.description!.isEmpty ? null : event.description!);
+        description: event.description!.isEmpty ? null : event.description!));
 
-    emit(newState);
+    final TaskDTO data = state.toDTO();
+
     try {
-      final dio = Dio();
-      final data = state.toDTO().toJson();
-      final response = await dio.post(
-        "${ApiConstant.api_const}",
-        data: data,
-      );
-
-      // final response = await dio
-      //     .post("https://fnnprdph-5245.asse.devtunnels.ms/backend/mission", data: data);
-
-      if (response.statusCode! >= 200 && response.statusCode! <= 299) {
-        emit(state.copyWith(status: NewHomeStatus.success));
-      } else {
-        emit(state.copyWith(status: NewHomeStatus.failure));
-      }
+      await repository.createTask(data);
+      emit(state.copyWith(status: NewHomeStatus.success));
     } catch (e) {
-      print(e);
+      log(e.toString());
       emit(state.copyWith(status: NewHomeStatus.failure));
     }
   }

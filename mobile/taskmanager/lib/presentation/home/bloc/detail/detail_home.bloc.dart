@@ -1,14 +1,19 @@
-import 'package:dio/dio.dart';
+import 'dart:developer';
+
 import 'package:equatable/equatable.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:taskmanager/common/datetime_extension.dart';
+import 'package:taskmanager/data/datasources/task/remote/task_remote.datasource.dart';
+import 'package:taskmanager/data/dtos/task.dto.dart';
+import 'package:taskmanager/data/repositories/task.repository.dart';
 import 'package:taskmanager/data/task_model.dart';
-import 'package:taskmanager/common/api_constant.dart';
 part 'detail_home.event.dart';
 part 'detail_home.state.dart';
 
 class DetailHomeBloc extends Bloc<DetailHomeEvent, DetailHomeState> {
+  final repository = TaskRepository(dataSource: TaskRemoteDataSource());
+
   DetailHomeBloc() : super(const DetailHomeState.initial()) {
     on<DetailHomeClose>(_onCloseDown);
     on<DetailHomeOpen>(_onOpen);
@@ -19,7 +24,6 @@ class DetailHomeBloc extends Bloc<DetailHomeEvent, DetailHomeState> {
   }
 
   void _onCloseDown(DetailHomeClose event, Emitter<DetailHomeState> emit) {
-    //TODO: save progress
     print("Close down received");
   }
 
@@ -40,18 +44,17 @@ class DetailHomeBloc extends Bloc<DetailHomeEvent, DetailHomeState> {
     final DateTime date = (event.date ?? state.task!.deadTime)
         .at(event.time ?? TimeOfDay.fromDateTime(state.task!.deadTime));
 
-    final data = state.task!.copyWith(deadTime: date, status: event.status);
+    final TaskDTO data =
+        state.task!.copyWith(deadTime: date, status: event.status).toResponse();
 
-    final dio = Dio();
     emit(state.copyWith(status: DetailHomeStatus.loading));
     try {
-      await dio.put("${ApiConstant.api_const}${state.task!.id}",
-          data: data.toResponse().toJson());
+      final editedTask = await repository.editTask(data, state.task!.id);
+      emit(DetailHomeState.loaded(task: editedTask));
     } catch (e) {
-      print(e);
+      log(e.toString());
+      emit(state.copyWith(status: DetailHomeStatus.error));
     }
-
-    emit(DetailHomeState.loaded(task: data));
   }
 
   void _onOpenEdit(DetailHomeOpenEdit event, Emitter<DetailHomeState> emit) {
@@ -73,19 +76,17 @@ class DetailHomeBloc extends Bloc<DetailHomeEvent, DetailHomeState> {
       return;
     }
 
-    final TaskModel data = state.task!
-        .copyWith(name: event.taskName, description: event.taskDescription);
+    final TaskDTO data = state.task!
+        .copyWith(name: event.taskName, description: event.taskDescription)
+        .toResponse();
 
     emit(state.copyWith(status: DetailHomeStatus.loading));
-    final dio = Dio();
 
     try {
-      await dio.put("${ApiConstant.api_const}${state.task!.id}",
-          data: data.toResponse().toJson());
+      final responseTask = await repository.editTask(data, state.task!.id);
+      emit(DetailHomeState.loaded(task: responseTask));
     } catch (e) {
-      print(e);
+      emit(state.copyWith(status: DetailHomeStatus.error));
     }
-
-    emit(DetailHomeState.loaded(task: data));
   }
 }
