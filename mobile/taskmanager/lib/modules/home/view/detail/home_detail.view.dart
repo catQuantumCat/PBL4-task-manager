@@ -1,14 +1,15 @@
 import 'package:flutter/material.dart';
+
 import 'package:taskmanager/common/datetime_extension.dart';
+
+
 import 'package:taskmanager/common/timeofday_extension.dart';
-
-import 'package:taskmanager/presentation/home/bloc/detail/detail_home.bloc.dart';
-
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:taskmanager/presentation/home/view/modal/detail_task_edit.modal.dart';
+import 'package:taskmanager/modules/home/bloc/detail/detail_home.bloc.dart';
+import 'package:taskmanager/modules/home/view/detail/home_detail_edit.view.dart';
 
-class DetailTaskModal extends StatelessWidget {
-  const DetailTaskModal({super.key});
+class HomeDetailView extends StatelessWidget {
+  const HomeDetailView({super.key});
 
   void _showDateHandle(DetailHomeState state, BuildContext context) async {
     final DateTime? selectedDate = await showDatePicker(
@@ -183,7 +184,7 @@ class DetailTaskModal extends StatelessWidget {
                 ),
               );
             case DetailHomeStatus.editing:
-              return DetailTaskEditModal();
+              return const HomeDetailEditView();
             case DetailHomeStatus.success:
             // TODO: Handle this case.
             case DetailHomeStatus.error:

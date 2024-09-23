@@ -1,16 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:taskmanager/presentation/home/bloc/new/new_home.bloc.dart';
-import 'package:taskmanager/presentation/home/view/widget/new_task_button.widget.dart';
 
-class NewTaskModal extends StatefulWidget {
-  const NewTaskModal({super.key});
+import 'package:taskmanager/modules/home/bloc/new/new_home.bloc.dart';
+import 'package:taskmanager/modules/home/widget/new/new_task_button.widget.dart';
+
+class NewTaskView extends StatefulWidget {
+  const NewTaskView({super.key});
 
   @override
-  State<NewTaskModal> createState() => _NewTaskModalState();
+  State<NewTaskView> createState() => _NewTaskViewState();
 }
 
-class _NewTaskModalState extends State<NewTaskModal> {
+class _NewTaskViewState extends State<NewTaskView> {
   final taskFieldController = TextEditingController();
   final descriptionFieldController = TextEditingController();
 

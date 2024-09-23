@@ -1,15 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:taskmanager/presentation/home/bloc/detail/detail_home.bloc.dart';
+import 'package:taskmanager/modules/home/bloc/detail/detail_home.bloc.dart';
 
-class DetailTaskEditModal extends StatefulWidget {
-  const DetailTaskEditModal({super.key});
+
+class HomeDetailEditView extends StatefulWidget {
+  const HomeDetailEditView({super.key});
 
   @override
-  State<DetailTaskEditModal> createState() => _DetailTaskEditModalState();
+  State<HomeDetailEditView> createState() => _HomeDetailEditViewState();
 }
 
-class _DetailTaskEditModalState extends State<DetailTaskEditModal> {
+class _HomeDetailEditViewState extends State<HomeDetailEditView> {
   final TextEditingController nameFieldController = TextEditingController();
   final TextEditingController descriptionFieldController =
       TextEditingController();
