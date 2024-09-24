@@ -28,8 +28,9 @@ class _HomeListTileWidgetState extends State<HomeListTileWidget> {
     _taskStatus = widget.task.status;
   }
 
-  void _showTaskSheet() {
+  void _showDetailTaskSheet() {
     showModalBottomSheet(
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
         isScrollControlled: true,
         enableDrag: true,
         context: context,
@@ -39,7 +40,7 @@ class _HomeListTileWidgetState extends State<HomeListTileWidget> {
               ..add(HomeDetailTaskOpen(task: widget.task)),
             child: const HomeDetailTaskView(),
           );
-        }).whenComplete(() {
+        }).then((dynamic value) {
       if (!mounted) return;
       context.read<HomeListBloc>().add(FetchTaskList());
     });
@@ -55,7 +56,8 @@ class _HomeListTileWidgetState extends State<HomeListTileWidget> {
   @override
   Widget build(BuildContext context) {
     return ListTile(
-      onTap: _showTaskSheet,
+      contentPadding: const EdgeInsets.all(0),
+      onTap: _showDetailTaskSheet,
       leading: Transform.scale(
         scale: 1.5,
         child: Checkbox(

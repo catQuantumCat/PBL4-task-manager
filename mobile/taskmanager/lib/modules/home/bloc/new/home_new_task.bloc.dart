@@ -59,7 +59,7 @@ class HomeNewTaskBloc extends Bloc<HomeNewTaskEvent, HomeNewTaskStatus> {
     emit(state.copyWith(
         status: NewHomeStatus.loading,
         missionName: event.missionName,
-        description: event.description!.isEmpty ? null : event.description!));
+        description: event.description!.isEmpty ? "" : event.description!));
 
     final TaskDTO data = state.toDTO();
 

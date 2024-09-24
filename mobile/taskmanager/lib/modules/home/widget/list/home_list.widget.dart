@@ -19,40 +19,35 @@ class HomeListWidget extends StatelessWidget {
           case HomeListStatus.loading:
             return const Center(child: CircularProgressIndicator());
           case HomeListStatus.success:
-            return RefreshIndicator(
-              onRefresh: () async {
-                context.read<HomeListBloc>().add(FetchTaskList());
-              },
-              child: ListView.builder(
-                addAutomaticKeepAlives: false,
-                itemCount: state.taskList.length,
-                itemBuilder: (_, index) => Dismissible(
-                  direction: DismissDirection.endToStart,
-                  background: Container(
-                    padding: const EdgeInsets.only(right: 20),
-                    color: Colors.redAccent,
-                    child: const Row(
-                      mainAxisAlignment: MainAxisAlignment.end,
-                      children: [
-                        Icon(
-                          Icons.delete,
-                          color: Colors.white,
-                        ),
-                      ],
-                    ),
-                  ),
-                  onDismissed: (_) {
-                    context.read<HomeListBloc>().add(RemoveOneTask(
-                        taskToRemoveIndex: state.taskList[index].id));
-                  },
-                  key: Key(state.taskList[index].name),
-                  child: HomeListTileWidget(
-                    task: state.taskList[index],
+            return ListView.builder(
+              addAutomaticKeepAlives: false,
+              itemCount: state.taskList.length,
+              itemBuilder: (_, index) => Dismissible(
+                direction: DismissDirection.endToStart,
+                background: Container(
+                  
+                  color: Colors.redAccent,
+                  child: const Row(
+                    mainAxisAlignment: MainAxisAlignment.end,
+                    children: [
+                      Icon(
+                        Icons.delete,
+                        color: Colors.white,
+                      ),
+                    ],
                   ),
                 ),
-                padding: const EdgeInsets.symmetric(
-                  vertical: 16,
+                onDismissed: (_) {
+                  context.read<HomeListBloc>().add(RemoveOneTask(
+                      taskToRemoveIndex: state.taskList[index].id));
+                },
+                key: Key(state.taskList[index].name),
+                child: HomeListTileWidget(
+                  task: state.taskList[index],
                 ),
+              ),
+              padding: const EdgeInsets.symmetric(
+                vertical: 16,
               ),
             );
         }
