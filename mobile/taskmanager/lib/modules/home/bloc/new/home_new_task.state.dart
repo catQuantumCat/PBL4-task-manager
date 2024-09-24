@@ -1,8 +1,8 @@
-part of 'new_home.bloc.dart';
+part of 'home_new_task.bloc.dart';
 
-enum NewHomeStatus { initial, editing, loading, success, failure }
+enum NewHomeStatus { initial, loading, success, failure }
 
-class NewHomeState extends Equatable {
+class HomeNewTaskStatus extends Equatable {
   final NewHomeStatus status;
   final DateTime date;
   final TimeOfDay time;
@@ -15,7 +15,7 @@ class NewHomeState extends Equatable {
   List<Object?> get props =>
       [status, date, dateLabel, timeLabel, missionName, description];
 
-  const NewHomeState({
+  const HomeNewTaskStatus({
     required this.status,
     required this.date,
     required this.time,
@@ -25,7 +25,7 @@ class NewHomeState extends Equatable {
     this.description,
   });
 
-  NewHomeState.initial()
+  HomeNewTaskStatus.initial()
       : this(
             status: NewHomeStatus.initial,
             date: DateTime.now(),
@@ -33,7 +33,7 @@ class NewHomeState extends Equatable {
             dateLabel: "Today",
             timeLabel: TimeOfDay.now().toLabel());
 
-  NewHomeState copyWith(
+  HomeNewTaskStatus copyWith(
       {NewHomeStatus? status,
       DateTime? date,
       TimeOfDay? time,
@@ -41,7 +41,7 @@ class NewHomeState extends Equatable {
       String? timeLabel,
       String? missionName,
       String? description}) {
-    return NewHomeState(
+    return HomeNewTaskStatus(
         status: status ?? this.status,
         date: date ?? this.date,
         time: time ?? this.time,
@@ -57,10 +57,11 @@ class NewHomeState extends Equatable {
     }
 
     return TaskDTO(
-        name: missionName!,
-        description: description,
-        createTime: DateTime.now(),
-        deadTime: date.at(time),
-        status: false);
+      name: missionName!,
+      description: description,
+      createTime: DateTime.now(),
+      deadTime: date.at(time),
+      status: false,
+    );
   }
 }

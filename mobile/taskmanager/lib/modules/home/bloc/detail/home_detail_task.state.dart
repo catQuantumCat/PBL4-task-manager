@@ -1,29 +1,29 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first
-part of 'detail_home.bloc.dart';
+part of 'home_detail_task.bloc.dart';
 
 enum DetailHomeStatus { initial, loading, loaded, editing, success, error }
 
-class DetailHomeState extends Equatable {
+class HomeDetailTaskState extends Equatable {
   final DetailHomeStatus status;
   final TaskModel? task;
 
-  const DetailHomeState(
+  const HomeDetailTaskState(
       {this.status = DetailHomeStatus.initial, required this.task});
 
-  const DetailHomeState.initial(
+  const HomeDetailTaskState.initial(
       {this.status = DetailHomeStatus.initial, this.task});
 
-  const DetailHomeState.loaded(
+  const HomeDetailTaskState.loaded(
       {this.status = DetailHomeStatus.loaded, required this.task});
 
   @override
   List<Object?> get props => [status, task];
 
-  DetailHomeState copyWith({
+  HomeDetailTaskState copyWith({
     DetailHomeStatus? status,
     TaskModel? task,
   }) {
-    return DetailHomeState(
+    return HomeDetailTaskState(
       status: status ?? this.status,
       task: task ?? this.task,
     );

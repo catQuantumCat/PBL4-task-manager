@@ -1,15 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:taskmanager/presentation/home/bloc/detail/detail_home.bloc.dart';
+import 'package:taskmanager/modules/home/bloc/detail/home_detail_task.bloc.dart';
 
-class DetailTaskEditModal extends StatefulWidget {
-  const DetailTaskEditModal({super.key});
+class HomeDetailTaskEditView extends StatefulWidget {
+  const HomeDetailTaskEditView({super.key});
 
   @override
-  State<DetailTaskEditModal> createState() => _DetailTaskEditModalState();
+  State<HomeDetailTaskEditView> createState() => _HomeDetailTaskEditViewState();
 }
 
-class _DetailTaskEditModalState extends State<DetailTaskEditModal> {
+class _HomeDetailTaskEditViewState extends State<HomeDetailTaskEditView> {
   final TextEditingController nameFieldController = TextEditingController();
   final TextEditingController descriptionFieldController =
       TextEditingController();
@@ -17,24 +17,25 @@ class _DetailTaskEditModalState extends State<DetailTaskEditModal> {
   @override
   void initState() {
     super.initState();
-    nameFieldController.text = context.read<DetailHomeBloc>().state.task!.name;
+    nameFieldController.text =
+        context.read<HomeDetailTaskBloc>().state.task!.name;
     descriptionFieldController.text =
-        context.read<DetailHomeBloc>().state.task!.description ?? "";
+        context.read<HomeDetailTaskBloc>().state.task!.description ?? "";
   }
 
   void _cancelTapped() {
-    context.read<DetailHomeBloc>().add(DetailHomeCancelEdit());
+    context.read<HomeDetailTaskBloc>().add(HomeDetailTaskCancelEdit());
   }
 
   void _saveTapped() {
-    context.read<DetailHomeBloc>().add(DetailHomeSaveEdit(
+    context.read<HomeDetailTaskBloc>().add(HomeDetailTaskSaveEdit(
         taskName: nameFieldController.text,
         taskDescription: descriptionFieldController.text));
   }
 
   @override
   Widget build(BuildContext context) {
-    return BlocBuilder<DetailHomeBloc, DetailHomeState>(
+    return BlocBuilder<HomeDetailTaskBloc, HomeDetailTaskState>(
       builder: (context, state) {
         return DraggableScrollableSheet(
           shouldCloseOnMinExtent: true,

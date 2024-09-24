@@ -1,20 +1,24 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:taskmanager/presentation/home/bloc/list/list_home.bloc.dart';
-import 'package:taskmanager/presentation/home/view/widget/task_tile.widget.dart';
+import 'package:taskmanager/modules/home/bloc/list/home_list.bloc.dart';
+import 'package:taskmanager/modules/home/widget/list/home_list_tile.widget.dart';
 
-class HomeTaskList extends StatelessWidget {
-  const HomeTaskList({super.key});
+class HomeListWidget extends StatelessWidget {
+  const HomeListWidget({super.key});
 
   @override
   Widget build(BuildContext context) {
-    return BlocBuilder<ListHomeBloc, ListHomeState>(
+    return BlocBuilder<HomeListBloc, HomeListState>(
       builder: (context, state) {
         switch (state.status) {
-          case HomeStatus.initial:
-          case HomeStatus.loading:
+          case HomeListStatus.initial:
+          case HomeListStatus.failed:
+            return const Center(
+              child: Text("Fetching data failed "),
+            );
+          case HomeListStatus.loading:
             return const Center(child: CircularProgressIndicator());
-          case HomeStatus.success:
+          case HomeListStatus.success:
             return ListView.builder(
               addAutomaticKeepAlives: false,
               itemCount: state.taskList.length,
@@ -34,12 +38,11 @@ class HomeTaskList extends StatelessWidget {
                   ),
                 ),
                 onDismissed: (_) {
-                  context
-                      .read<ListHomeBloc>()
-                      .add(RemoveOneTask(taskToRemoveIndex: state.taskList[index].id));
+                  context.read<HomeListBloc>().add(RemoveOneTask(
+                      taskToRemoveIndex: state.taskList[index].id));
                 },
                 key: Key(state.taskList[index].name),
-                child: TaskTileWidget(
+                child: HomeListTileWidget(
                   task: state.taskList[index],
                 ),
               ),

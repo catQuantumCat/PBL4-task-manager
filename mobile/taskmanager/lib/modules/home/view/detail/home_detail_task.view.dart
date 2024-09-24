@@ -1,44 +1,50 @@
 import 'package:flutter/material.dart';
+
 import 'package:taskmanager/common/datetime_extension.dart';
+
 import 'package:taskmanager/common/timeofday_extension.dart';
-
-import 'package:taskmanager/presentation/home/bloc/detail/detail_home.bloc.dart';
-
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:taskmanager/presentation/home/view/modal/detail_task_edit.modal.dart';
+import 'package:taskmanager/modules/home/bloc/detail/home_detail_task.bloc.dart';
+import 'package:taskmanager/modules/home/view/detail/home_detail_edit.view.dart';
 
-class DetailTaskModal extends StatelessWidget {
-  const DetailTaskModal({super.key});
+class HomeDetailTaskView extends StatelessWidget {
+  const HomeDetailTaskView({super.key});
 
-  void _showDateHandle(DetailHomeState state, BuildContext context) async {
+  void _showDateHandle(HomeDetailTaskState state, BuildContext context) async {
     final DateTime? selectedDate = await showDatePicker(
         context: context, firstDate: DateTime.now(), lastDate: DateTime(2032));
 
     if (!context.mounted) return;
-    context.read<DetailHomeBloc>().add(DetailHomeEditTask(date: selectedDate));
+    context
+        .read<HomeDetailTaskBloc>()
+        .add(HomeDetailTaskChangeMetadata(date: selectedDate));
   }
 
-  void _showTimeHandle(DetailHomeState state, BuildContext context) async {
+  void _showTimeHandle(HomeDetailTaskState state, BuildContext context) async {
     final TimeOfDay? selectedTime =
         await showTimePicker(context: context, initialTime: TimeOfDay.now());
 
     if (!context.mounted) return;
-    context.read<DetailHomeBloc>().add(DetailHomeEditTask(time: selectedTime));
+    context
+        .read<HomeDetailTaskBloc>()
+        .add(HomeDetailTaskChangeMetadata(time: selectedTime));
   }
 
   void _checkBoxHandle(
-      DetailHomeState state, BuildContext context, bool? newStatus) async {
-    context.read<DetailHomeBloc>().add(DetailHomeEditTask(status: newStatus));
+      HomeDetailTaskState state, BuildContext context, bool? newStatus) async {
+    context
+        .read<HomeDetailTaskBloc>()
+        .add(HomeDetailTaskChangeMetadata(status: newStatus));
   }
 
   void _openEditHandle(BuildContext context) {
-    context.read<DetailHomeBloc>().add(DetailHomeOpenEdit());
+    context.read<HomeDetailTaskBloc>().add(HomeDetailTaskEdit());
   }
 
   @override
   Widget build(BuildContext context) {
     {
-      return BlocBuilder<DetailHomeBloc, DetailHomeState>(
+      return BlocBuilder<HomeDetailTaskBloc, HomeDetailTaskState>(
         builder: (context, state) {
           switch (state.status) {
             case DetailHomeStatus.initial:
@@ -94,8 +100,8 @@ class DetailTaskModal extends StatelessWidget {
                                 if (context.mounted) {
                                   Navigator.pop(context);
                                   context
-                                      .read<DetailHomeBloc>()
-                                      .add(DetailHomeClose());
+                                      .read<HomeDetailTaskBloc>()
+                                      .add(HomeTaskDetailClose());
                                 }
                               },
                               icon: Icon(
@@ -183,7 +189,7 @@ class DetailTaskModal extends StatelessWidget {
                 ),
               );
             case DetailHomeStatus.editing:
-              return DetailTaskEditModal();
+              return const HomeDetailTaskEditView();
             case DetailHomeStatus.success:
             // TODO: Handle this case.
             case DetailHomeStatus.error:

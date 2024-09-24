@@ -1,14 +1,14 @@
-part of "list_home.bloc.dart";
+part of "home_list.bloc.dart";
 
-abstract class ListHomeEvent extends Equatable {
-  const ListHomeEvent();
+abstract class HomeListEvent extends Equatable {
+  const HomeListEvent();
   @override
   List<Object?> get props => [];
 }
 
-class FetchTaskList extends ListHomeEvent {}
+class FetchTaskList extends HomeListEvent {}
 
-class RemoveOneTask extends ListHomeEvent {
+class RemoveOneTask extends HomeListEvent {
   final int taskToRemoveIndex;
 
   const RemoveOneTask({required this.taskToRemoveIndex});
@@ -16,12 +16,11 @@ class RemoveOneTask extends ListHomeEvent {
   List<Object?> get props => [taskToRemoveIndex];
 }
 
-class ListHomeCheckTask extends ListHomeEvent {
+class ListHomeCheckTask extends HomeListEvent {
   final bool taskStatus;
   final int taskId;
 
   const ListHomeCheckTask({required this.taskId, required this.taskStatus});
-
 
   @override
   List<Object?> get props => [taskId];
