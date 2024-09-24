@@ -8,18 +8,18 @@ import 'package:taskmanager/data/dtos/task.dto.dart';
 import 'package:taskmanager/common/datetime_extension.dart';
 import 'package:taskmanager/common/timeofday_extension.dart';
 import 'package:taskmanager/data/repositories/task.repository.dart';
-part 'new_home.event.dart';
-part 'new_home.state.dart';
+part 'home_new_task.event.dart';
+part 'home_new_task.state.dart';
 
-class NewHomeBloc extends Bloc<NewHomeEvent, NewHomeState> {
+class HomeNewTaskBloc extends Bloc<HomeNewTaskEvent, HomeNewTaskStatus> {
   final repository = TaskRepository(dataSource: TaskRemoteDataSource());
-  NewHomeBloc() : super(NewHomeState.initial()) {
+  HomeNewTaskBloc() : super(HomeNewTaskStatus.initial()) {
     on<NewHomeDateTapped>(_onDateTapped);
     on<NewHomeTimeTapped>(_onTimeTapped);
     on<NewHomeSubmitTapped>(_onSubmitTapped);
   }
 
-  void _onDateTapped(NewHomeDateTapped event, Emitter<NewHomeState> emit) {
+  void _onDateTapped(NewHomeDateTapped event, Emitter<HomeNewTaskStatus> emit) {
     if (event.date == null) {
       return;
     }
@@ -34,7 +34,7 @@ class NewHomeBloc extends Bloc<NewHomeEvent, NewHomeState> {
     emit(newState);
   }
 
-  void _onTimeTapped(NewHomeTimeTapped event, Emitter<NewHomeState> emit) {
+  void _onTimeTapped(NewHomeTimeTapped event, Emitter<HomeNewTaskStatus> emit) {
     if (event.time == null) {
       return;
     }
@@ -44,14 +44,14 @@ class NewHomeBloc extends Bloc<NewHomeEvent, NewHomeState> {
     if (newTime.isSameTimeFromDate(state.date)) {
       return;
     }
-    
+
     final newState =
         state.copyWith(time: newTime, timeLabel: newTime.toLabel());
     emit(newState);
   }
 
   void _onSubmitTapped(
-      NewHomeSubmitTapped event, Emitter<NewHomeState> emit) async {
+      NewHomeSubmitTapped event, Emitter<HomeNewTaskStatus> emit) async {
     if (event.missionName == null || event.missionName!.isEmpty) {
       return;
     }

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:taskmanager/modules/home/bloc/list/list_home.bloc.dart';
+import 'package:taskmanager/modules/home/bloc/list/home_list.bloc.dart';
 import 'package:taskmanager/modules/home/view/list/home_list.view.dart';
 
 void main() {
@@ -14,7 +14,7 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       home: BlocProvider(
-        create: (context) => ListHomeBloc()..add(FetchTaskList()),
+        create: (context) => HomeListBloc()..add(FetchTaskList()),
         child: const HomeListView(),
       ),
     );

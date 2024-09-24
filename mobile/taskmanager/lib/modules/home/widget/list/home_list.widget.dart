@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:taskmanager/modules/home/bloc/list/list_home.bloc.dart';
+import 'package:taskmanager/modules/home/bloc/list/home_list.bloc.dart';
 import 'package:taskmanager/modules/home/widget/list/home_list_tile.widget.dart';
 
 class HomeListWidget extends StatelessWidget {
@@ -8,17 +8,17 @@ class HomeListWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return BlocBuilder<ListHomeBloc, ListHomeState>(
+    return BlocBuilder<HomeListBloc, HomeListState>(
       builder: (context, state) {
         switch (state.status) {
-          case HomeStatus.initial:
-          case HomeStatus.failed:
+          case HomeListStatus.initial:
+          case HomeListStatus.failed:
             return const Center(
               child: Text("Fetching data failed "),
             );
-          case HomeStatus.loading:
+          case HomeListStatus.loading:
             return const Center(child: CircularProgressIndicator());
-          case HomeStatus.success:
+          case HomeListStatus.success:
             return ListView.builder(
               addAutomaticKeepAlives: false,
               itemCount: state.taskList.length,
@@ -38,7 +38,7 @@ class HomeListWidget extends StatelessWidget {
                   ),
                 ),
                 onDismissed: (_) {
-                  context.read<ListHomeBloc>().add(RemoveOneTask(
+                  context.read<HomeListBloc>().add(RemoveOneTask(
                       taskToRemoveIndex: state.taskList[index].id));
                 },
                 key: Key(state.taskList[index].name),

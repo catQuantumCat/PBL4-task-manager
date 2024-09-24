@@ -3,9 +3,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:taskmanager/common/datetime_extension.dart';
 import 'package:taskmanager/data/task_model.dart';
-import 'package:taskmanager/modules/home/bloc/detail/detail_home.bloc.dart';
-import 'package:taskmanager/modules/home/bloc/list/list_home.bloc.dart';
-import 'package:taskmanager/modules/home/view/detail/home_detail.view.dart';
+import 'package:taskmanager/modules/home/bloc/detail/home_detail_task.bloc.dart';
+import 'package:taskmanager/modules/home/bloc/list/home_list.bloc.dart';
+import 'package:taskmanager/modules/home/view/detail/home_detail_task.view.dart';
 
 class HomeListTileWidget extends StatefulWidget {
   final TaskModel task;
@@ -35,13 +35,13 @@ class _HomeListTileWidgetState extends State<HomeListTileWidget> {
         context: context,
         builder: (BuildContext context) {
           return BlocProvider(
-            create: (context) =>
-                DetailHomeBloc()..add(DetailHomeOpen(task: widget.task)),
-            child: const HomeDetailView(),
+            create: (context) => HomeDetailTaskBloc()
+              ..add(HomeDetailTaskOpen(task: widget.task)),
+            child: const HomeDetailTaskView(),
           );
         }).whenComplete(() {
       if (!mounted) return;
-      context.read<ListHomeBloc>().add(FetchTaskList());
+      context.read<HomeListBloc>().add(FetchTaskList());
     });
   }
 
@@ -63,7 +63,7 @@ class _HomeListTileWidgetState extends State<HomeListTileWidget> {
             visualDensity: VisualDensity.compact,
             value: _taskStatus,
             onChanged: (newVal) {
-              context.read<ListHomeBloc>().add(ListHomeCheckTask(
+              context.read<HomeListBloc>().add(ListHomeCheckTask(
                   taskId: widget.task.id, taskStatus: newVal!));
               changeTaskStatus(newVal);
             }),

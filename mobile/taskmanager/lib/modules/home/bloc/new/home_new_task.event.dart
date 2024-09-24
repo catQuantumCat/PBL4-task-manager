@@ -1,12 +1,12 @@
-part of 'new_home.bloc.dart';
+part of 'home_new_task.bloc.dart';
 
-abstract class NewHomeEvent extends Equatable {
-  const NewHomeEvent();
+abstract class HomeNewTaskEvent extends Equatable {
+  const HomeNewTaskEvent();
   @override
   List<Object?> get props => [];
 }
 
-class NewHomeDateTapped extends NewHomeEvent {
+class NewHomeDateTapped extends HomeNewTaskEvent {
   final DateTime? date;
 
   const NewHomeDateTapped({required this.date});
@@ -15,14 +15,14 @@ class NewHomeDateTapped extends NewHomeEvent {
   List<Object?> get props => [date];
 }
 
-class NewHomeTimeTapped extends NewHomeEvent {
+class NewHomeTimeTapped extends HomeNewTaskEvent {
   final TimeOfDay? time;
   const NewHomeTimeTapped({this.time});
   @override
   List<Object?> get props => [time];
 }
 
-class NewHomeSubmitTapped extends NewHomeEvent {
+class NewHomeSubmitTapped extends HomeNewTaskEvent {
   final String? missionName;
   final String? description;
 

@@ -6,11 +6,11 @@ import 'package:taskmanager/data/repositories/task.repository.dart';
 import 'package:taskmanager/data/task_model.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-part 'list_home.state.dart';
-part 'list_home.event.dart';
+part 'home_list.state.dart';
+part 'home_list.event.dart';
 
-class ListHomeBloc extends Bloc<ListHomeEvent, ListHomeState> {
-  ListHomeBloc() : super(const ListHomeState()) {
+class HomeListBloc extends Bloc<HomeListEvent, HomeListState> {
+  HomeListBloc() : super(const HomeListState()) {
     on<FetchTaskList>(_fetchList);
     on<RemoveOneTask>(_removeTask);
     on<ListHomeCheckTask>(_editTask);
@@ -18,29 +18,29 @@ class ListHomeBloc extends Bloc<ListHomeEvent, ListHomeState> {
 
   final repository = TaskRepository(dataSource: TaskRemoteDataSource());
 
-  void _fetchList(FetchTaskList event, Emitter<ListHomeState> emit) async {
-    emit(state.copyWith(status: HomeStatus.loading));
+  void _fetchList(FetchTaskList event, Emitter<HomeListState> emit) async {
+    emit(state.copyWith(status: HomeListStatus.loading));
 
     try {
       final taskList = await repository.getTaskList();
-      emit(state.copyWith(status: HomeStatus.success, taskList: taskList));
+      emit(state.copyWith(status: HomeListStatus.success, taskList: taskList));
     } catch (e) {
       log(e.toString());
-      emit(state.copyWith(status: HomeStatus.failed));
+      emit(state.copyWith(status: HomeListStatus.failed));
     }
   }
 
-  void _removeTask(RemoveOneTask event, Emitter<ListHomeState> emit) async {
+  void _removeTask(RemoveOneTask event, Emitter<HomeListState> emit) async {
     try {
       await repository.deleteTask(event.taskToRemoveIndex);
       add(FetchTaskList());
     } catch (e) {
       log(e.toString());
-      emit(state.copyWith(status: HomeStatus.failed));
+      emit(state.copyWith(status: HomeListStatus.failed));
     }
   }
 
-  void _editTask(ListHomeCheckTask event, Emitter<ListHomeState> emit) async {
+  void _editTask(ListHomeCheckTask event, Emitter<HomeListState> emit) async {
     final TaskModel task = state.taskList.firstWhere((task) {
       return task.id == event.taskId;
     });
@@ -49,9 +49,9 @@ class ListHomeBloc extends Bloc<ListHomeEvent, ListHomeState> {
 
     try {
       repository.editTask(data, event.taskId);
-      emit(state.copyWith(status: HomeStatus.success));
+      emit(state.copyWith(status: HomeListStatus.success));
     } catch (e) {
-      emit(state.copyWith(status: HomeStatus.failed));
+      emit(state.copyWith(status: HomeListStatus.failed));
     }
   }
 }
