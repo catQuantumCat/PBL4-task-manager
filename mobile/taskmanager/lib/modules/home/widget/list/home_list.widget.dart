@@ -20,12 +20,13 @@ class HomeListWidget extends StatelessWidget {
             return const Center(child: CircularProgressIndicator());
           case HomeListStatus.success:
             return ListView.builder(
+              primary: false,
+              shrinkWrap: true,
               addAutomaticKeepAlives: false,
               itemCount: state.taskList.length,
               itemBuilder: (_, index) => Dismissible(
                 direction: DismissDirection.endToStart,
                 background: Container(
-                  
                   color: Colors.redAccent,
                   child: const Row(
                     mainAxisAlignment: MainAxisAlignment.end,
