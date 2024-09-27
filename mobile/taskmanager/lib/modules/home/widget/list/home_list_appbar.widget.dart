@@ -8,7 +8,7 @@ class HomeListAppbarWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return CustomScrollView(
-      physics: const BouncingScrollPhysics(),
+      physics: const AlwaysScrollableScrollPhysics(),
       slivers: [
         SliverAppBar(
           scrolledUnderElevation: 0,

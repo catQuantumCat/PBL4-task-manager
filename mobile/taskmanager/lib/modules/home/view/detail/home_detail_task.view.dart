@@ -6,6 +6,7 @@ import 'package:taskmanager/common/timeofday_extension.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:taskmanager/modules/home/bloc/detail/home_detail_task.bloc.dart';
 import 'package:taskmanager/modules/home/view/detail/home_detail_edit.view.dart';
+import 'package:taskmanager/modules/home/widget/detail/home_detail_menu_button.widget.dart';
 
 class HomeDetailTaskView extends StatelessWidget {
   const HomeDetailTaskView({super.key});
@@ -44,7 +45,12 @@ class HomeDetailTaskView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     {
-      return BlocBuilder<HomeDetailTaskBloc, HomeDetailTaskState>(
+      return BlocConsumer<HomeDetailTaskBloc, HomeDetailTaskState>(
+        listener: (context, state) {
+          if (state.status == DetailHomeStatus.success) {
+            Navigator.pop(context);
+          }
+        },
         builder: (context, state) {
           switch (state.status) {
             case DetailHomeStatus.initial:
@@ -83,16 +89,9 @@ class HomeDetailTaskView extends StatelessWidget {
                       children: [
                         Text(state.task!.createTime.relativeToToday()),
                         Wrap(
+                          crossAxisAlignment: WrapCrossAlignment.center,
                           children: [
-                            IconButton.filled(
-                              constraints: const BoxConstraints(),
-                              padding: const EdgeInsets.all(4),
-                              onPressed: () => _openEditHandle(context),
-                              icon: Icon(
-                                Icons.edit,
-                                color: Colors.deepPurple[100],
-                              ),
-                            ),
+                            const HomeDetailMenuButtonWidget(),
                             IconButton.filled(
                               constraints: const BoxConstraints(),
                               padding: const EdgeInsets.all(4),
@@ -124,7 +123,7 @@ class HomeDetailTaskView extends StatelessWidget {
                               onChanged: (bool? value) =>
                                   _checkBoxHandle(state, context, value)),
                         ),
-                        SizedBox(
+                        const SizedBox(
                           width: 8,
                         ),
                         InkWell(
@@ -190,8 +189,6 @@ class HomeDetailTaskView extends StatelessWidget {
               );
             case DetailHomeStatus.editing:
               return const HomeDetailTaskEditView();
-            case DetailHomeStatus.success:
-            // TODO: Handle this case.
             case DetailHomeStatus.error:
             // TODO: Handle this case.
             default:

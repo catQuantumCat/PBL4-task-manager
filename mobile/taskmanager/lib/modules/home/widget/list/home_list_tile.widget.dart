@@ -1,4 +1,5 @@
 // ignore_for_file: public_member_api_docsort_constructors_first
+
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:taskmanager/common/datetime_extension.dart';
@@ -40,7 +41,7 @@ class _HomeListTileWidgetState extends State<HomeListTileWidget> {
               ..add(HomeDetailTaskOpen(task: widget.task)),
             child: const HomeDetailTaskView(),
           );
-        }).then((dynamic value) {
+        }).whenComplete(() {
       if (!mounted) return;
       context.read<HomeListBloc>().add(FetchTaskList());
     });
