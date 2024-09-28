@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 
 namespace backend.Dtos.User
 {
-    public class CreateRequeseUserDto
+    public class CreateRequestUserDto
     {
         public string Username { get; set; } = string.Empty;
         public string Password { get; set; } = string.Empty;

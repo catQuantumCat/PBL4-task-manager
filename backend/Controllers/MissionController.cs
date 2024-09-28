@@ -4,9 +4,11 @@ using System.Linq;
 using System.Threading.Tasks;
 using backend.Data;
 using backend.Dtos.Mission;
+using backend.Interfaces;
 using backend.Mappers;
 using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Identity.Client;
 
 namespace backend.Controllers
@@ -15,31 +17,30 @@ namespace backend.Controllers
     [ApiController]
     public class MissionController : ControllerBase
     {
-        private readonly ApplicationDBContext _context;
-        public MissionController(ApplicationDBContext context)
+        private readonly IMissionRepository _missionRepo;
+        public MissionController(IMissionRepository missionRepo)
         {
-            _context = context; 
+            _missionRepo = missionRepo;
         }
 
         [HttpGet]
-        public IActionResult GetAll()
+        public async Task<IActionResult> GetAll()
         {
-            var mission = _context.Missions.ToList()
-            .Select(s => s.toMissionDto()).ToList();
+            var mission = await _missionRepo.GetAllAsync();
 
             var result = new 
             {
                 Count = mission.Count,
-                Data = mission
+                Data = mission.Select(s => s.toMissionDto()).ToList()
             };
 
             return Ok(result);
         }
 
         [HttpGet("{id}")]
-        public IActionResult GetById([FromRoute] int id)
+        public async Task<IActionResult> GetById([FromRoute] int id)
         {
-            var mission = _context.Missions.Find(id);
+            var mission = await _missionRepo.GetByIdAsync(id);
 
             if(mission == null)
             {
@@ -50,48 +51,37 @@ namespace backend.Controllers
         }
 
         [HttpPost]
-        public IActionResult Create([FromBody] CreateRequestMissionDto missionDto)
+        public async Task<IActionResult> Create([FromBody] CreateRequestMissionDto missionDto)
         {
             var missionModel = missionDto.toMissionFromCreateDto();
-            _context.Missions.Add(missionModel);
-            _context.SaveChanges();
+            await _missionRepo.CreateAsync(missionModel);
             return CreatedAtAction(nameof(GetById), new { id = missionModel.Id }, missionModel.toMissionDto());
         }
 
         [HttpPut]
         [Route("{id}")]
-        public IActionResult Update([FromRoute] int id, [FromBody] UpdateRequestMissionDto updateRequestMissionDto)
+        public async Task<IActionResult> Update([FromRoute] int id, [FromBody] UpdateRequestMissionDto updateRequestMissionDto)
         {
-            var missionModel = _context.Missions.FirstOrDefault(x => x.Id == id);
+            var missionModel = await _missionRepo.UpdateAsync(id, updateRequestMissionDto);
             
             if(missionModel == null)
             {
                 return NotFound();
             }
 
-            missionModel.MissionName = updateRequestMissionDto.name;
-            missionModel.Description = updateRequestMissionDto.description;
-            missionModel.DeadDate = updateRequestMissionDto.deadTime;
-            missionModel.Status = updateRequestMissionDto.status;
-
-            _context.SaveChanges();
-
             return Ok(missionModel.toMissionDto());
         }
 
         [HttpDelete]
         [Route("{id}")]
-        public IActionResult Delete([FromRoute] int id)
+        public async Task<IActionResult> Delete([FromRoute] int id)
         {
-            var missionModel = _context.Missions.FirstOrDefault(x => x.Id == id);
+            var missionModel = await _missionRepo.DeleteAsync(id);  
 
             if(missionModel == null)
             {
                 return NotFound();
             }
-
-            _context.Missions.Remove(missionModel);
-            _context.SaveChanges();
 
             return NoContent(); 
         }

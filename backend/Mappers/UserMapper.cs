@@ -20,7 +20,7 @@ namespace backend.Mappers
             };
         }    
 
-        public static User toUserFromCreateDto(this CreateRequeseUserDto createRequeseUserDto) 
+        public static User toUserFromCreateDto(this CreateRequestUserDto createRequeseUserDto) 
         {
             return new User
             {
