@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using backend.Data;
 using backend.Dtos.User;
+using backend.Interfaces;
 using backend.Mappers;
 using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
@@ -14,24 +15,23 @@ namespace backend.Controllers
     [ApiController]
     public class UserController : ControllerBase
     {
-        private readonly ApplicationDBContext _context;
-        public UserController(ApplicationDBContext context)
+        private readonly IUserRepository _userRepo;
+        public UserController(IUserRepository userRepo)
         {
-            _context = context; 
+             _userRepo = userRepo;
         }
 
         [HttpGet]
-        public IActionResult GetAll()
+        public async Task<IActionResult> GetAll()
         {
-            var users = _context.Users.ToList()
-            .Select(s => s.toUserDto());
+            var users = await _userRepo.GetAllAsync();
             return Ok(users);
         }
 
         [HttpGet("{id}")]
-        public IActionResult GetById([FromRoute] int id)
+        public async Task<IActionResult> GetById([FromRoute] int id)
         {
-            var user = _context.Users.Find(id);
+            var user = await _userRepo.GetByIdAsync(id);
 
             if(user == null)
             {
@@ -42,46 +42,37 @@ namespace backend.Controllers
         }
 
         [HttpPost]
-        public IActionResult Create([FromBody] CreateRequeseUserDto userDto)
+        public async Task<IActionResult> Create([FromBody] CreateRequestUserDto userDto)
         {
             var user = userDto.toUserFromCreateDto();
-            _context.Users.Add(user);
-            _context.SaveChanges();
+            await _userRepo.CreateAsync(user);
             return CreatedAtAction(nameof(GetById), new {id = user.Id}, user.toUserDto());    
         }
 
         [HttpPut]
         [Route("{id}")]
-        public IActionResult Update ([FromRoute] int id,[FromBody] UpdateRequestUserDto updateRequestUserDto)
+        public async Task<IActionResult> Update ([FromRoute] int id,[FromBody] UpdateRequestUserDto updateRequestUserDto)
         {
-            var userModel = _context.Users.FirstOrDefault(x => x.Id == id);
+            var userModel = await _userRepo.UpdateAsync(id, updateRequestUserDto);
 
             if(userModel == null)
             {
                 return NotFound();
             }
-
-            userModel.Username = updateRequestUserDto.Username;
-            userModel.Password = updateRequestUserDto.Password;
-
-            _context.SaveChanges();
 
             return Ok(userModel.toUserDto());
         }
 
         [HttpDelete]
         [Route("{id}")]
-        public IActionResult Delete([FromRoute] int id)
+        public async Task<IActionResult> Delete([FromRoute] int id)
         {
-            var userModel = _context.Users.FirstOrDefault(x => x.Id == id);
+            var userModel = await _userRepo.DeleteAsync(id);
 
             if(userModel == null)
             {
                 return NotFound();
             }
-
-            _context.Users.Remove(userModel);
-            _context.SaveChanges();
 
             return NoContent();
         }
