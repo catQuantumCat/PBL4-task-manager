@@ -22,12 +22,11 @@ class HomeDetailTaskBloc
     on<HomeDetailTaskEdit>(_onOpenEdit);
     on<HomeDetailTaskCancelEdit>(_onCancelEdit);
     on<HomeDetailTaskSaveEdit>(_onSaveEdit);
+    on<HomeDetailTaskDelete>(_onDeleteTask);
   }
 
   void _onCloseDown(
-      HomeTaskDetailClose event, Emitter<HomeDetailTaskState> emit) {
-    print("Close down received");
-  }
+      HomeTaskDetailClose event, Emitter<HomeDetailTaskState> emit) {}
 
   void _onOpen(HomeDetailTaskOpen event, Emitter<HomeDetailTaskState> emit) {
     emit(HomeDetailTaskState.loaded(task: event.task));
@@ -89,6 +88,23 @@ class HomeDetailTaskBloc
       final responseTask = await repository.editTask(data, state.task!.id);
       emit(HomeDetailTaskState.loaded(task: responseTask));
     } catch (e) {
+      emit(state.copyWith(status: DetailHomeStatus.error));
+    }
+  }
+
+  Future<void> _onDeleteTask(
+      HomeDetailTaskDelete event, Emitter<HomeDetailTaskState> emit) async {
+    if (state.task == null) {
+      return;
+    }
+    emit(state.copyWith(status: DetailHomeStatus.loading));
+
+    try {
+      await repository.deleteTask(state.task!.id);
+
+      emit(state.copyWith(status: DetailHomeStatus.success));
+    } catch (e) {
+      log(e.toString());
       emit(state.copyWith(status: DetailHomeStatus.error));
     }
   }
