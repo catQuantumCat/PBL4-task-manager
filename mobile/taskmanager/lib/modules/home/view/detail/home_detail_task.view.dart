@@ -126,11 +126,17 @@ class HomeDetailTaskView extends StatelessWidget {
                         const SizedBox(
                           width: 8,
                         ),
-                        InkWell(
-                          onTap: () => _openEditHandle(context),
-                          child: Text(state.task!.name,
+                        Expanded(
+                          child: InkWell(
+                            onTap: () => _openEditHandle(context),
+                            child: Text(
+                              softWrap: true,
+                              overflow: TextOverflow.fade,
+                              state.task!.name,
                               style: const TextStyle(
-                                  fontSize: 20, fontWeight: FontWeight.w500)),
+                                  fontSize: 20, fontWeight: FontWeight.w500),
+                            ),
+                          ),
                         ),
                       ],
                     ),
