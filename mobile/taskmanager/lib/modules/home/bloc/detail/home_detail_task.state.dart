@@ -6,26 +6,26 @@ enum DetailHomeStatus { initial, loading, loaded, editing, success, error }
 class HomeDetailTaskState extends Equatable {
   final DetailHomeStatus status;
   final TaskModel? task;
+  final bool isEdited;
 
   const HomeDetailTaskState(
-      {this.status = DetailHomeStatus.initial, required this.task});
+      {this.status = DetailHomeStatus.initial,
+      required this.task,
+      required this.isEdited});
 
   const HomeDetailTaskState.initial(
-      {this.status = DetailHomeStatus.initial, this.task});
-
-  const HomeDetailTaskState.loaded(
-      {this.status = DetailHomeStatus.loaded, required this.task});
+      {this.status = DetailHomeStatus.initial,
+      this.task,
+      this.isEdited = false});
 
   @override
-  List<Object?> get props => [status, task];
+  List<Object?> get props => [status, task, isEdited];
 
-  HomeDetailTaskState copyWith({
-    DetailHomeStatus? status,
-    TaskModel? task,
-  }) {
+  HomeDetailTaskState copyWith(
+      {DetailHomeStatus? status, TaskModel? task, bool? isEdited}) {
     return HomeDetailTaskState(
-      status: status ?? this.status,
-      task: task ?? this.task,
-    );
+        status: status ?? this.status,
+        task: task ?? this.task,
+        isEdited: isEdited ?? this.isEdited);
   }
 }
