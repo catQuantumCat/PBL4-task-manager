@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:dio/dio.dart';
 import 'package:taskmanager/common/api_constant.dart';
 import 'package:taskmanager/data/dtos/task.dto.dart';
@@ -15,8 +17,10 @@ class TaskRemoteDataSource {
   }
 
   Future<TaskModel> editTask(TaskDTO task, int taskId) async {
+    log("${ApiConstant.apiCONST}/$taskId");
     final response =
         await _dio.put("${ApiConstant.apiCONST}/$taskId", data: task.toJson());
+
     return TaskModel.fromJson(response.data);
   }
 
