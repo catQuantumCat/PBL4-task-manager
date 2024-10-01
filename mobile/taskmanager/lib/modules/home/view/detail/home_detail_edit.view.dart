@@ -85,6 +85,7 @@ class _HomeDetailTaskEditViewState extends State<HomeDetailTaskEditView> {
             const SizedBox(width: 8),
             Expanded(
               child: TextFormField(
+                autofocus: true,
                 controller: nameFieldController,
                 style:
                     const TextStyle(fontSize: 20, fontWeight: FontWeight.w500),
