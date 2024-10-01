@@ -6,11 +6,7 @@ import 'package:taskmanager/modules/home/bloc/detail/home_detail_task.bloc.dart'
 import 'package:taskmanager/modules/home/widget/detail/home_detail_menu_button.widget.dart';
 
 class HomeDetailLoadedView extends StatelessWidget {
-  const HomeDetailLoadedView(
-      {super.key, required ScrollController scrollController})
-      : _scrollController = scrollController;
-
-  final ScrollController _scrollController;
+  const HomeDetailLoadedView({super.key});
 
   void _showDateHandle(HomeDetailTaskState state, BuildContext context) async {
     final DateTime? selectedDate = await showDatePicker(
@@ -48,7 +44,7 @@ class HomeDetailLoadedView extends StatelessWidget {
     {
       final state = context.read<HomeDetailTaskBloc>().state;
       return ListView(
-        controller: _scrollController,
+        primary: false,
         padding: const EdgeInsets.fromLTRB(20, 0, 20, 20),
         children: [
           Row(

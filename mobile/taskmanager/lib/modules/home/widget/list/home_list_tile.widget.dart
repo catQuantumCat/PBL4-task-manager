@@ -43,7 +43,7 @@ class _HomeListTileWidgetState extends State<HomeListTileWidget> {
       builder: (BuildContext context) {
         return BlocProvider.value(
           value: homeDetailTaskBloc,
-          child: const HomeDetailTaskView(),
+          child: HomeDetailTaskView(),
         );
       },
     );

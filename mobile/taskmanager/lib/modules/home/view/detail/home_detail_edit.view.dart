@@ -3,10 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:taskmanager/modules/home/bloc/detail/home_detail_task.bloc.dart';
 
 class HomeDetailTaskEditView extends StatefulWidget {
-  const HomeDetailTaskEditView({super.key, required scrollController})
-      : _scrollController = scrollController;
-
-  final ScrollController _scrollController;
+  const HomeDetailTaskEditView({super.key});
 
   @override
   State<HomeDetailTaskEditView> createState() => _HomeDetailTaskEditViewState();
@@ -39,7 +36,7 @@ class _HomeDetailTaskEditViewState extends State<HomeDetailTaskEditView> {
   @override
   Widget build(BuildContext context) {
     return ListView(
-      controller: widget._scrollController,
+      primary: false,
       padding: const EdgeInsets.fromLTRB(20, 0, 20, 20),
       children: [
         Row(
