@@ -50,7 +50,7 @@ class HomeDetailTaskBloc
     emit(state.copyWith(status: DetailHomeStatus.loading));
     try {
       await repository.editTask(data, state.task!.id);
-      emit(const HomeDetailTaskState.finished(isEdited: true));
+      emit(state.copyWith(status: DetailHomeStatus.finished, isEdited: true));
     } catch (e) {
       log(e.toString());
       emit(state.copyWith(status: DetailHomeStatus.failed));
@@ -133,7 +133,7 @@ class HomeDetailTaskBloc
 
     try {
       await repository.deleteTask(state.task!.id);
-      emit(const HomeDetailTaskState.finished(isEdited: true));
+      emit(state.copyWith(status: DetailHomeStatus.finished, isEdited: true));
     } catch (e) {
       log(e.toString());
       emit(state.copyWith(status: DetailHomeStatus.failed));

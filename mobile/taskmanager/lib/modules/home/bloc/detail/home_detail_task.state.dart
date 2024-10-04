@@ -10,7 +10,7 @@ class HomeDetailTaskState extends Equatable {
 
   const HomeDetailTaskState({
     this.status = DetailHomeStatus.initial,
-    required this.task,
+    this.task,
     required this.isEdited,
   });
 
@@ -18,12 +18,6 @@ class HomeDetailTaskState extends Equatable {
     this.status = DetailHomeStatus.initial,
     this.task,
     this.isEdited = false,
-  });
-
-  const HomeDetailTaskState.finished({
-    this.status = DetailHomeStatus.finished,
-    this.task,
-    required this.isEdited,
   });
 
   @override

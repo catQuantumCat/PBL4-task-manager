@@ -22,10 +22,10 @@ class _HomeDetailMenuButtonWidgetState
             actions: [
               TextButton(
                   onPressed: () {
-                    Navigator.pop(dialogContext);
                     context
                         .read<HomeDetailTaskBloc>()
                         .add(HomeDetailTaskDelete());
+                    Navigator.pop(dialogContext);
                   },
                   child: const Text("Yes")),
               TextButton(
