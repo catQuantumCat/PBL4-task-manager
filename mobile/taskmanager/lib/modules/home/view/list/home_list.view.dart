@@ -7,6 +7,18 @@ import 'package:taskmanager/modules/home/view/new/home_new_task.view.dart';
 import 'package:taskmanager/modules/home/widget/list/home_list.widget.dart';
 import 'package:taskmanager/modules/home/widget/list/home_list_appbar.widget.dart';
 
+class HomeListPage extends StatelessWidget {
+  const HomeListPage({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return BlocProvider(
+      create: (context) => HomeListBloc()..add(FetchTaskList()),
+      child: const HomeListView(),
+    );
+  }
+}
+
 class HomeListView extends StatelessWidget {
   const HomeListView({super.key});
 

@@ -1,22 +1,19 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:taskmanager/modules/home/bloc/list/home_list.bloc.dart';
-import 'package:taskmanager/modules/home/view/list/home_list.view.dart';
+import 'package:taskmanager/config/router/app_routes.dart';
 
 void main() {
-  runApp(const MyApp());
+  runApp(MyApp());
 }
 
 class MyApp extends StatelessWidget {
-  const MyApp({super.key});
+  MyApp({super.key});
+
+  final _router = AppRoutes();
 
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      home: BlocProvider(
-        create: (context) => HomeListBloc()..add(FetchTaskList()),
-        child: const HomeListView(),
-      ),
+      onGenerateRoute: (setting) => _router.onGenerateRoute(setting),
     );
   }
 }
