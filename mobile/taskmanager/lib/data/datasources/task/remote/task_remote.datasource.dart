@@ -7,7 +7,7 @@ class TaskRemoteDataSource {
   final _dio = Dio();
 
   Future<List<TaskModel>> getTaskList() async {
-    final Response response = await _dio.get(ApiConstant.api_const);
+    final Response response = await _dio.get(ApiConstant.apiCONST);
 
     return response.data["data"]
         .map<TaskModel>((task) => TaskModel.fromJson(task))
@@ -16,17 +16,16 @@ class TaskRemoteDataSource {
 
   Future<TaskModel> editTask(TaskDTO task, int taskId) async {
     final response =
-        await _dio.put("${ApiConstant.api_const}/$taskId", data: task.toJson());
+        await _dio.put("${ApiConstant.apiCONST}/$taskId", data: task.toJson());
     return TaskModel.fromJson(response.data);
   }
 
   Future<void> deleteTask(int taskID) async {
-    await _dio.delete("${ApiConstant.api_const}/$taskID");
+    await _dio.delete("${ApiConstant.apiCONST}/$taskID");
   }
 
   Future<TaskModel> createTask(TaskDTO task) async {
-    final response =
-        await _dio.post(ApiConstant.api_const, data: task.toJson());
+    final response = await _dio.post(ApiConstant.apiCONST, data: task.toJson());
     return TaskModel.fromJson(response.data);
   }
 }

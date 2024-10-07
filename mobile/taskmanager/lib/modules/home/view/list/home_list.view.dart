@@ -5,12 +5,14 @@ import 'package:taskmanager/modules/home/bloc/new/home_new_task.bloc.dart';
 
 import 'package:taskmanager/modules/home/view/new/home_new_task.view.dart';
 import 'package:taskmanager/modules/home/widget/list/home_list.widget.dart';
+import 'package:taskmanager/modules/home/widget/list/home_list_appbar.widget.dart';
 
 class HomeListView extends StatelessWidget {
   const HomeListView({super.key});
 
-  void _showTaskSheet(BuildContext context) {
+  void _showNewTaskSheet(BuildContext context) {
     showModalBottomSheet(
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
         isScrollControlled: true,
         context: context,
         builder: (BuildContext context) => BlocProvider(
@@ -26,16 +28,29 @@ class HomeListView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-          title: const Text('Task Manager'),
-          backgroundColor: Colors.blueAccent),
       floatingActionButton: FloatingActionButton(
+        elevation: 4,
+        shape: const CircleBorder(),
+        backgroundColor: Colors.red[400],
+        foregroundColor: Colors.white,
         onPressed: () {
-          _showTaskSheet(context);
+          _showNewTaskSheet(context);
         },
         child: const Icon(Icons.add),
       ),
-      body: const HomeListWidget(),
+      // ignore: prefer_const_constructors
+      body: RefreshIndicator(
+        onRefresh: () async =>
+            context.read<HomeListBloc>().add(FetchTaskList()),
+        child: const HomeListAppbarWidget(
+          child: Padding(
+            padding: EdgeInsets.symmetric(
+              horizontal: 16,
+            ),
+            child: HomeListWidget(),
+          ),
+        ),
+      ),
     );
   }
 }

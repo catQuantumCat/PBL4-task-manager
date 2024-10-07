@@ -1,4 +1,5 @@
 // ignore_for_file: public_member_api_docsort_constructors_first
+
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:taskmanager/common/datetime_extension.dart';
@@ -28,8 +29,9 @@ class _HomeListTileWidgetState extends State<HomeListTileWidget> {
     _taskStatus = widget.task.status;
   }
 
-  void _showTaskSheet() {
+  void _showDetailTaskSheet() {
     showModalBottomSheet(
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
         isScrollControlled: true,
         enableDrag: true,
         context: context,
@@ -55,7 +57,8 @@ class _HomeListTileWidgetState extends State<HomeListTileWidget> {
   @override
   Widget build(BuildContext context) {
     return ListTile(
-      onTap: _showTaskSheet,
+      contentPadding: const EdgeInsets.all(0),
+      onTap: _showDetailTaskSheet,
       leading: Transform.scale(
         scale: 1.5,
         child: Checkbox(

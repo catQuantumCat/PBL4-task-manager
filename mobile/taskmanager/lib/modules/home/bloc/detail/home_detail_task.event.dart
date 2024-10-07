@@ -50,3 +50,8 @@ class HomeDetailTaskSaveEdit extends HomeDetailTaskEvent {
   @override
   List<Object?> get props => [taskName, taskDescription];
 }
+
+class HomeDetailTaskDelete extends HomeDetailTaskEvent {
+  @override
+  List<Object?> get props => [];
+}

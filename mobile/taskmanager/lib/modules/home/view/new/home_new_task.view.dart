@@ -45,97 +45,109 @@ class _HomeNewTaskViewState extends State<HomeNewTaskView> {
   @override
   Widget build(BuildContext context) {
     return BlocConsumer<HomeNewTaskBloc, HomeNewTaskStatus>(
-      listener: (context, state) async {
-        if (state.status case NewHomeStatus.success) {
-          Navigator.pop(context, "success");
-          return;
-        }
-        if (state.status == NewHomeStatus.success) {}
-      },
-      builder: (context, state) {
-        if (state.status == NewHomeStatus.loading) {
-          return const Center(child: CircularProgressIndicator());
-        } else {
-          return DraggableScrollableSheet(
-            shouldCloseOnMinExtent: true,
-            expand: false,
-            maxChildSize: 0.95,
-            minChildSize: 0.64,
-            initialChildSize: 0.65,
-            snap: true,
-            snapSizes: const [0.65, 0.95],
-            builder: (context, scrollController) => ListView(
-              controller: scrollController,
-              padding: const EdgeInsets.fromLTRB(20, 0, 20, 20),
-              children: [
-                const SizedBox(height: 24),
-                TextFormField(
-                  controller: taskFieldController,
-                  style: const TextStyle(fontSize: 24),
-                  maxLines: null,
-                  minLines: 1,
-                  decoration: const InputDecoration.collapsed(
-                      hintText: "Task name",
-                      hintStyle: TextStyle(
-                          color: Colors.black45, fontWeight: FontWeight.w500)),
-                ),
-                const SizedBox(height: 4),
-                TextFormField(
-                  controller: descriptionFieldController,
-                  style: const TextStyle(fontSize: 16),
-                  maxLines: null,
-                  minLines: 2,
-                  decoration: const InputDecoration.collapsed(
-                      hintText: "Description",
-                      hintStyle: TextStyle(
-                          color: Colors.black45, fontWeight: FontWeight.w400)),
-                ),
-                const SizedBox(height: 16),
-                SizedBox(
-                  height: 40,
-                  child: ListView(
-                    scrollDirection: Axis.horizontal,
-                    children: [
-                      BlocBuilder<HomeNewTaskBloc, HomeNewTaskStatus>(
-                        builder: (context, state) {
-                          return NewTaskButtonWidget(
-                            label: state.dateLabel,
-                            icon: const Icon(Icons.date_range),
-                            color: Colors.deepPurple,
-                            handle: () => _showDateHandle(state),
-                          );
-                        },
-                      ),
-                      const SizedBox(
-                        width: 8,
-                      ),
-                      BlocBuilder<HomeNewTaskBloc, HomeNewTaskStatus>(
-                        builder: (context, state) {
-                          return NewTaskButtonWidget(
-                            label: state.timeLabel,
-                            icon: const Icon(Icons.access_time_outlined),
-                            color: Colors.deepPurple,
-                            handle: () => _showTimeHandle(state),
-                          );
-                        },
-                      ),
-                      const SizedBox(width: 12),
-                    ],
+        listener: (context, state) async {
+      if (state.status case NewHomeStatus.success) {
+        Navigator.pop(context, "success");
+        return;
+      }
+    }, builder: (context, state) {
+      return DraggableScrollableSheet(
+        expand: false,
+        shouldCloseOnMinExtent: true,
+        maxChildSize: 0.95,
+        minChildSize: MediaQuery.of(context).viewInsets.bottom /
+                MediaQuery.sizeOf(context).height +
+            0.3,
+        initialChildSize: MediaQuery.of(context).viewInsets.bottom /
+                MediaQuery.sizeOf(context).height +
+            0.3,
+        builder: (context, scrollController) {
+          switch (state.status) {
+            case NewHomeStatus.initial:
+              return ListView(
+                physics: const NeverScrollableScrollPhysics(),
+                controller: scrollController,
+                padding: const EdgeInsets.fromLTRB(20, 0, 20, 20),
+                children: [
+                  const SizedBox(height: 24),
+                  TextFormField(
+                    autofocus: true,
+                    controller: taskFieldController,
+                    style: const TextStyle(fontSize: 24),
+                    maxLines: null,
+                    minLines: 1,
+                    decoration: const InputDecoration.collapsed(
+                        hintText: "Task name",
+                        hintStyle: TextStyle(
+                            color: Colors.black45,
+                            fontWeight: FontWeight.w500)),
                   ),
-                ),
-                const SizedBox(height: 32),
-                IconButton.filled(
-                    onPressed: () {
-                      context.read<HomeNewTaskBloc>().add(NewHomeSubmitTapped(
-                          missionName: taskFieldController.text,
-                          description: descriptionFieldController.text));
-                    },
-                    icon: const Icon(Icons.add))
-              ],
-            ),
-          );
-        }
-      },
-    );
+                  const SizedBox(height: 4),
+                  TextFormField(
+                    controller: descriptionFieldController,
+                    style: const TextStyle(fontSize: 16),
+                    maxLines: null,
+                    minLines: 2,
+                    decoration: const InputDecoration.collapsed(
+                        hintText: "Description",
+                        hintStyle: TextStyle(
+                            color: Colors.black45,
+                            fontWeight: FontWeight.w400)),
+                  ),
+                  const SizedBox(height: 16),
+                  SizedBox(
+                    height: 40,
+                    child: ListView(
+                      scrollDirection: Axis.horizontal,
+                      children: [
+                        BlocBuilder<HomeNewTaskBloc, HomeNewTaskStatus>(
+                          builder: (context, state) {
+                            return NewTaskButtonWidget(
+                              label: state.dateLabel,
+                              icon: const Icon(Icons.date_range),
+                              color: Colors.deepPurple,
+                              handle: () => _showDateHandle(state),
+                            );
+                          },
+                        ),
+                        const SizedBox(
+                          width: 8,
+                        ),
+                        BlocBuilder<HomeNewTaskBloc, HomeNewTaskStatus>(
+                          builder: (context, state) {
+                            return NewTaskButtonWidget(
+                              label: state.timeLabel,
+                              icon: const Icon(Icons.access_time_outlined),
+                              color: Colors.deepPurple,
+                              handle: () => _showTimeHandle(state),
+                            );
+                          },
+                        ),
+                        const SizedBox(width: 12),
+                      ],
+                    ),
+                  ),
+                  const SizedBox(height: 32),
+                  IconButton.filled(
+                      onPressed: () {
+                        context.read<HomeNewTaskBloc>().add(NewHomeSubmitTapped(
+                            missionName: taskFieldController.text,
+                            description: descriptionFieldController.text));
+                      },
+                      icon: const Icon(Icons.add))
+                ],
+              );
+            case NewHomeStatus.loading:
+              return const Center(child: CircularProgressIndicator());
+            case NewHomeStatus.success:
+              return const Center(child: Text(''));
+            case NewHomeStatus.failure:
+              return const Center(child: Text('Something went wrong!'));
+            default:
+              return const Center(child: Text('NO WIDGET FOUND!'));
+          }
+        },
+      );
+    });
   }
 }
