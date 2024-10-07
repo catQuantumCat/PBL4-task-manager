@@ -38,7 +38,7 @@ namespace backend.Controllers
                 return NotFound();
             }
 
-            return Ok(user.toUserDto());
+            return Ok(user);
         }
 
         [HttpPost]
