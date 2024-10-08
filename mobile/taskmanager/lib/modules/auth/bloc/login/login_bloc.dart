@@ -1,5 +1,6 @@
 import 'dart:developer';
 
+import 'package:dio/dio.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:equatable/equatable.dart';
 
@@ -20,17 +21,22 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
       LoginSubmitTapped event, Emitter<LoginState> emit) async {
     emit(const LoginLoading());
 
-    // await Future.delayed(Duration(seconds: 3));
     try {
       final token = await repo.submitLogin(
           userName: event.username, password: event.password);
-      //TODO: remove
+
       log(token);
       emit(state.copyWith(status: LoginStatus.success));
     } catch (e) {
-      //TODO: remove
       log(e.toString());
-      emit(state.copyWith(status: LoginStatus.failed));
+      if (e is DioException && e.response?.statusCode == 401) {
+        emit(
+          const LoginState.failed(
+              errorString: "Incorrect username or password, please try again"),
+        );
+      } else {
+        emit(LoginState.failed(errorString: e.toString()));
+      }
     }
   }
 }

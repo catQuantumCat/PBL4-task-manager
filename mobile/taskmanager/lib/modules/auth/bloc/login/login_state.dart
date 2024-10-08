@@ -34,3 +34,8 @@ class LoginInitial extends LoginState {
 class LoginLoading extends LoginState {
   const LoginLoading({super.status = LoginStatus.loading});
 }
+
+class LoginFailed extends LoginState {
+  const LoginFailed(
+      {super.status = LoginStatus.failed, required super.errorString});
+}

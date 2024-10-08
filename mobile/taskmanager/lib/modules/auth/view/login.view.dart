@@ -2,7 +2,10 @@ import 'dart:developer';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:taskmanager/common/utils/validation.utils.dart';
 import 'package:taskmanager/modules/auth/bloc/login/login_bloc.dart';
+import 'package:taskmanager/modules/auth/widget/auth_elevated_button.widget.dart';
+import 'package:taskmanager/modules/auth/widget/round_text_form_field.widget.dart';
 
 class LoginPage extends StatelessWidget {
   const LoginPage({super.key});
@@ -24,73 +27,46 @@ class LoginView extends StatelessWidget {
   final TextEditingController _passwordFieldController =
       TextEditingController();
 
+  final GlobalKey<FormState> _formkey = GlobalKey<FormState>();
+
   void _onLoginTapped(BuildContext context) {
+    if (!_formkey.currentState!.validate()) return;
+    
     context.read<LoginBloc>().add(LoginSubmitTapped(
           username: _usernameFieldController.text,
           password: _passwordFieldController.text,
         ));
   }
 
-  Widget authTextFormField(
-      {String? hintText,
-      bool obscureText = false,
-      TextEditingController? controller,
-      FormFieldValidator? validator}) {
-    return TextFormField(
-      obscureText: obscureText,
-      controller: controller,
-      validator: validator,
-      decoration: InputDecoration(
-        focusedBorder: const OutlineInputBorder(
-            borderRadius: BorderRadius.all(Radius.circular(8))),
-        filled: true,
-        fillColor: Colors.grey[300],
-        hintText: hintText,
-        border: const OutlineInputBorder(
-          borderRadius: BorderRadius.all(
-            Radius.circular(8),
-          ),
-        ),
-      ),
-    );
-  }
+  void _listenToStateChanges(BuildContext context, LoginState state) {
+    if (state.status == LoginStatus.success) {
+      Navigator.pushNamedAndRemoveUntil(
+        context,
+        "/home",
+        (route) => false,
+      );
+    }
 
-  Widget authElevatedButton(
-      {required String label, void Function()? onPressed}) {
-    return ElevatedButton(
-      style: const ButtonStyle().copyWith(
-        elevation: const WidgetStatePropertyAll(0),
-        backgroundColor: const WidgetStatePropertyAll(Colors.redAccent),
-        shape: const WidgetStatePropertyAll(
-          RoundedRectangleBorder(
-            borderRadius: BorderRadius.all(Radius.circular(8)),
-          ),
+    if (state.status == LoginStatus.failed) {
+      showDialog(
+        context: context,
+        builder: (dialogContext) => AlertDialog(
+          actions: [
+            TextButton(
+                onPressed: () => Navigator.pop(dialogContext),
+                child: const Text("Try again"))
+          ],
+          title: const Text("Cannot sign in"),
+          content: Text(state.errorString ?? "Unknown error"),
         ),
-      ),
-      onPressed: onPressed,
-      child: Container(
-        margin: const EdgeInsets.symmetric(vertical: 8),
-        child: Text(
-          label,
-          style: const TextStyle(fontSize: 20, color: Colors.white),
-        ),
-      ),
-    );
+      );
+    }
   }
 
   @override
   Widget build(BuildContext context) {
     return BlocConsumer<LoginBloc, LoginState>(
-      listener: (context, state) {
-        log("HERE");
-        if (state.status == LoginStatus.success) {
-          Navigator.pushNamedAndRemoveUntil(
-            context,
-            "/home",
-            (route) => false,
-          );
-        }
-      },
+      listener: (context, state) => _listenToStateChanges(context, state),
       builder: (context, state) {
         return Scaffold(
           appBar: AppBar(),
@@ -120,31 +96,35 @@ class LoginView extends StatelessWidget {
                           ),
                           const SizedBox(height: 16),
                           Form(
+                            key: _formkey,
                             child: Column(
                               children: [
-                                authTextFormField(
+                                RoundTextFormField(
+                                    validator: (p0) =>
+                                        ValidationUtils.validateField(p0),
                                     hintText: "Username",
                                     controller: _usernameFieldController),
                                 const SizedBox(height: 16),
-                                authTextFormField(
+                                RoundTextFormField(
+                                    validator: (p0) =>
+                                        ValidationUtils.validateField(p0),
                                     hintText: "Password",
                                     obscureText: true,
                                     controller: _passwordFieldController),
                                 const SizedBox(height: 24),
-                                Row(
-                                  children: [
-                                    Expanded(
-                                      child: authElevatedButton(
-                                        label: "Log in",
-                                        onPressed: () =>
-                                            _onLoginTapped(context),
-                                      ),
-                                    ),
-                                  ],
-                                ),
                               ],
                             ),
                           ),
+                          Row(
+                            children: [
+                              Expanded(
+                                child: AuthElevatedButton(
+                                  label: "Log in",
+                                  onPressed: () => _onLoginTapped(context),
+                                ),
+                              ),
+                            ],
+                          )
                         ],
                       ),
                     ),
