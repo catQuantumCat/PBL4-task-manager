@@ -3,7 +3,7 @@ import 'dart:developer';
 import 'package:equatable/equatable.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:taskmanager/data/datasources/task/remote/task_remote.datasource.dart';
+import 'package:taskmanager/data/datasources/remote/task_remote.datasource.dart';
 import 'package:taskmanager/data/dtos/task.dto.dart';
 import 'package:taskmanager/common/datetime_extension.dart';
 import 'package:taskmanager/common/timeofday_extension.dart';
