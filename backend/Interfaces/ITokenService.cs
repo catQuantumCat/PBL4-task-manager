@@ -9,5 +9,7 @@ namespace backend.Interfaces
     public interface ITokenService
     {
         string CreateToken(AppUser user);
+        string? getAppUserIdFromToken(string token);
+        bool isTokenExpired(string token);
     }
 }

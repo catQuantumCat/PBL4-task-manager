@@ -28,6 +28,7 @@ namespace backend.Services
             {
                 new Claim(JwtRegisteredClaimNames.Email, user.Email),
                 new Claim(JwtRegisteredClaimNames.GivenName, user.UserName),
+                new Claim(ClaimTypes.NameIdentifier, user.Id)
             };
 
             var creds = new SigningCredentials(_key, SecurityAlgorithms.HmacSha512Signature);
@@ -35,7 +36,7 @@ namespace backend.Services
             var tokenDesciptor = new SecurityTokenDescriptor
             {
                 Subject = new ClaimsIdentity(claims),
-                Expires = DateTime.Now.AddDays(7),
+                Expires = DateTime.Now.AddDays(1),
                 SigningCredentials = creds,
                 Issuer = _config ["JWT:Issuer"],
                 Audience = _config["JWT:Audience"]
@@ -46,6 +47,39 @@ namespace backend.Services
             var token = tokenHandler.CreateToken(tokenDesciptor);
 
             return tokenHandler.WriteToken(token);
+        }
+
+        public string? getAppUserIdFromToken(string token)
+        {
+            if(string.IsNullOrEmpty(token))
+                throw new ArgumentNullException(nameof(token));
+            
+            var handler = new JwtSecurityTokenHandler();
+
+            if(handler.CanReadToken(token))
+            {
+                var jwtToken = handler.ReadJwtToken(token) as JwtSecurityToken;
+
+                var userId = jwtToken.Claims.FirstOrDefault(c => c.Type == "nameid").Value;
+
+                return userId;
+
+            }
+
+            return null;
+        }
+
+        public bool isTokenExpired(string token)
+        {
+            var currentTime = DateTime.UtcNow;
+            var tokenHandler = new JwtSecurityTokenHandler();
+            var jwtToken = tokenHandler.ReadToken(token) as JwtSecurityToken;
+            var exp = jwtToken.ValidTo;
+            if (exp < currentTime)
+            {
+                return true;
+            }
+            return false;
         }
     }
 }
