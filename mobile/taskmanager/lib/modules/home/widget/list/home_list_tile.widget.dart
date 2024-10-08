@@ -1,5 +1,3 @@
-// ignore_for_file: public_member_api_docsort_constructors_first
-
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:taskmanager/common/datetime_extension.dart';
@@ -29,22 +27,26 @@ class _HomeListTileWidgetState extends State<HomeListTileWidget> {
     _taskStatus = widget.task.status;
   }
 
-  void _showDetailTaskSheet() {
-    showModalBottomSheet(
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
-        isScrollControlled: true,
-        enableDrag: true,
-        context: context,
-        builder: (BuildContext context) {
-          return BlocProvider(
-            create: (context) => HomeDetailTaskBloc()
-              ..add(HomeDetailTaskOpen(task: widget.task)),
-            child: const HomeDetailTaskView(),
-          );
-        }).whenComplete(() {
-      if (!mounted) return;
+  Future<void> _showDetailTaskSheet() async {
+    final homeDetailTaskBloc = HomeDetailTaskBloc()
+      ..add(HomeDetailTaskOpen(task: widget.task));
+
+    await showModalBottomSheet<bool>(
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+      isScrollControlled: true,
+      enableDrag: true,
+      context: context,
+      builder: (BuildContext context) {
+        return BlocProvider.value(
+          value: homeDetailTaskBloc,
+          child: const HomeDetailTaskView(),
+        );
+      },
+    );
+
+    if (mounted && homeDetailTaskBloc.state.isEdited == true) {
       context.read<HomeListBloc>().add(FetchTaskList());
-    });
+    }
   }
 
   void changeTaskStatus(value) {
@@ -76,8 +78,4 @@ class _HomeListTileWidgetState extends State<HomeListTileWidget> {
       trailing: const Icon(Icons.chevron_right),
     );
   }
-}
-
-class DetailTaskModal {
-  const DetailTaskModal();
 }

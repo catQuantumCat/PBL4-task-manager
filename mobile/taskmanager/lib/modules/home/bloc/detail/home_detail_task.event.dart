@@ -5,10 +5,7 @@ abstract class HomeDetailTaskEvent extends Equatable {
   List<Object?> get props => [];
 }
 
-class HomeTaskDetailClose extends HomeDetailTaskEvent {
-  @override
-  List<Object?> get props => [];
-}
+class HomeTaskDetailClose extends HomeDetailTaskEvent {}
 
 class HomeDetailTaskOpen extends HomeDetailTaskEvent {
   final TaskModel task;
@@ -19,15 +16,23 @@ class HomeDetailTaskOpen extends HomeDetailTaskEvent {
   List<Object?> get props => [task];
 }
 
-class HomeDetailTaskChangeMetadata extends HomeDetailTaskEvent {
+class HomeDetailTaskChangeDateTime extends HomeDetailTaskEvent {
   final DateTime? date;
   final TimeOfDay? time;
-  final bool? status;
 
-  HomeDetailTaskChangeMetadata({this.date, this.time, this.status});
+  HomeDetailTaskChangeDateTime({this.date, this.time});
 
   @override
   List<Object?> get props => [date, time];
+}
+
+class HomeDetailTaskCompleteTask extends HomeDetailTaskEvent {
+  final bool? status;
+
+  HomeDetailTaskCompleteTask({required this.status});
+
+  @override
+  List<Object?> get props => [status];
 }
 
 class HomeDetailTaskEdit extends HomeDetailTaskEvent {

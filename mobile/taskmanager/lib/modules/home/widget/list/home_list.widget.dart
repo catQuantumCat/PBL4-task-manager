@@ -6,6 +6,31 @@ import 'package:taskmanager/modules/home/widget/list/home_list_tile.widget.dart'
 class HomeListWidget extends StatelessWidget {
   const HomeListWidget({super.key});
 
+  get onPressed => null;
+
+  Future<bool?> _deleteConfirm(BuildContext context) async {
+    return await showDialog<bool>(
+        context: context,
+        builder: (dialogContext) {
+          return AlertDialog(
+            title: const Text("Delete task?"),
+            content: const Text("Action cannot be undone"),
+            actions: [
+              TextButton(
+                  onPressed: () {
+                    Navigator.pop(dialogContext, false);
+                  },
+                  child: const Text("Cancel")),
+              TextButton(
+                  onPressed: () {
+                    Navigator.pop(dialogContext, true);
+                  },
+                  child: const Text("Delete"))
+            ],
+          );
+        });
+  }
+
   @override
   Widget build(BuildContext context) {
     return BlocBuilder<HomeListBloc, HomeListState>(
@@ -38,10 +63,9 @@ class HomeListWidget extends StatelessWidget {
                     ],
                   ),
                 ),
-                onDismissed: (_) {
-                  context.read<HomeListBloc>().add(RemoveOneTask(
-                      taskToRemoveIndex: state.taskList[index].id));
-                },
+                confirmDismiss: (direction) async => _deleteConfirm(context),
+                onDismissed: (_) => context.read<HomeListBloc>().add(
+                    RemoveOneTask(taskToRemoveIndex: state.taskList[index].id)),
                 key: Key(state.taskList[index].name),
                 child: HomeListTileWidget(
                   task: state.taskList[index],
