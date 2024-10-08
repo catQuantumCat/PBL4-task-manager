@@ -4,7 +4,7 @@ import 'package:equatable/equatable.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:taskmanager/common/datetime_extension.dart';
-import 'package:taskmanager/data/datasources/task/remote/task_remote.datasource.dart';
+import 'package:taskmanager/data/datasources/remote/task_remote.datasource.dart';
 import 'package:taskmanager/data/dtos/task.dto.dart';
 import 'package:taskmanager/data/repositories/task.repository.dart';
 import 'package:taskmanager/data/task_model.dart';
@@ -18,44 +18,71 @@ class HomeDetailTaskBloc
   HomeDetailTaskBloc() : super(const HomeDetailTaskState.initial()) {
     on<HomeTaskDetailClose>(_onCloseDown);
     on<HomeDetailTaskOpen>(_onOpen);
-    on<HomeDetailTaskChangeMetadata>(_onEditTask);
+    on<HomeDetailTaskChangeDateTime>(_onChangeDateTime);
     on<HomeDetailTaskEdit>(_onOpenEdit);
     on<HomeDetailTaskCancelEdit>(_onCancelEdit);
     on<HomeDetailTaskSaveEdit>(_onSaveEdit);
+    on<HomeDetailTaskDelete>(_onDeleteTask);
+    on<HomeDetailTaskCompleteTask>(_onCompleteTask);
   }
 
   void _onCloseDown(
       HomeTaskDetailClose event, Emitter<HomeDetailTaskState> emit) {
-    print("Close down received");
+    emit(state.copyWith(status: DetailHomeStatus.finished));
   }
 
-  void _onOpen(HomeDetailTaskOpen event, Emitter<HomeDetailTaskState> emit) {
-    emit(HomeDetailTaskState.loaded(task: event.task));
+  void _onOpen(
+      HomeDetailTaskOpen event, Emitter<HomeDetailTaskState> emit) async {
+    emit(state.copyWith(status: DetailHomeStatus.loading));
+
+    emit(state.copyWith(status: DetailHomeStatus.initial, task: event.task));
   }
 
-  void _onEditTask(HomeDetailTaskChangeMetadata event,
+  void _onCompleteTask(HomeDetailTaskCompleteTask event,
+      Emitter<HomeDetailTaskState> emit) async {
+    if (state.task == null || event.status == null) {
+      return;
+    }
+
+    final TaskDTO data =
+        state.task!.copyWith(status: event.status).toResponse();
+
+    emit(state.copyWith(status: DetailHomeStatus.loading));
+    try {
+      await repository.editTask(data, state.task!.id);
+      emit(state.copyWith(status: DetailHomeStatus.finished, isEdited: true));
+    } catch (e) {
+      log(e.toString());
+      emit(state.copyWith(status: DetailHomeStatus.failed));
+    }
+  }
+
+  void _onChangeDateTime(HomeDetailTaskChangeDateTime event,
       Emitter<HomeDetailTaskState> emit) async {
     if (state.task == null) {
       return;
     }
 
-    if (event.date == null && event.time == null && event.status == null) {
+    if (event.date == null && event.time == null) {
       return;
     }
 
     final DateTime date = (event.date ?? state.task!.deadTime)
         .at(event.time ?? TimeOfDay.fromDateTime(state.task!.deadTime));
 
-    final TaskDTO data =
-        state.task!.copyWith(deadTime: date, status: event.status).toResponse();
+    final TaskDTO data = state.task!.copyWith(deadTime: date).toResponse();
 
     emit(state.copyWith(status: DetailHomeStatus.loading));
     try {
       final editedTask = await repository.editTask(data, state.task!.id);
-      emit(HomeDetailTaskState.loaded(task: editedTask));
+
+      emit(
+        state.copyWith(
+            task: editedTask, status: DetailHomeStatus.initial, isEdited: true),
+      );
     } catch (e) {
       log(e.toString());
-      emit(state.copyWith(status: DetailHomeStatus.error));
+      emit(state.copyWith(status: DetailHomeStatus.failed));
     }
   }
 
@@ -66,7 +93,7 @@ class HomeDetailTaskBloc
 
   void _onCancelEdit(
       HomeDetailTaskCancelEdit event, Emitter<HomeDetailTaskState> emit) {
-    emit(state.copyWith(status: DetailHomeStatus.loaded));
+    emit(state.copyWith(status: DetailHomeStatus.initial));
   }
 
   void _onSaveEdit(
@@ -87,9 +114,29 @@ class HomeDetailTaskBloc
 
     try {
       final responseTask = await repository.editTask(data, state.task!.id);
-      emit(HomeDetailTaskState.loaded(task: responseTask));
+
+      emit(state.copyWith(
+          status: DetailHomeStatus.initial,
+          task: responseTask,
+          isEdited: true));
     } catch (e) {
-      emit(state.copyWith(status: DetailHomeStatus.error));
+      emit(state.copyWith(status: DetailHomeStatus.failed));
+    }
+  }
+
+  Future<void> _onDeleteTask(
+      HomeDetailTaskDelete event, Emitter<HomeDetailTaskState> emit) async {
+    if (state.task == null) {
+      return;
+    }
+    emit(state.copyWith(status: DetailHomeStatus.loading));
+
+    try {
+      await repository.deleteTask(state.task!.id);
+      emit(state.copyWith(status: DetailHomeStatus.finished, isEdited: true));
+    } catch (e) {
+      log(e.toString());
+      emit(state.copyWith(status: DetailHomeStatus.failed));
     }
   }
 }
