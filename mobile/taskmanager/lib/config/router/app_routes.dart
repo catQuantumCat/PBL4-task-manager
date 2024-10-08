@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:taskmanager/modules/auth/view/login.view.dart';
+import 'package:taskmanager/modules/auth/view/register.view.dart';
 import 'package:taskmanager/modules/home/view/list/home_list.view.dart';
 import 'package:taskmanager/modules/navigation/view/navigation.view.dart';
 
@@ -9,7 +10,7 @@ class AppRoutes {
       case '/':
         return MaterialPageRoute(builder: (_) {
           // return const NavigationPage();
-          return LoginPage();
+          return const LoginPage();
         });
 
       case '/authLogin':
@@ -18,6 +19,14 @@ class AppRoutes {
             return const LoginPage();
           },
         );
+
+      case '/authRegister':
+        return MaterialPageRoute(
+          builder: (_) {
+            return const RegisterPage();
+          },
+        );
+
       case '/home':
         return MaterialPageRoute(
           builder: (_) {

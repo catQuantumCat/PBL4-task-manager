@@ -1,7 +1,7 @@
 import 'dart:developer';
 
 import 'package:dio/dio.dart';
-import 'package:taskmanager/common/api_constant.dart';
+import 'package:taskmanager/common/constants/api_constant.dart';
 import 'package:taskmanager/data/dtos/task.dto.dart';
 import 'package:taskmanager/data/task_model.dart';
 

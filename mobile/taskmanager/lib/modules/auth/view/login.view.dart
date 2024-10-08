@@ -2,10 +2,10 @@ import 'dart:developer';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:taskmanager/common/utils/validation.utils.dart';
+
 import 'package:taskmanager/modules/auth/bloc/login/login_bloc.dart';
+import 'package:taskmanager/modules/auth/widget/login_form.widget.dart';
 import 'package:taskmanager/modules/auth/widget/auth_elevated_button.widget.dart';
-import 'package:taskmanager/modules/auth/widget/round_text_form_field.widget.dart';
 
 class LoginPage extends StatelessWidget {
   const LoginPage({super.key});
@@ -31,11 +31,15 @@ class LoginView extends StatelessWidget {
 
   void _onLoginTapped(BuildContext context) {
     if (!_formkey.currentState!.validate()) return;
-    
+
     context.read<LoginBloc>().add(LoginSubmitTapped(
           username: _usernameFieldController.text,
           password: _passwordFieldController.text,
         ));
+  }
+
+  void _onNavigateToRegisterTapped(BuildContext context) {
+    Navigator.pushNamed(context, '/authRegister');
   }
 
   void _listenToStateChanges(BuildContext context, LoginState state) {
@@ -95,25 +99,10 @@ class LoginView extends StatelessWidget {
                             style: TextStyle(fontSize: 16),
                           ),
                           const SizedBox(height: 16),
-                          Form(
-                            key: _formkey,
-                            child: Column(
-                              children: [
-                                RoundTextFormField(
-                                    validator: (p0) =>
-                                        ValidationUtils.validateField(p0),
-                                    hintText: "Username",
-                                    controller: _usernameFieldController),
-                                const SizedBox(height: 16),
-                                RoundTextFormField(
-                                    validator: (p0) =>
-                                        ValidationUtils.validateField(p0),
-                                    hintText: "Password",
-                                    obscureText: true,
-                                    controller: _passwordFieldController),
-                                const SizedBox(height: 24),
-                              ],
-                            ),
+                          LoginForm(
+                            formkey: _formkey,
+                            usernameFieldController: _usernameFieldController,
+                            passwordFieldController: _passwordFieldController,
                           ),
                           Row(
                             children: [
@@ -124,6 +113,13 @@ class LoginView extends StatelessWidget {
                                 ),
                               ),
                             ],
+                          ),
+                          Center(
+                            child: TextButton(
+                              child: const Text("New here? Register now!"),
+                              onPressed: () =>
+                                  _onNavigateToRegisterTapped(context),
+                            ),
                           )
                         ],
                       ),

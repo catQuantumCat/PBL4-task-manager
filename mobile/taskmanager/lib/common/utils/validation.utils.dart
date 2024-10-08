@@ -2,17 +2,17 @@ import 'package:taskmanager/common/utils/ux_writing.util.dart';
 
 abstract class ValidationUtils {
   static String? validateEmail(String? value) {
-    if (value == null) return UXWritingEnum.errorAuthEmptyField.value;
+    if (value == null) return UXWritingEnum.authEmptyField.value;
     final RegExp regExp = RegExp(
       r'^(([^<>()[\]\.,;:\s@\"]+(\.[^<>()[\]\.,;:\s@\"]+)*)|(\".+\"))@(([^<>()[\]\.,;:\s@\"]+\.)+[^<>()[\]\.,;:\s@\"]{2,})$',
       caseSensitive: false,
     );
     if (regExp.hasMatch(value)) return null;
-    return UXWritingEnum.errorAuthInvalidEmail.value;
+    return UXWritingEnum.authInvalidEmail.value;
   }
 
   static String? validatePassword(String? value) {
-    if (value == null) return UXWritingEnum.errorAuthEmptyField.value;
+    if (value == null) return UXWritingEnum.authEmptyField.value;
 
     final RegExp regExp = RegExp(
       r'^[a-zA-Z0-9\\d@$!%*?&]{12,}$',
@@ -20,12 +20,12 @@ abstract class ValidationUtils {
     );
     if (regExp.hasMatch(value)) return null;
 
-    return UXWritingEnum.errorAuthInvalidPassword.value;
+    return UXWritingEnum.authInvalidPassword.value;
   }
 
   static String? validateField(String? value) {
     if (value == null || value.isEmpty) {
-      return UXWritingEnum.errorAuthEmptyField.value;
+      return UXWritingEnum.authEmptyField.value;
     }
     return null;
   }

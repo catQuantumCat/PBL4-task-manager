@@ -21,6 +21,7 @@ class RoundTextFormField extends StatelessWidget {
       controller: controller,
       validator: validator,
       decoration: InputDecoration(
+        errorMaxLines: 3,
         focusedBorder: const OutlineInputBorder(
             borderRadius: BorderRadius.all(Radius.circular(8))),
         filled: true,
