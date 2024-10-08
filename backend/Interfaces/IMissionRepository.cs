@@ -15,5 +15,7 @@ namespace backend.Interfaces
         Task<Mission> CreateAsync(Mission missionModel);
         Task<Mission?> UpdateAsync(int id, UpdateRequestMissionDto updateRequestMissionDto);
         Task<Mission?> DeleteAsync(int id);
+
+        Task<List<Mission>> GetByAppUserIdAsync(string appUserId);
     }
 }

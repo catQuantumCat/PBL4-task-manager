@@ -1,12 +1,18 @@
 using System;
 using System.Collections.Generic;
+using System.IdentityModel.Tokens.Jwt;
 using System.Linq;
 using System.Threading.Tasks;
 using backend.Data;
+using backend.Dtos;
 using backend.Dtos.Mission;
+using backend.Extensions;
 using backend.Interfaces;
 using backend.Mappers;
+using backend.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http.HttpResults;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Identity.Client;
@@ -18,16 +24,34 @@ namespace backend.Controllers
     public class MissionController : ControllerBase
     {
         private readonly IMissionRepository _missionRepo;
-        public MissionController(IMissionRepository missionRepo)
+        private readonly ITokenService _tokenService;
+        private readonly UserManager<AppUser> _userManager;
+        public MissionController(IMissionRepository missionRepo, ITokenService tokenService, UserManager<AppUser> userManager)
         {
+            _tokenService = tokenService;
             _missionRepo = missionRepo;
+            _userManager = userManager;
         }
 
         [HttpGet]
+        [Authorize]
         public async Task<IActionResult> GetAll()
         {
-            var mission = await _missionRepo.GetAllAsync();
+            var token = Request.Headers["Authorization"].ToString().Replace("Bearer ", "");
+            if (_tokenService.isTokenExpired(token))
+            {
+                return Unauthorized("Token is expired") ;
+            }
+            
+            var userId = _tokenService.getAppUserIdFromToken(token);
+            
+            if(string.IsNullOrEmpty(userId))
+            {
+                return BadRequest("Invalid access token");
+            }
 
+            var mission = await _missionRepo.GetByAppUserIdAsync(userId);
+            
             var result = new 
             {
                 Count = mission.Count,
@@ -51,17 +75,32 @@ namespace backend.Controllers
         }
 
         [HttpPost]
+        [Authorize]
         public async Task<IActionResult> Create([FromBody] CreateRequestMissionDto missionDto)
         {
-            var missionModel = missionDto.toMissionFromCreateDto();
+            var token = Request.Headers["Authorization"].ToString().Replace("Bearer ", "");
+            if (_tokenService.isTokenExpired(token))
+            {
+                return Unauthorized("Token is expired") ;
+            }
+            var username = User.GetUsername();
+            var appUser = await _userManager.FindByNameAsync(username);
+            var missionModel = missionDto.toMissionFromCreateDto(appUser);
             await _missionRepo.CreateAsync(missionModel);
             return CreatedAtAction(nameof(GetById), new { id = missionModel.Id }, missionModel.toMissionDto());
         }
 
         [HttpPut]
         [Route("{id}")]
+        [Authorize]
         public async Task<IActionResult> Update([FromRoute] int id, [FromBody] UpdateRequestMissionDto updateRequestMissionDto)
         {
+            var token = Request.Headers["Authorization"].ToString().Replace("Bearer ", "");
+            if (_tokenService.isTokenExpired(token))
+            {
+                return Unauthorized("Token is expired") ;
+            }
+            
             var missionModel = await _missionRepo.UpdateAsync(id, updateRequestMissionDto);
             
             if(missionModel == null)
@@ -74,8 +113,15 @@ namespace backend.Controllers
 
         [HttpDelete]
         [Route("{id}")]
+        [Authorize]
         public async Task<IActionResult> Delete([FromRoute] int id)
         {
+            var token = Request.Headers["Authorization"].ToString().Replace("Bearer ", "");
+            if (_tokenService.isTokenExpired(token))
+            {
+                return Unauthorized("Token is expired") ;
+            }
+
             var missionModel = await _missionRepo.DeleteAsync(id);  
 
             if(missionModel == null)

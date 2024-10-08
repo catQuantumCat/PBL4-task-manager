@@ -12,8 +12,8 @@ using backend.Data;
 namespace backend.Migrations
 {
     [DbContext(typeof(ApplicationDBContext))]
-    [Migration("20241007024525_SeedRole")]
-    partial class SeedRole
+    [Migration("20241007170400_Init")]
+    partial class Init
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -54,13 +54,13 @@ namespace backend.Migrations
                     b.HasData(
                         new
                         {
-                            Id = "eef83f74-1cd3-4947-adb0-f734bee2ab73",
+                            Id = "55a4b5fa-110b-4967-b1d3-a4b7ffc39c82",
                             Name = "Admin",
                             NormalizedName = "ADMIN"
                         },
                         new
                         {
-                            Id = "cbb77de8-dfbf-4b8f-8c6c-48b0a0f55ae6",
+                            Id = "69f60206-b34d-457b-801c-178297fa68d3",
                             Name = "User",
                             NormalizedName = "USER"
                         });
@@ -245,6 +245,10 @@ namespace backend.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
+                    b.Property<string>("AppUserId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
+
                     b.Property<DateTime>("CreateDate")
                         .HasColumnType("datetime2");
 
@@ -261,35 +265,11 @@ namespace backend.Migrations
                     b.Property<bool>("Status")
                         .HasColumnType("bit");
 
-                    b.Property<int?>("UserId")
-                        .HasColumnType("int");
-
                     b.HasKey("Id");
 
-                    b.HasIndex("UserId");
+                    b.HasIndex("AppUserId");
 
-                    b.ToTable("Missions");
-                });
-
-            modelBuilder.Entity("backend.Models.User", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<string>("Password")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Username")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("Users");
+                    b.ToTable("Mission");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
@@ -345,14 +325,16 @@ namespace backend.Migrations
 
             modelBuilder.Entity("backend.Models.Mission", b =>
                 {
-                    b.HasOne("backend.Models.User", "User")
+                    b.HasOne("backend.Models.AppUser", "AppUser")
                         .WithMany("Missions")
-                        .HasForeignKey("UserId");
+                        .HasForeignKey("AppUserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
-                    b.Navigation("User");
+                    b.Navigation("AppUser");
                 });
 
-            modelBuilder.Entity("backend.Models.User", b =>
+            modelBuilder.Entity("backend.Models.AppUser", b =>
                 {
                     b.Navigation("Missions");
                 });

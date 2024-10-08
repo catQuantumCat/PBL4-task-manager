@@ -23,7 +23,7 @@ namespace backend.Mappers
             };
         }
 
-        public static Mission toMissionFromCreateDto(this CreateRequestMissionDto createDto)
+        public static Mission toMissionFromCreateDto(this CreateRequestMissionDto createDto, AppUser user)
         {
             return new Mission
             {
@@ -32,6 +32,8 @@ namespace backend.Mappers
                 CreateDate = createDto.createTime,
                 DeadDate = createDto.deadTime,
                 Status = createDto.status,  
+                AppUser = user,
+                AppUserId = user.Id,
             };
         } 
     }

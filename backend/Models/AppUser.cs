@@ -8,6 +8,6 @@ namespace backend.Models
 {
     public class AppUser : IdentityUser
     { 
-        
+        public List<Mission> Missions { get; set; } = new List<Mission>();
     }
 }
