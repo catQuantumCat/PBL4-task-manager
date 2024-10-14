@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:taskmanager/modules/auth/bloc/auth/auth_bloc.dart';
 
 import 'package:taskmanager/modules/auth/bloc/login/login_bloc.dart';
 import 'package:taskmanager/modules/auth/widget/login_form.widget.dart';
@@ -11,7 +12,7 @@ class LoginPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
-      create: (context) => LoginBloc(),
+      create: (context) => LoginBloc(authBloc: context.read<AuthBloc>()),
       child: LoginView(),
     );
   }

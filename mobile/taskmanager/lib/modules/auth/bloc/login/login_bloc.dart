@@ -3,19 +3,27 @@ import 'dart:developer';
 import 'package:dio/dio.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:equatable/equatable.dart';
+import 'package:hive/hive.dart';
+import 'package:taskmanager/common/constants/hive_constant.dart';
+import 'package:taskmanager/config/router/user_local.datasource.dart';
 
 import 'package:taskmanager/data/datasources/remote/user_remote.datasource.dart';
 import 'package:taskmanager/data/repositories/user.repository.dart';
+import 'package:taskmanager/modules/auth/bloc/auth/auth_bloc.dart';
 
 part 'login_event.dart';
 part 'login_state.dart';
 
 class LoginBloc extends Bloc<LoginEvent, LoginState> {
-  LoginBloc() : super(const LoginInitial()) {
+  LoginBloc({required AuthBloc authBloc})
+      : _authBloc = authBloc,
+        super(const LoginInitial()) {
     on<LoginSubmitTapped>(_onSubmitTapped);
   }
 
-  final repo = UserRepository(datasource: UserRemoteDatasource());
+  final AuthBloc _authBloc;
+  final repo = UserRepository(
+      remoteSource: UserRemoteDatasource(), localSource: UserLocalDatasource());
 
   Future<void> _onSubmitTapped(
       LoginSubmitTapped event, Emitter<LoginState> emit) async {
@@ -25,7 +33,7 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
       final token = await repo.submitLogin(
           userName: event.username, password: event.password);
 
-      log(token);
+      _authBloc.add(AuthSetToken(tokenString: token));
       emit(state.copyWith(status: LoginStatus.success));
     } catch (e) {
       log(e.toString());
