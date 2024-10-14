@@ -15,7 +15,7 @@ abstract class ValidationUtils {
     if (value == null) return UXWritingEnum.authEmptyField.value;
 
     final RegExp regExp = RegExp(
-      r'^[a-zA-Z0-9\\d@$!%*?&]{12,}$',
+      r'^[a-zA-Z0-9\\d@$!%_*?&]{12,}$',
       caseSensitive: false,
     );
     if (regExp.hasMatch(value)) return null;
