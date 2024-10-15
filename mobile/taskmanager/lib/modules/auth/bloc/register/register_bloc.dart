@@ -1,7 +1,9 @@
 import 'package:equatable/equatable.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:hive/hive.dart';
+import 'package:taskmanager/common/constants/hive_constant.dart';
 import 'package:taskmanager/common/constants/state_status.constant.dart';
-import 'package:taskmanager/config/router/user_local.datasource.dart';
+import 'package:taskmanager/data/datasources/local/user_local.datasource.dart';
 import 'package:taskmanager/data/datasources/remote/user_remote.datasource.dart';
 import 'package:taskmanager/data/repositories/user.repository.dart';
 import 'package:taskmanager/modules/auth/bloc/auth/auth_bloc.dart';
@@ -19,7 +21,9 @@ class RegisterBloc extends Bloc<RegisterEvent, RegisterState> {
   final AuthBloc _authBloc;
 
   final repo = UserRepository(
-      remoteSource: UserRemoteDatasource(), localSource: UserLocalDatasource());
+      remoteSource:
+          UserRemoteDatasource(tokenBox: Hive.box(HiveConstant.boxName)),
+      localSource: UserLocalDatasource());
 
   Future<void> _onRegisterTapped(
       SubmitRegisterTapped event, Emitter<RegisterState> emit) async {

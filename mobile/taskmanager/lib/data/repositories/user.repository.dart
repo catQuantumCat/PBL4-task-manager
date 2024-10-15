@@ -1,4 +1,4 @@
-import 'package:taskmanager/config/router/user_local.datasource.dart';
+import 'package:taskmanager/data/datasources/local/user_local.datasource.dart';
 import 'package:taskmanager/data/datasources/remote/user_remote.datasource.dart';
 import 'package:taskmanager/data/dtos/auth_login.dto.dart';
 import 'package:taskmanager/data/dtos/auth_register.dto.dart';

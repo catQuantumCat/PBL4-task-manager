@@ -3,6 +3,8 @@ import 'dart:developer';
 import 'package:equatable/equatable.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:hive/hive.dart';
+import 'package:taskmanager/common/constants/hive_constant.dart';
 import 'package:taskmanager/common/datetime_extension.dart';
 import 'package:taskmanager/data/datasources/remote/task_remote.datasource.dart';
 import 'package:taskmanager/data/dtos/task.dto.dart';
@@ -13,7 +15,10 @@ part 'home_detail_task.state.dart';
 
 class HomeDetailTaskBloc
     extends Bloc<HomeDetailTaskEvent, HomeDetailTaskState> {
-  final repository = TaskRepository(dataSource: TaskRemoteDataSource());
+
+
+
+  final repository = TaskRepository(dataSource: TaskRemoteDataSource(tokenBox: Hive.box(HiveConstant.boxName)));
 
   HomeDetailTaskBloc() : super(const HomeDetailTaskState.initial()) {
     on<HomeTaskDetailClose>(_onCloseDown);

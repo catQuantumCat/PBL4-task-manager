@@ -1,6 +1,8 @@
 import 'dart:developer';
 
 import 'package:equatable/equatable.dart';
+import 'package:hive/hive.dart';
+import 'package:taskmanager/common/constants/hive_constant.dart';
 import 'package:taskmanager/data/datasources/remote/task_remote.datasource.dart';
 import 'package:taskmanager/data/repositories/task.repository.dart';
 import 'package:taskmanager/data/task_model.dart';
@@ -16,7 +18,7 @@ class HomeListBloc extends Bloc<HomeListEvent, HomeListState> {
     on<ListHomeCheckTask>(_editTask);
   }
 
-  final repository = TaskRepository(dataSource: TaskRemoteDataSource());
+  final repository = TaskRepository(dataSource: TaskRemoteDataSource(tokenBox: Hive.box(HiveConstant.boxName)));
 
   void _fetchList(FetchTaskList event, Emitter<HomeListState> emit) async {
     emit(state.copyWith(status: HomeListStatus.loading));

@@ -3,7 +3,9 @@ import 'dart:developer';
 import 'package:dio/dio.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:equatable/equatable.dart';
-import 'package:taskmanager/config/router/user_local.datasource.dart';
+import 'package:hive/hive.dart';
+import 'package:taskmanager/common/constants/hive_constant.dart';
+import 'package:taskmanager/data/datasources/local/user_local.datasource.dart';
 
 import 'package:taskmanager/data/datasources/remote/user_remote.datasource.dart';
 import 'package:taskmanager/data/repositories/user.repository.dart';
@@ -21,7 +23,9 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
 
   final AuthBloc _authBloc;
   final repo = UserRepository(
-      remoteSource: UserRemoteDatasource(), localSource: UserLocalDatasource());
+      remoteSource:
+          UserRemoteDatasource(tokenBox: Hive.box(HiveConstant.boxName)),
+      localSource: UserLocalDatasource());
 
   Future<void> _onSubmitTapped(
       LoginSubmitTapped event, Emitter<LoginState> emit) async {

@@ -1,6 +1,8 @@
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
-import 'package:taskmanager/config/router/user_local.datasource.dart';
+import 'package:hive/hive.dart';
+import 'package:taskmanager/common/constants/hive_constant.dart';
+import 'package:taskmanager/data/datasources/local/user_local.datasource.dart';
 import 'package:taskmanager/data/datasources/remote/user_remote.datasource.dart';
 import 'package:taskmanager/data/repositories/user.repository.dart';
 
@@ -13,7 +15,9 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
   }
 
   final _userRepository = UserRepository(
-      remoteSource: UserRemoteDatasource(), localSource: UserLocalDatasource());
+      remoteSource:
+          UserRemoteDatasource(tokenBox: Hive.box(HiveConstant.boxName)),
+      localSource: UserLocalDatasource());
 
   void _changeAuthState(String? tokenString, Emitter<AuthState> emit) {
     if (tokenString == null) {
