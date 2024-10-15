@@ -1,33 +1,32 @@
 
-## MOBILE
-mobile/taskmanager/build/
-mobile/taskmanager/.dart_tool/
-# Miscellaneous
+## MACOS ENV
+.DS_Store
 
+## MOBILE
+# Miscellaneous
 mobile/taskmanager/*.log
 mobile/taskmanager/*.pyc
 mobile/taskmanager/*.swp
 mobile/taskmanager/.DS_Store
-mobile/taskmanager/.atom/
-mobile/taskmanager/.buildlog/
-mobile/taskmanager/.history
-mobile/taskmanager/.svn/
+mobile/taskmanager/lib/.DS_Store
+mobile/taskmanager/atom/
+mobile/taskmanager/buildlog/
+mobile/taskmanager/history
+mobile/taskmanager/svn/
 mobile/taskmanager/migrate_working_dir/
-mobile/taskmanager/
-mobile/taskmanager/
 mobile/taskmanager/*.iml
 mobile/taskmanager/*.ipr
 mobile/taskmanager/*.iws
-mobile/taskmanager/.idea/
+mobile/taskmanager/idea/
 
 # Flutter/Dart/Pub related
 mobile/taskmanager/**/doc/api/
 mobile/taskmanager/**/ios/Flutter/.last_build_id
 mobile/taskmanager/.dart_tool/
-mobile/taskmanager/.flutter-plugins
-mobile/taskmanager/.flutter-plugins-dependencies
-mobile/taskmanager/.pub-cache/
-mobile/taskmanager/.pub/
+mobile/taskmanager/flutter-plugins
+mobile/taskmanager/flutter-plugins-dependencies
+mobile/taskmanager.pub-cache/
+mobile/taskmanager/pub/
 mobile/taskmanager/build/
 
 # Symbolication related
