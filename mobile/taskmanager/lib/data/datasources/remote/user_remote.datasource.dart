@@ -12,7 +12,7 @@ class UserRemoteDatasource {
   UserRemoteDatasource({required Dio dio}) : _dio = dio;
 
   Future<AuthResponseDTO> submitLogin(AuthLoginDTO credentials) async {
-    final response = await _dio.post(apiEndpoints.authLogin.value,
+    final response = await _dio.post(ApiConstants.authLogin.value,
         data: credentials.toJson());
 
     //TODO: remove
@@ -22,7 +22,7 @@ class UserRemoteDatasource {
   }
 
   Future<AuthResponseDTO> submitRegister(AuthRegisterDTO credentials) async {
-    final response = await _dio.post(apiEndpoints.authRegister.value,
+    final response = await _dio.post(ApiConstants.authRegister.value,
         data: credentials.toJson());
     //TODO: remove
     log(AuthResponseDTO.fromMap(response.data).toString());
