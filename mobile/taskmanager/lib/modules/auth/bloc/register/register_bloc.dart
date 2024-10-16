@@ -12,25 +12,24 @@ part 'register_event.dart';
 part 'register_state.dart';
 
 class RegisterBloc extends Bloc<RegisterEvent, RegisterState> {
-  RegisterBloc({required AuthBloc authBloc})
+  RegisterBloc(
+      {required AuthBloc authBloc, required UserRepository userRepository})
       : _authBloc = authBloc,
+        _userRepository = userRepository,
         super(const RegisterState.initial()) {
     on<SubmitRegisterTapped>(_onRegisterTapped);
   }
 
   final AuthBloc _authBloc;
 
-  final repo = UserRepository(
-      remoteSource:
-          UserRemoteDatasource(tokenBox: Hive.box(HiveConstant.boxName)),
-      localSource: UserLocalDatasource());
+  final UserRepository _userRepository;
 
   Future<void> _onRegisterTapped(
       SubmitRegisterTapped event, Emitter<RegisterState> emit) async {
     emit(const RegisterState.loading());
 
     try {
-      final token = await repo.submitRegister(
+      final token = await _userRepository.submitRegister(
           email: event.email,
           username: event.username,
           password: event.password);

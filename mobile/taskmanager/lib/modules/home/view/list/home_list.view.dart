@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:get_it/get_it.dart';
+import 'package:taskmanager/data/repositories/task.repository.dart';
+import 'package:taskmanager/main.dart';
 import 'package:taskmanager/modules/home/bloc/list/home_list.bloc.dart';
 import 'package:taskmanager/modules/home/bloc/new/home_new_task.bloc.dart';
 
@@ -13,7 +16,8 @@ class HomeListPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
-      create: (context) => HomeListBloc()..add(FetchTaskList()),
+      create: (context) => HomeListBloc(taskRepository: getIt<TaskRepository>())
+        ..add(FetchTaskList()),
       child: const HomeListView(),
     );
   }
@@ -28,7 +32,8 @@ class HomeListView extends StatelessWidget {
         isScrollControlled: true,
         context: context,
         builder: (BuildContext context) => BlocProvider(
-              create: (context) => HomeNewTaskBloc(),
+              create: (context) =>
+                  HomeNewTaskBloc(taskRepository: getIt<TaskRepository>()),
               child: const HomeNewTaskView(),
             )).then((val) {
       if (context.mounted && val == "success") {

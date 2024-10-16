@@ -4,9 +4,9 @@ import 'package:taskmanager/data/task_model.dart';
 
 class TaskRepository {
   final TaskRemoteDataSource _dataSource;
-  
-  TaskRepository({required TaskRemoteDataSource dataSource})
-      : _dataSource = dataSource;
+
+  TaskRepository({required TaskRemoteDataSource remoteDataSource})
+      : _dataSource = remoteDataSource;
 
   Future<List<TaskModel>> getTaskList() {
     return _dataSource.getTaskList();

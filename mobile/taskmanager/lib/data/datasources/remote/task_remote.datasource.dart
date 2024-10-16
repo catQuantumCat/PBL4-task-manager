@@ -1,20 +1,15 @@
 import 'dart:developer';
 
 import 'package:dio/dio.dart';
-import 'package:hive/hive.dart';
 import 'package:taskmanager/common/constants/api_constant.dart';
 import 'package:taskmanager/data/dtos/task.dto.dart';
 import 'package:taskmanager/data/task_model.dart';
-import 'package:taskmanager/services/dio_provider.dart';
+
 
 class TaskRemoteDataSource {
   final Dio _dio;
 
-  final Box _tokenBox;
-
-  TaskRemoteDataSource({required Box tokenBox})
-      : _tokenBox = tokenBox,
-        _dio = DioProvider.getDio(tokenBox: tokenBox);
+  TaskRemoteDataSource({required Dio dio}) : _dio = dio;
 
   Future<List<TaskModel>> getTaskList() async {
     final Response response = await _dio.get(apiEndpoints.task.value);

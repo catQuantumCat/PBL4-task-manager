@@ -15,24 +15,23 @@ part 'login_event.dart';
 part 'login_state.dart';
 
 class LoginBloc extends Bloc<LoginEvent, LoginState> {
-  LoginBloc({required AuthBloc authBloc})
+  LoginBloc(
+      {required AuthBloc authBloc, required UserRepository userRepository})
       : _authBloc = authBloc,
+        _userRepository = userRepository,
         super(const LoginInitial()) {
     on<LoginSubmitTapped>(_onSubmitTapped);
   }
 
   final AuthBloc _authBloc;
-  final repo = UserRepository(
-      remoteSource:
-          UserRemoteDatasource(tokenBox: Hive.box(HiveConstant.boxName)),
-      localSource: UserLocalDatasource());
+  final UserRepository _userRepository;
 
   Future<void> _onSubmitTapped(
       LoginSubmitTapped event, Emitter<LoginState> emit) async {
     emit(const LoginLoading());
 
     try {
-      final token = await repo.submitLogin(
+      final token = await _userRepository.submitLogin(
           userName: event.username, password: event.password);
 
       _authBloc.add(AuthSetToken(tokenString: token));

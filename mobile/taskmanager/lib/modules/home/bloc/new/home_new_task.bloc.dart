@@ -3,9 +3,6 @@ import 'dart:developer';
 import 'package:equatable/equatable.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:hive/hive.dart';
-import 'package:taskmanager/common/constants/hive_constant.dart';
-import 'package:taskmanager/data/datasources/remote/task_remote.datasource.dart';
 import 'package:taskmanager/data/dtos/task.dto.dart';
 import 'package:taskmanager/common/datetime_extension.dart';
 import 'package:taskmanager/common/timeofday_extension.dart';
@@ -14,10 +11,10 @@ part 'home_new_task.event.dart';
 part 'home_new_task.state.dart';
 
 class HomeNewTaskBloc extends Bloc<HomeNewTaskEvent, HomeNewTaskStatus> {
-  final repository = TaskRepository(
-      dataSource:
-          TaskRemoteDataSource(tokenBox: Hive.box(HiveConstant.boxName)));
-  HomeNewTaskBloc() : super(HomeNewTaskStatus.initial()) {
+  final TaskRepository _taskRepository;
+  HomeNewTaskBloc({required TaskRepository taskRepository})
+      : _taskRepository = taskRepository,
+        super(HomeNewTaskStatus.initial()) {
     on<NewHomeDateTapped>(_onDateTapped);
     on<NewHomeTimeTapped>(_onTimeTapped);
     on<NewHomeSubmitTapped>(_onSubmitTapped);
@@ -68,7 +65,7 @@ class HomeNewTaskBloc extends Bloc<HomeNewTaskEvent, HomeNewTaskStatus> {
     final TaskDTO data = state.toDTO();
 
     try {
-      await repository.createTask(data);
+      await _taskRepository.createTask(data);
       emit(state.copyWith(status: NewHomeStatus.success));
     } catch (e) {
       log(e.toString());

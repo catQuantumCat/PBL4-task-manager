@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:taskmanager/data/repositories/user.repository.dart';
+import 'package:taskmanager/main.dart';
 import 'package:taskmanager/modules/auth/bloc/auth/auth_bloc.dart';
 
 import 'package:taskmanager/modules/auth/bloc/login/login_bloc.dart';
@@ -12,7 +14,9 @@ class LoginPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
-      create: (context) => LoginBloc(authBloc: context.read<AuthBloc>()),
+      create: (context) => LoginBloc(
+          authBloc: context.read<AuthBloc>(),
+          userRepository: getIt<UserRepository>()),
       child: LoginView(),
     );
   }
