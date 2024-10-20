@@ -7,6 +7,7 @@ using backend.Data;
 using backend.Dtos;
 using backend.Dtos.Mission;
 using backend.Extensions;
+using backend.Helper;
 using backend.Interfaces;
 using backend.Mappers;
 using backend.Models;
@@ -35,7 +36,7 @@ namespace backend.Controllers
 
         [HttpGet]
         [Authorize]
-        public async Task<IActionResult> GetAll()
+        public async Task<IActionResult> GetAll([FromQuery] QueryObject query)
         {
             var token = Request.Headers["Authorization"].ToString().Replace("Bearer ", "");
             if (_tokenService.isTokenExpired(token))
@@ -50,7 +51,7 @@ namespace backend.Controllers
                 return BadRequest("Invalid access token");
             }
 
-            var mission = await _missionRepo.GetByAppUserIdAsync(userId);
+            var mission = await _missionRepo.GetByAppUserIdWithQueryAsync(userId, query);
             
             var result = new 
             {
