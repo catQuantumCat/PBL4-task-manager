@@ -12,8 +12,8 @@ using backend.Data;
 namespace backend.Migrations
 {
     [DbContext(typeof(ApplicationDBContext))]
-    [Migration("20241007170400_Init")]
-    partial class Init
+    [Migration("20241020151646_init")]
+    partial class init
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -54,13 +54,13 @@ namespace backend.Migrations
                     b.HasData(
                         new
                         {
-                            Id = "55a4b5fa-110b-4967-b1d3-a4b7ffc39c82",
+                            Id = "9ff70946-485b-416f-a36c-1d22c92a5380",
                             Name = "Admin",
                             NormalizedName = "ADMIN"
                         },
                         new
                         {
-                            Id = "69f60206-b34d-457b-801c-178297fa68d3",
+                            Id = "f36d59b1-7ea4-48f9-b1a0-4f6711753649",
                             Name = "User",
                             NormalizedName = "USER"
                         });
@@ -261,6 +261,9 @@ namespace backend.Migrations
                     b.Property<string>("MissionName")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
+
+                    b.Property<int?>("Priority")
+                        .HasColumnType("int");
 
                     b.Property<bool>("Status")
                         .HasColumnType("bit");

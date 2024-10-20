@@ -66,6 +66,7 @@ namespace backend.Repository
 
             missionModel.MissionName = updateRequestMissionDto.name;
             missionModel.Description = updateRequestMissionDto.description;
+            missionModel.Priority = updateRequestMissionDto.priority;
             missionModel.DeadDate = updateRequestMissionDto.deadTime;
             missionModel.Status = updateRequestMissionDto.status;
 

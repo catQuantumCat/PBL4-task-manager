@@ -17,6 +17,7 @@ namespace backend.Mappers
                 id = missionModel.Id,
                 name = missionModel.MissionName,
                 description = missionModel.Description,
+                priority = missionModel.Priority,
                 createTime = missionModel.CreateDate,
                 deadTime = missionModel.DeadDate,
                 status = missionModel.Status,
@@ -29,6 +30,7 @@ namespace backend.Mappers
             {
                 MissionName = createDto.name,
                 Description = createDto.description,
+                Priority = createDto.priority,
                 CreateDate = createDto.createTime,
                 DeadDate = createDto.deadTime,
                 Status = createDto.status,  
