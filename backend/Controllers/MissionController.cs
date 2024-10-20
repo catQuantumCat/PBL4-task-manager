@@ -62,6 +62,7 @@ namespace backend.Controllers
         }
 
         [HttpGet("{id}")]
+        [Authorize]
         public async Task<IActionResult> GetById([FromRoute] int id)
         {
             var mission = await _missionRepo.GetByIdAsync(id);
@@ -100,6 +101,25 @@ namespace backend.Controllers
             {
                 return Unauthorized("Token is expired") ;
             }
+
+            var userId = _tokenService.getAppUserIdFromToken(token);
+            
+            if(string.IsNullOrEmpty(userId))
+            {
+                return BadRequest("Invalid access token");
+            }
+
+            var mission = await _missionRepo.GetByAppUserIdAsync(userId);
+            if(mission.Count == 0)
+            {
+                return BadRequest("This user doesn't have any missions to update");
+            }
+
+            var updateMission = mission.FirstOrDefault(x => x.Id == id);
+            if(updateMission == null)
+            {
+                return NotFound();
+            }
             
             var missionModel = await _missionRepo.UpdateAsync(id, updateRequestMissionDto);
             
@@ -120,6 +140,25 @@ namespace backend.Controllers
             if (_tokenService.isTokenExpired(token))
             {
                 return Unauthorized("Token is expired") ;
+            }
+
+            var userId = _tokenService.getAppUserIdFromToken(token);
+            
+            if(string.IsNullOrEmpty(userId))
+            {
+                return BadRequest("Invalid access token");
+            }
+
+            var mission = await _missionRepo.GetByAppUserIdAsync(userId);
+            if(mission.Count == 0)
+            {
+                return BadRequest("This user doesn't have any missions to delete");
+            }
+
+            var updateMission = mission.FirstOrDefault(x => x.Id == id);
+            if(updateMission == null)
+            {
+                return NotFound();
             }
 
             var missionModel = await _missionRepo.DeleteAsync(id);  
