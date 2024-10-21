@@ -7,8 +7,6 @@
 mobile/taskmanager/*.log
 mobile/taskmanager/*.pyc
 mobile/taskmanager/*.swp
-mobile/taskmanager/.DS_Store
-mobile/taskmanager/lib/.DS_Store
 mobile/taskmanager/atom/
 mobile/taskmanager/buildlog/
 mobile/taskmanager/history
