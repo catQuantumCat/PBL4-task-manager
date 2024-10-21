@@ -12,15 +12,17 @@ class AppInterceptor extends QueuedInterceptor {
 
   @override
   void onRequest(RequestOptions options, RequestInterceptorHandler handler) {
+
     final token = _tokenBox.get(HiveConstant.token);
 
     if (token != null) {
-      options.headers.addAll({HttpHeaders.authorizationHeader: token});
+      options.headers.addAll({HttpHeaders.authorizationHeader: "Bearer $token"});
 
-      options.headers.forEach((key, value) {
-        log('Header: $key, Value: $value');
-      });
     }
+
+    log('Request [${options.method}] => PATH: ${options.path}');
+    log('Request Headers: ${options.headers}');
+    log('Request Data: ${options.data}');
 
     super.onRequest(options, handler);
   }
@@ -33,7 +35,12 @@ class AppInterceptor extends QueuedInterceptor {
 
   @override
   void onError(DioException err, ErrorInterceptorHandler handler) {
-    // TODO: implement onError
+    log("App interceptor: ${err.message}");
+    log("App interceptor: ${err.response}");
+    log("Error data: ${err.response?.data}");
+    log("Error headers: ${err.response?.headers}");
+    log("Error status code: ${err.response?.statusCode}");
+
     super.onError(err, handler);
   }
 }
