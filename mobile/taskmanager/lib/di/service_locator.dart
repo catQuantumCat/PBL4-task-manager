@@ -10,39 +10,24 @@ import 'package:taskmanager/data/repositories/user.repository.dart';
 import 'package:taskmanager/services/dio_provider.dart';
 
 class ServiceLocator {
-  // Private constructor
-  ServiceLocator._internal() {
-    setup();
-  }
-
-  final GetIt _getIt = GetIt.instance;
-  GetIt get getIt => _getIt;
-
-  static final ServiceLocator _instance = ServiceLocator._internal();
-
-  factory ServiceLocator() {
-    return _instance;
-  }
-
-  Future<void> setup() async {
-    _getIt.registerSingletonAsync<Box>(
+  static Future<void> setup(GetIt getIt) async {
+    getIt.registerSingletonAsync<Box>(
         () async => await Hive.openBox(HiveConstant.boxName));
 
-    _getIt.registerSingletonAsync<Dio>(
-        () async =>
-            DioProvider().getDio(tokenBox: await _getIt.getAsync<Box>()),
+    getIt.registerSingletonAsync<Dio>(
+        () async => DioProvider().getDio(tokenBox: await getIt.getAsync<Box>()),
         dependsOn: [Box]);
 
-    _getIt.registerLazySingleton<TaskRepository>(
+    getIt.registerLazySingleton<TaskRepository>(
       () => TaskRepository(
         remoteDataSource: TaskRemoteDataSource(
-          dio: _getIt<Dio>(),
+          dio: getIt<Dio>(),
         ),
       ),
     );
-    _getIt.registerSingletonWithDependencies<UserRepository>(
+    getIt.registerSingletonWithDependencies<UserRepository>(
         () => UserRepository(
-            remoteSource: UserRemoteDatasource(dio: _getIt<Dio>()),
+            remoteSource: UserRemoteDatasource(dio: getIt<Dio>()),
             localSource: UserLocalDatasource()),
         dependsOn: [Box, Dio]);
   }

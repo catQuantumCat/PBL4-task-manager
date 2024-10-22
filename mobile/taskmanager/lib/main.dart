@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:get_it/get_it.dart';
@@ -8,13 +10,19 @@ import 'package:taskmanager/data/repositories/user.repository.dart';
 import 'package:taskmanager/di/service_locator.dart';
 import 'package:taskmanager/modules/auth/bloc/auth/auth_bloc.dart';
 
-final GetIt getIt = ServiceLocator().getIt;
+final GetIt getIt = GetIt.instance;
 
 void main() async {
+  await initialize();
+  runApp(MyApp());
+}
+
+Future<void> initialize() async {
   WidgetsFlutterBinding.ensureInitialized();
   final appDir = await path_provider.getApplicationDocumentsDirectory();
   Hive.init(appDir.path);
-  runApp(MyApp());
+  await ServiceLocator.setup(getIt);
+  await getIt.allReady();
 }
 
 class MyApp extends StatelessWidget {
@@ -22,23 +30,38 @@ class MyApp extends StatelessWidget {
 
   final _router = AppRoutes();
 
+  final GlobalKey<NavigatorState> _navigatorKey = GlobalKey<NavigatorState>();
+
+  NavigatorState get _navigator => _navigatorKey.currentState!;
+
   @override
   Widget build(BuildContext context) {
-    return FutureBuilder(
-      future: getIt.allReady(),
-      builder: (BuildContext context, AsyncSnapshot snapshot) {
-        if (snapshot.hasData) {
-          return BlocProvider(
-            create: (context) =>
-                AuthBloc(userRepository: getIt<UserRepository>()),
-            child: MaterialApp(
-              onGenerateRoute: (setting) => _router.onGenerateRoute(setting),
-            ),
-          );
-        } else {
-          return const Center(child: CircularProgressIndicator());
-        }
-      },
+    return BlocProvider(
+      create: (context) => AuthBloc(userRepository: getIt<UserRepository>())
+        ..add(const AuthCheckToken()),
+      child: MaterialApp(
+        navigatorKey: _navigatorKey,
+        onGenerateRoute: _router.onGenerateRoute,
+        initialRoute: "/",
+        builder: (context, child) {
+          return BlocListener<AuthBloc, AuthState>(
+              child: child,
+              listener: (context, state) {
+                log(state.status.toString());
+                switch (state.status) {
+                  case AuthStatus.authenticated:
+                    _navigator.pushNamedAndRemoveUntil("/home", (_) => false);
+                    break;
+                  case AuthStatus.unauthenticated:
+                    _navigator.pushNamedAndRemoveUntil(
+                        "/authLogin", (_) => false);
+                    break;
+                  case AuthStatus.initial:
+                    break;
+                }
+              });
+        },
+      ),
     );
   }
 }

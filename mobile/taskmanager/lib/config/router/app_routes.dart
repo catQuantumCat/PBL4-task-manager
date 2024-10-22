@@ -9,8 +9,11 @@ class AppRoutes {
     switch (routeSettings.name) {
       case '/':
         return MaterialPageRoute(builder: (_) {
-          // return const NavigationPage();
-          return const LoginPage();
+          return const Scaffold(
+            body: Center(
+              child: Text("Dummy Page"),
+            ),
+          );
         });
 
       case '/authLogin':

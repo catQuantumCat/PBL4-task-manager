@@ -46,14 +46,6 @@ class LoginView extends StatelessWidget {
   }
 
   void _listenToStateChanges(BuildContext context, LoginState state) {
-    if (state.status == LoginStatus.success) {
-      Navigator.pushNamedAndRemoveUntil(
-        context,
-        "/home",
-        (route) => false,
-      );
-    }
-
     if (state.status == LoginStatus.failed) {
       showDialog(
         context: context,

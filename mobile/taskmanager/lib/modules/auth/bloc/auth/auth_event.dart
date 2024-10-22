@@ -14,3 +14,7 @@ class AuthSetToken extends AuthEvent {
   @override
   List<Object?> get props => [tokenString];
 }
+
+class AuthCheckToken extends AuthEvent {
+  const AuthCheckToken();
+}

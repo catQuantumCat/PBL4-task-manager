@@ -10,6 +10,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
       : _userRepository = userRepository,
         super(const AuthState(status: AuthStatus.initial)) {
     on<AuthSetToken>(_setToken);
+    on<AuthCheckToken>(_onCheckToken);
   }
 
   final UserRepository _userRepository;
@@ -20,6 +21,11 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
       return;
     }
     emit(const AuthState.authenticated());
+  }
+
+  void _onCheckToken(AuthCheckToken event, Emitter<AuthState> emit) {
+    final tokenString = _userRepository.getToken();
+    _changeAuthState(tokenString, emit);
   }
 
   void _setToken(AuthSetToken event, Emitter<AuthState> emit) {
