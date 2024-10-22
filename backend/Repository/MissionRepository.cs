@@ -80,7 +80,7 @@ namespace backend.Repository
         public async Task<Mission?> GetByIdAsync(int id)
         {
             return await _context.Missions.FindAsync(id);
-        }
+        }   
 
         public async Task<Mission?> UpdateAsync(int id, UpdateRequestMissionDto updateRequestMissionDto)
         {

@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>User Tasks</title>
+    <link rel="stylesheet" href="../../css/task/user-tasks.css">
+</head>
+<body>
+
+    <div class="container">
+        <h1>Tasks for User: John Doe</h1>
+
+        <table>
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Name</th>
+                    <th>Description</th>
+                    <th>Priority</th>
+                    <th>Create Time</th>
+                    <th>Dead Time</th>
+                    <th>Status</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>1</td>
+                    <td>Complete Report</td>
+                    <td>Finish the financial report for Q4</td>
+                    <td>High</td>
+                    <td>2024-10-01 09:00</td>
+                    <td>2024-10-10 17:00</td>
+                    <td>In Progress</td>
+                    <td>
+                        <div class="button-group">
+                            <button class="edit-btn">Edit</button>
+                            <button class="delete-btn">Delete</button>
+                        </div>
+                    </td>
+                </tr>
+                <tr>
+                    <td>2</td>
+                    <td>Design Homepage</td>
+                    <td>Create wireframes for new website homepage</td>
+                    <td>Medium</td>
+                    <td>2024-09-20 10:30</td>
+                    <td>2024-10-05 15:00</td>
+                    <td>Completed</td>
+                    <td>
+                        <div class="button-group">
+                            <button class="edit-btn">Edit</button>
+                            <button class="delete-btn">Delete</button>
+                        </div>
+                    </td>
+                </tr>
+                <tr>
+                    <td>3</td>
+                    <td>Team Meeting</td>
+                    <td>Discuss project progress with team</td>
+                    <td>Low</td>
+                    <td>2024-10-15 11:00</td>
+                    <td>2024-10-15 12:00</td>
+                    <td>Pending</td>
+                    <td>
+                        <div class="button-group">
+                            <button class="edit-btn">Edit</button>
+                            <button class="delete-btn">Delete</button>
+                        </div>
+                    </td>
+                </tr>
+                <!-- Thêm task khác tại đây -->
+            </tbody>
+        </table>
+
+        <div class="button-container">
+            <button class="add-task-btn">Add Task</button>
+        </div>
+    </div>
+
+</body>
+</html>
