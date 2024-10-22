@@ -12,34 +12,30 @@ class AppInterceptor extends QueuedInterceptor {
 
   @override
   void onRequest(RequestOptions options, RequestInterceptorHandler handler) {
-
     final token = _tokenBox.get(HiveConstant.token);
 
     if (token != null) {
-      options.headers.addAll({HttpHeaders.authorizationHeader: "Bearer $token"});
-
+      options.headers
+          .addAll({HttpHeaders.authorizationHeader: "Bearer $token"});
     }
 
     log('Request [${options.method}] => PATH: ${options.path}');
-    log('Request Headers: ${options.headers}');
-    log('Request Data: ${options.data}');
-
     super.onRequest(options, handler);
   }
 
   @override
   void onResponse(Response response, ResponseInterceptorHandler handler) {
-    // TODO: implement onResponse
+    log('RESPONSE[${response.statusCode}] => PATH: ${response.requestOptions.path}');
     super.onResponse(response, handler);
   }
 
   @override
   void onError(DioException err, ErrorInterceptorHandler handler) {
-    log("App interceptor: ${err.message}");
-    log("App interceptor: ${err.response}");
-    log("Error data: ${err.response?.data}");
-    log("Error headers: ${err.response?.headers}");
-    log("Error status code: ${err.response?.statusCode}");
+    log('ERROR[${err.response?.statusCode}] => PATH: ${err.requestOptions.path}');
+
+    if (err.response?.statusCode == 401) {
+      _tokenBox.delete(HiveConstant.token);
+    }
 
     super.onError(err, handler);
   }

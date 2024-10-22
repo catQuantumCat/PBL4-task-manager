@@ -18,3 +18,7 @@ class AuthSetToken extends AuthEvent {
 class AuthCheckToken extends AuthEvent {
   const AuthCheckToken();
 }
+
+class AuthLogOut extends AuthEvent {
+  const AuthLogOut();
+}

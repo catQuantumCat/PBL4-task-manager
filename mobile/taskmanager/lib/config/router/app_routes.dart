@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:taskmanager/modules/auth/view/login.view.dart';
 import 'package:taskmanager/modules/auth/view/register.view.dart';
-import 'package:taskmanager/modules/home/view/list/home_list.view.dart';
 import 'package:taskmanager/modules/navigation/view/navigation.view.dart';
 
 class AppRoutes {

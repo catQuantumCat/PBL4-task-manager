@@ -21,8 +21,8 @@ mobile/taskmanager/idea/
 mobile/taskmanager/**/doc/api/
 mobile/taskmanager/**/ios/Flutter/.last_build_id
 mobile/taskmanager/.dart_tool/
-mobile/taskmanager/flutter-plugins
-mobile/taskmanager/flutter-plugins-dependencies
+mobile/taskmanager/.flutter-plugins
+mobile/taskmanager/.flutter-plugins-dependencies
 mobile/taskmanager.pub-cache/
 mobile/taskmanager/pub/
 mobile/taskmanager/build/
