@@ -73,6 +73,54 @@ namespace backend.Controllers
             }
         }
 
+        [HttpPost("admin")]
+        public async Task<IActionResult> createAdmin([FromBody] RegisterDto registerDto)  
+        {
+            try 
+            {
+                if(!ModelState.IsValid)
+                {
+                    return BadRequest(ModelState);
+                }
+
+                var appUser = new AppUser
+                {
+                    UserName = registerDto.Username,
+                    Email = registerDto.Email
+                };
+
+                var createdUser = await _userManager.CreateAsync(appUser, registerDto.Password);
+
+                if(createdUser.Succeeded)
+                {
+                    var roleResult = await _userManager.AddToRoleAsync(appUser, "Admin");
+                    if(roleResult.Succeeded)
+                    {
+                        return Ok(
+                            new NewUserDto {
+                                Username = appUser.UserName,
+                                Email = appUser.Email,
+                                Token = _tokenService.CreateToken(appUser)
+                            }
+                        );
+                    }
+                    else
+                    {
+                        return StatusCode(500, roleResult.Errors);
+                    }
+                }
+                else 
+                {
+                    return StatusCode(500, createdUser.Errors);
+                }
+                
+            }catch(Exception e)
+            {
+                return StatusCode(500, e);
+            }
+        }
+
+
         [HttpPost("login")]
         public async Task<IActionResult> Login(LoginDto loginDto)
         {
@@ -99,6 +147,14 @@ namespace backend.Controllers
                     Token = _tokenService.CreateToken(user)
                 }
             );
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> GetAllAccount()
+        {
+            var user = await _userManager.GetUsersInRoleAsync("User");
+            var result = user.Select(x => new { x.UserName, x.Email}).ToList();
+            return Ok(result);
         }
     }
 }
