@@ -149,6 +149,40 @@ namespace backend.Controllers
             );
         }
 
+        [HttpPost("loginadmin")]
+        public async Task<IActionResult> LoginAdmin(LoginDto loginDto)
+        {
+            if(!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+            
+            if(!loginDto.UserName.Equals("admin"))
+            {
+                return BadRequest("Invalid username or password");
+            }
+
+            var user = await _userManager.Users.FirstOrDefaultAsync(x => x.UserName == loginDto.UserName.ToLower());
+
+            if(user == null)
+            {
+                return Unauthorized("Invalid Username");
+            }        
+
+            var result = await _signInManager.CheckPasswordSignInAsync(user, loginDto.Password, false);
+
+            if(!result.Succeeded) return Unauthorized("Username not found/or password is incorrect");
+            return Ok(
+                new NewUserDto
+                {
+                    Username = user.UserName,
+                    Email = user.Email,
+                    Token = _tokenService.CreateToken(user)
+                }
+            );
+        }
+
+
         [HttpGet]
         public async Task<IActionResult> GetAllAccount()
         {
