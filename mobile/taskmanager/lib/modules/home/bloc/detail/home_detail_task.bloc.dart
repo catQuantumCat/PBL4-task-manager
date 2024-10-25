@@ -34,8 +34,6 @@ class HomeDetailTaskBloc
 
   void _onOpen(
       HomeDetailTaskOpen event, Emitter<HomeDetailTaskState> emit) async {
-    emit(state.copyWith(status: DetailHomeStatus.loading));
-
     emit(state.copyWith(status: DetailHomeStatus.initial, task: event.task));
   }
 
