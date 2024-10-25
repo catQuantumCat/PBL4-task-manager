@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
 using backend.Dtos.Account;
 using backend.Interfaces;
@@ -10,6 +11,8 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.Data;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Metadata.Internal;
+using Microsoft.Extensions.ObjectPool;
 
 namespace backend.Controllers
 {
@@ -33,7 +36,7 @@ namespace backend.Controllers
             {
                 if(!ModelState.IsValid)
                 {
-                    return BadRequest(ModelState);
+                    return StatusCode(444, ModelState);
                 }
 
                 var appUser = new AppUser
@@ -189,6 +192,40 @@ namespace backend.Controllers
             var user = await _userManager.GetUsersInRoleAsync("User");
             var result = user.Select(x => new { x.UserName, x.Email}).ToList();
             return Ok(result);
+        }
+
+        [HttpPut("editUser")]
+        public async Task<IActionResult> EditAccount([FromBody] EditUserDto editUser)
+        {
+            if(!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+
+            var user = await _userManager.FindByNameAsync(editUser.Username);
+            if(user == null)
+            {
+                return NotFound("User not found");
+            }
+
+            user.Email = editUser.Email;
+            var removePasswordHash = await _userManager.RemovePasswordAsync(user);
+            if(!removePasswordHash.Succeeded)
+            {
+                return BadRequest(removePasswordHash.Errors);
+            }
+
+            var addPasswordHash = await _userManager.AddPasswordAsync(user, editUser.Password);
+            if(addPasswordHash.Succeeded)
+            {
+                return Ok(new EditUserDto{
+                    Username = user.UserName,
+                    Email = user.Email,
+                    Password = editUser.Password,
+                });
+            }
+            
+            return BadRequest(addPasswordHash.Errors); 
         }
     }
 }
