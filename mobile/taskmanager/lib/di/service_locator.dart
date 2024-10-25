@@ -2,6 +2,7 @@ import 'package:dio/dio.dart';
 import 'package:get_it/get_it.dart';
 import 'package:hive/hive.dart';
 import 'package:taskmanager/common/constants/hive_constant.dart';
+import 'package:taskmanager/data/datasources/local/task_local.datasource.dart';
 import 'package:taskmanager/data/datasources/local/user_local.datasource.dart';
 import 'package:taskmanager/data/datasources/remote/task_remote.datasource.dart';
 import 'package:taskmanager/data/datasources/remote/user_remote.datasource.dart';
@@ -20,6 +21,7 @@ class ServiceLocator {
 
     getIt.registerLazySingleton<TaskRepository>(
       () => TaskRepository(
+        localDataSource: TaskLocalDatasource(),
         remoteDataSource: TaskRemoteDataSource(
           dio: getIt<Dio>(),
         ),
