@@ -30,8 +30,9 @@ class _HomeListTileWidgetState extends State<HomeListTileWidget> {
   }
 
   Future<void> _showDetailTaskSheet() async {
-    final homeDetailTaskBloc = HomeDetailTaskBloc(taskRepository: getIt<TaskRepository>())
-      ..add(HomeDetailTaskOpen(task: widget.task));
+    final homeDetailTaskBloc =
+        HomeDetailTaskBloc(taskRepository: getIt<TaskRepository>())
+          ..add(HomeDetailTaskOpen(task: widget.task));
 
     await showModalBottomSheet<bool>(
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
@@ -45,10 +46,6 @@ class _HomeListTileWidgetState extends State<HomeListTileWidget> {
         );
       },
     );
-
-    if (mounted && homeDetailTaskBloc.state.isEdited == true) {
-      context.read<HomeListBloc>().add(FetchTaskList());
-    }
   }
 
   void changeTaskStatus(value) {

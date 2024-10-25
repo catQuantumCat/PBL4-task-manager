@@ -1,8 +1,17 @@
 import 'package:flutter/material.dart';
 
 class HomeListAppbarWidget extends StatelessWidget {
-  const HomeListAppbarWidget({super.key, required this.child});
-
+  const HomeListAppbarWidget(
+      {super.key,
+      required this.child,
+      required Widget topWidget,
+      Widget? searchBar,
+      this.searchBarHeight = 0})
+      : _searchBar = searchBar,
+        _topWidget = topWidget;
+  final Widget _topWidget;
+  final Widget? _searchBar;
+  final double searchBarHeight;
   final Widget child;
 
   @override
@@ -11,6 +20,12 @@ class HomeListAppbarWidget extends StatelessWidget {
       physics: const AlwaysScrollableScrollPhysics(),
       slivers: [
         SliverAppBar(
+          bottom: _searchBar == null
+              ? null
+              : PreferredSize(
+                  preferredSize: Size.fromHeight(searchBarHeight.toDouble()),
+                  child: _searchBar,
+                ),
           scrolledUnderElevation: 0,
           actions: [
             IconButton(
@@ -20,21 +35,22 @@ class HomeListAppbarWidget extends StatelessWidget {
                   size: 32,
                 ))
           ],
-          centerTitle: true,
           primary: true,
-          expandedHeight: 96,
+          expandedHeight: 96 + searchBarHeight,
           pinned: true,
-          flexibleSpace: const FlexibleSpaceBar(
-            titlePadding: EdgeInsets.symmetric(horizontal: 16, vertical: 12),
-            title: Text(
-              "Today",
-              style: TextStyle(fontWeight: FontWeight.bold),
-            ),
+          floating: false,
+          flexibleSpace: FlexibleSpaceBar(
+            titlePadding: EdgeInsets.only(
+                left: 16, right: 16, top: 0, bottom: searchBarHeight + 10),
+            title: _topWidget,
           ),
           stretch: true,
         ),
         SliverToBoxAdapter(
-          child: child,
+          child: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 16.0),
+            child: child,
+          ),
         )
       ],
     );
