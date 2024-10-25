@@ -1,15 +1,13 @@
 part of "home_list.bloc.dart";
 
-enum HomeListStatus { initial, loading, success, failed }
-
 class HomeListState extends Equatable {
   final List<TaskModel> taskList;
-  final HomeListStatus status;
+  final StateStatus status;
 
   const HomeListState(
-      {this.taskList = const [], this.status = HomeListStatus.initial});
+      {this.taskList = const [], this.status = StateStatus.initial});
 
-  HomeListState copyWith({List<TaskModel>? taskList, HomeListStatus? status}) {
+  HomeListState copyWith({List<TaskModel>? taskList, StateStatus? status}) {
     return HomeListState(
         taskList: taskList ?? this.taskList, status: status ?? this.status);
   }

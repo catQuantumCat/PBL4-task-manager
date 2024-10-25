@@ -4,7 +4,6 @@ import 'package:equatable/equatable.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:taskmanager/common/datetime_extension.dart';
-import 'package:taskmanager/data/datasources/remote/task_remote.datasource.dart';
 import 'package:taskmanager/data/dtos/task.dto.dart';
 import 'package:taskmanager/data/repositories/task.repository.dart';
 import 'package:taskmanager/data/task_model.dart';
@@ -13,9 +12,11 @@ part 'home_detail_task.state.dart';
 
 class HomeDetailTaskBloc
     extends Bloc<HomeDetailTaskEvent, HomeDetailTaskState> {
-  final repository = TaskRepository(dataSource: TaskRemoteDataSource());
+  final TaskRepository _taskRepository;
 
-  HomeDetailTaskBloc() : super(const HomeDetailTaskState.initial()) {
+  HomeDetailTaskBloc({required TaskRepository taskRepository})
+      : _taskRepository = taskRepository,
+        super(const HomeDetailTaskState.initial()) {
     on<HomeTaskDetailClose>(_onCloseDown);
     on<HomeDetailTaskOpen>(_onOpen);
     on<HomeDetailTaskChangeDateTime>(_onChangeDateTime);
@@ -33,8 +34,6 @@ class HomeDetailTaskBloc
 
   void _onOpen(
       HomeDetailTaskOpen event, Emitter<HomeDetailTaskState> emit) async {
-    emit(state.copyWith(status: DetailHomeStatus.loading));
-
     emit(state.copyWith(status: DetailHomeStatus.initial, task: event.task));
   }
 
@@ -49,7 +48,7 @@ class HomeDetailTaskBloc
 
     emit(state.copyWith(status: DetailHomeStatus.loading));
     try {
-      await repository.editTask(data, state.task!.id);
+      await _taskRepository.editTask(data, state.task!.id);
       emit(state.copyWith(status: DetailHomeStatus.finished, isEdited: true));
     } catch (e) {
       log(e.toString());
@@ -74,7 +73,7 @@ class HomeDetailTaskBloc
 
     emit(state.copyWith(status: DetailHomeStatus.loading));
     try {
-      final editedTask = await repository.editTask(data, state.task!.id);
+      final editedTask = await _taskRepository.editTask(data, state.task!.id);
 
       emit(
         state.copyWith(
@@ -113,7 +112,7 @@ class HomeDetailTaskBloc
     emit(state.copyWith(status: DetailHomeStatus.loading));
 
     try {
-      final responseTask = await repository.editTask(data, state.task!.id);
+      final responseTask = await _taskRepository.editTask(data, state.task!.id);
 
       emit(state.copyWith(
           status: DetailHomeStatus.initial,
@@ -132,7 +131,7 @@ class HomeDetailTaskBloc
     emit(state.copyWith(status: DetailHomeStatus.loading));
 
     try {
-      await repository.deleteTask(state.task!.id);
+      await _taskRepository.deleteTask(state.task!.id);
       emit(state.copyWith(status: DetailHomeStatus.finished, isEdited: true));
     } catch (e) {
       log(e.toString());

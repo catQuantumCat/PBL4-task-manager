@@ -80,4 +80,11 @@ class TaskModel {
       status: status ?? this.status,
     );
   }
+
+  
+
+  @override
+  String toString() {
+    return 'TaskModel(id: $id, name: $name, description: $description, createTime: $createTime, deadTime: $deadTime, status: $status)';
+  }
 }

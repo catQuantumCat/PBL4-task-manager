@@ -9,18 +9,28 @@ class NavigationWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     return BlocBuilder<NavigationBloc, NavigationState>(
       builder: (context, state) {
-        return BottomNavigationBar(
-          onTap: (index) => context
+        return NavigationBar(
+          height: kBottomNavigationBarHeight + 16,
+          onDestinationSelected: (value) => context
               .read<NavigationBloc>()
-              .add(NavigationItemTapped(newIndex: index)),
-          currentIndex: state.index,
-          items: const [
-            BottomNavigationBarItem(
-                icon: Icon(Icons.calendar_month), label: "label"),
-            BottomNavigationBarItem(
-                icon: Icon(Icons.calendar_month), label: "label"),
-            BottomNavigationBarItem(
-                icon: Icon(Icons.calendar_month), label: "label"),
+              .add(NavigationItemTapped(newIndex: value)),
+          selectedIndex: state.index,
+          destinations: const [
+            NavigationDestination(
+              icon: Icon(Icons.calendar_month_outlined),
+              selectedIcon: Icon(Icons.calendar_month),
+              label: "Today",
+            ),
+            NavigationDestination(
+              icon: Icon(Icons.search),
+              selectedIcon: Icon(Icons.search),
+              label: "Search",
+            ),
+            NavigationDestination(
+              icon: Icon(Icons.account_circle_outlined),
+              selectedIcon: Icon(Icons.account_circle),
+              label: "Account",
+            ),
           ],
         );
       },

@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:taskmanager/common/datetime_extension.dart';
+import 'package:taskmanager/data/repositories/task.repository.dart';
 import 'package:taskmanager/data/task_model.dart';
+import 'package:taskmanager/main.dart';
 import 'package:taskmanager/modules/home/bloc/detail/home_detail_task.bloc.dart';
 import 'package:taskmanager/modules/home/bloc/list/home_list.bloc.dart';
 import 'package:taskmanager/modules/home/view/detail/home_detail_task.view.dart';
@@ -28,8 +30,9 @@ class _HomeListTileWidgetState extends State<HomeListTileWidget> {
   }
 
   Future<void> _showDetailTaskSheet() async {
-    final homeDetailTaskBloc = HomeDetailTaskBloc()
-      ..add(HomeDetailTaskOpen(task: widget.task));
+    final homeDetailTaskBloc =
+        HomeDetailTaskBloc(taskRepository: getIt<TaskRepository>())
+          ..add(HomeDetailTaskOpen(task: widget.task));
 
     await showModalBottomSheet<bool>(
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
@@ -43,10 +46,6 @@ class _HomeListTileWidgetState extends State<HomeListTileWidget> {
         );
       },
     );
-
-    if (mounted && homeDetailTaskBloc.state.isEdited == true) {
-      context.read<HomeListBloc>().add(FetchTaskList());
-    }
   }
 
   void changeTaskStatus(value) {

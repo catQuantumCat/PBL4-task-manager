@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:taskmanager/common/constants/state_status.constant.dart';
+import 'package:taskmanager/data/repositories/user.repository.dart';
+import 'package:taskmanager/main.dart';
+import 'package:taskmanager/modules/auth/bloc/auth/auth_bloc.dart';
 import 'package:taskmanager/modules/auth/bloc/register/register_bloc.dart';
 import 'package:taskmanager/modules/auth/widget/auth_elevated_button.widget.dart';
 import 'package:taskmanager/modules/auth/widget/register_form.widget.dart';
@@ -11,7 +14,9 @@ class RegisterPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
-      create: (context) => RegisterBloc(),
+      create: (context) => RegisterBloc(
+          authBloc: context.read<AuthBloc>(),
+          userRepository: getIt<UserRepository>()),
       child: RegisterView(),
     );
   }

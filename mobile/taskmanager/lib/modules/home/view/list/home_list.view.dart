@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:taskmanager/common/constants/state_status.constant.dart';
+import 'package:taskmanager/data/repositories/task.repository.dart';
+import 'package:taskmanager/main.dart';
 import 'package:taskmanager/modules/home/bloc/list/home_list.bloc.dart';
 import 'package:taskmanager/modules/home/bloc/new/home_new_task.bloc.dart';
 
@@ -12,9 +15,16 @@ class HomeListPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return BlocProvider(
-      create: (context) => HomeListBloc()..add(FetchTaskList()),
-      child: const HomeListView(),
+    return BlocProvider.value(
+      value: BlocProvider.of<HomeListBloc>(context),
+      child: BlocListener<HomeListBloc, HomeListState>(
+        listener: (context, state) {
+          if (state.status == StateStatus.initial) {
+            // context.read<HomeListBloc>().add(const FetchTaskList());
+          }
+        },
+        child: const HomeListView(),
+      ),
     );
   }
 }
@@ -28,13 +38,10 @@ class HomeListView extends StatelessWidget {
         isScrollControlled: true,
         context: context,
         builder: (BuildContext context) => BlocProvider(
-              create: (context) => HomeNewTaskBloc(),
+              create: (context) =>
+                  HomeNewTaskBloc(taskRepository: getIt<TaskRepository>()),
               child: const HomeNewTaskView(),
-            )).then((val) {
-      if (context.mounted && val == "success") {
-        context.read<HomeListBloc>().add(FetchTaskList());
-      }
-    });
+            ));
   }
 
   @override
@@ -50,16 +57,36 @@ class HomeListView extends StatelessWidget {
         },
         child: const Icon(Icons.add),
       ),
-      // ignore: prefer_const_constructors
       body: RefreshIndicator(
         onRefresh: () async =>
-            context.read<HomeListBloc>().add(FetchTaskList()),
-        child: const HomeListAppbarWidget(
-          child: Padding(
-            padding: EdgeInsets.symmetric(
-              horizontal: 16,
-            ),
-            child: HomeListWidget(),
+            context.read<HomeListBloc>().add(const ForceReloadTask()),
+        child: HomeListAppbarWidget(
+          topWidget: const Text(
+            "Today",
+            style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
+          ),
+          child: BlocBuilder<HomeListBloc, HomeListState>(
+            builder: (context, state) {
+              switch (state.status) {
+                case StateStatus.initial:
+                  return const Center(
+                    child: Text("Initial state"),
+                  );
+                case StateStatus.failed:
+                  return const Center(
+                    child: Text("Fetching data failed "),
+                  );
+                case StateStatus.loading:
+                  return const Center(child: CircularProgressIndicator());
+                case StateStatus.success:
+                  return HomeListWidget(
+                    taskList: state.taskList,
+                    onDismissed: (index) => context.read<HomeListBloc>().add(
+                          RemoveOneTask(taskToRemoveIndex: index),
+                        ),
+                  );
+              }
+            },
           ),
         ),
       ),
