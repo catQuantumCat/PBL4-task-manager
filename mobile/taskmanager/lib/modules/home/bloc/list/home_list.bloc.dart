@@ -1,5 +1,6 @@
 import 'dart:developer';
 import 'package:equatable/equatable.dart';
+import 'package:taskmanager/common/constants/state_status.constant.dart';
 import 'package:taskmanager/data/repositories/task.repository.dart';
 import 'package:taskmanager/data/task_model.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -14,33 +15,53 @@ class HomeListBloc extends Bloc<HomeListEvent, HomeListState> {
     on<FetchTaskList>(_fetchList);
     on<RemoveOneTask>(_removeTask);
     on<ListHomeCheckTask>(_editTask);
+    on<ForceReloadTask>(_syncFromRemote);
+    // _listenToStream();
   }
 
   final TaskRepository _taskRepository;
 
-  void _fetchList(FetchTaskList event, Emitter<HomeListState> emit) async {
-    emit(state.copyWith(status: HomeListStatus.loading));
-
+  void _syncFromRemote(
+      ForceReloadTask event, Emitter<HomeListState> emit) async {
+    emit(state.copyWith(status: StateStatus.loading));
     try {
-      final taskList = await _taskRepository.getTaskList();
-      emit(state.copyWith(status: HomeListStatus.success, taskList: taskList));
+      _taskRepository.syncFromRemote();
     } catch (e) {
       log(e.toString());
-      emit(state.copyWith(status: HomeListStatus.failed));
     }
+  }
+
+  void _fetchList(FetchTaskList event, Emitter<HomeListState> emit) async {
+    emit(state.copyWith(status: StateStatus.loading));
+
+    await emit.forEach<List<TaskModel>>(
+      _taskRepository.getTaskList(),
+      onData: (newList) {
+        log("NEW DATA INCOMING");
+        log("LATEST DATA: ${newList.last.toString()}");
+        return state.copyWith(
+          status: StateStatus.success,
+          taskList: [...newList],
+        );
+      },
+      onError: (error, stackTrace) {
+        log(error.toString());
+        return state.copyWith(status: StateStatus.failed);
+      },
+    );
   }
 
   void _removeTask(RemoveOneTask event, Emitter<HomeListState> emit) async {
     try {
       await _taskRepository.deleteTask(event.taskToRemoveIndex);
-      add(FetchTaskList());
     } catch (e) {
       log(e.toString());
-      emit(state.copyWith(status: HomeListStatus.failed));
+      emit(state.copyWith(status: StateStatus.failed));
     }
   }
 
   void _editTask(ListHomeCheckTask event, Emitter<HomeListState> emit) async {
+    // emit(state.copyWith(status: StateStatus.loading));
     final TaskModel task = state.taskList.firstWhere((task) {
       return task.id == event.taskId;
     });
@@ -49,9 +70,9 @@ class HomeListBloc extends Bloc<HomeListEvent, HomeListState> {
 
     try {
       _taskRepository.editTask(data, event.taskId);
-      emit(state.copyWith(status: HomeListStatus.success));
+      // emit(state.copyWith(status: StateStatus.success));
     } catch (e) {
-      emit(state.copyWith(status: HomeListStatus.failed));
+      emit(state.copyWith(status: StateStatus.failed));
     }
   }
 }

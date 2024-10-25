@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:developer';
 
 import 'package:dio/dio.dart';
@@ -10,8 +11,10 @@ class TaskRemoteDataSource {
 
   TaskRemoteDataSource({required Dio dio}) : _dio = dio;
 
-  Future<List<TaskModel>> getTaskList() async {
-    final Response response = await _dio.get(ApiConstants.task.value);
+  Future<List<TaskModel>> syncTaskList() async {
+    final Response response = await _dio.get(
+      ApiConstants.task.value,
+    );
 
     return response.data["data"]
         .map<TaskModel>((task) => TaskModel.fromJson(task))

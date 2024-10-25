@@ -6,7 +6,22 @@ abstract class HomeListEvent extends Equatable {
   List<Object?> get props => [];
 }
 
-class FetchTaskList extends HomeListEvent {}
+class ForceReloadTask extends HomeListEvent {
+  const ForceReloadTask();
+
+  @override
+  List<Object?> get props => [];
+}
+
+class FetchTaskList extends HomeListEvent {
+  final String? query;
+  const FetchTaskList({
+    this.query,
+  });
+
+  @override
+  List<Object?> get props => [query];
+}
 
 class RemoveOneTask extends HomeListEvent {
   final int taskToRemoveIndex;
@@ -24,4 +39,14 @@ class ListHomeCheckTask extends HomeListEvent {
 
   @override
   List<Object?> get props => [taskId];
+}
+
+class SearchTasks extends HomeListEvent {
+  final String query;
+  const SearchTasks({
+    required this.query,
+  });
+
+  @override
+  List<Object?> get props => [query];
 }
