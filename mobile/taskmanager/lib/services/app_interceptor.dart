@@ -19,7 +19,7 @@ class AppInterceptor extends QueuedInterceptor {
           .addAll({HttpHeaders.authorizationHeader: "Bearer $token"});
     }
 
-    log('Request [${options.method}] => PATH: ${options.path}');
+    log('Request [${options.method}] => BODY: ${options.data}'); 
     super.onRequest(options, handler);
   }
 
