@@ -5,15 +5,17 @@ class SearchInitialWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const Column(
-      mainAxisAlignment: MainAxisAlignment.center,
-      children: [
-        Icon(
-          Icons.search,
-          size: 50.0,
-        ),
-        Text("Search for any task")
-      ],
+    return Container(
+      child: const Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Icon(
+            Icons.search,
+            size: 50.0,
+          ),
+          Text("Search for any task")
+        ],
+      ),
     );
   }
 }

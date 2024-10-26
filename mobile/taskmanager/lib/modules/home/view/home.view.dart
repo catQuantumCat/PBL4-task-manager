@@ -75,9 +75,11 @@ class HomeView extends StatelessWidget {
                     child: Text("Initial state"),
                   );
                 case StateStatus.failed:
-                  return const Center(
-                    child: Text("Fetching data failed "),
-                  );
+                  // return const Center(
+                  //   child: Text("Fetching data failed "),
+                    
+                  // );
+                  return const Center(child: CircularProgressIndicator());
                 case StateStatus.loading:
                   return const Center(child: CircularProgressIndicator());
                 case StateStatus.success:

@@ -1,5 +1,3 @@
-import 'dart:async';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:taskmanager/common/constants/state_status.constant.dart';
@@ -21,38 +19,23 @@ class SearchPage extends StatelessWidget {
     return BlocProvider(
       create: (context) => SearchBloc(
           taskRepository: getIt<TaskRepository>(),
-          homeListBloc: BlocProvider.of<TaskListBloc>(context)),
+          homeListBloc: BlocProvider.of<TaskListBloc>(context))
+        ..add(const SearchOpen()),
       child: const SearchView(),
     );
   }
 }
 
-class SearchView extends StatefulWidget {
+class SearchView extends StatelessWidget {
   const SearchView({super.key});
 
-  @override
-  State<SearchView> createState() => _SearchViewState();
-}
-
-class _SearchViewState extends State<SearchView> {
-  Timer? _debounce;
-
-  String previousSearch = "";
-
-  void _onTextChange(String query) {
-    if (_debounce?.isActive ?? false) _debounce!.cancel();
-
+  void _onTextChange(BuildContext context, String query) {
     if (query.isEmpty) {
       context.read<SearchBloc>().add(const SearchCancel());
       return;
     }
 
-    setState(() {
-      previousSearch = query;
-    });
-
-    _debounce = Timer(const Duration(milliseconds: 500),
-        () => context.read<SearchBloc>().add(SearchEnterQuery(query: query)));
+    context.read<SearchBloc>().add(SearchEnterQuery(query: query));
   }
 
   @override
@@ -61,7 +44,8 @@ class _SearchViewState extends State<SearchView> {
       builder: (context, state) {
         return Scaffold(
           body: CommonTitleAppbar(
-            searchBar: AppbarSearchbarWidget(onChanged: _onTextChange),
+            searchBar: AppbarSearchbarWidget(
+                onChanged: (query) => _onTextChange(context, query)),
             searchBarHeight: 60,
             topWidget: const Text(
               "Search",
@@ -72,7 +56,7 @@ class _SearchViewState extends State<SearchView> {
                 case (StateStatus.initial):
                   return const SearchInitialWidget();
                 case (StateStatus.success):
-                  return TaskListView(taskList: state.taskList!);
+                  return TaskListView(taskList: state.taskList, allowDissiable: false,);
                 default:
                   return const Center(
                     child: Text(""),

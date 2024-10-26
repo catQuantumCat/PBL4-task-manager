@@ -13,7 +13,7 @@ class TaskListView extends StatelessWidget {
   const TaskListView(
       {super.key, required this.taskList, this.allowDissiable = true});
 
-  Future<bool?> _deleteConfirm(BuildContext context) async {
+  Future<bool?> _deleteConfirm(BuildContext context, int taskId) async {
     return await showDialog<bool>(
         context: context,
         builder: (dialogContext) {
@@ -28,6 +28,10 @@ class TaskListView extends StatelessWidget {
                   child: const Text("Cancel")),
               TextButton(
                   onPressed: () {
+                    context
+                        .read<TaskListBloc>()
+                        .add(RemoveOneTask(taskToRemoveIndex: taskId));
+
                     Navigator.pop(dialogContext, true);
                   },
                   child: const Text("Delete"))
@@ -38,7 +42,6 @@ class TaskListView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final taskListBloc = context.read<TaskListBloc>();
     return ListView.builder(
       primary: false,
       shrinkWrap: true,
@@ -66,10 +69,9 @@ class TaskListView extends StatelessWidget {
             ),
           ),
           confirmDismiss: (direction) async {
-            return _deleteConfirm(context);
+            return _deleteConfirm(context, taskList[index].id);
           },
-          onDismissed: (_) => taskListBloc
-              .add(RemoveOneTask(taskToRemoveIndex: taskList[index].id)),
+          onDismissed: (_) => (),
           child: TaskListTile(
             task: taskList[index],
           ),

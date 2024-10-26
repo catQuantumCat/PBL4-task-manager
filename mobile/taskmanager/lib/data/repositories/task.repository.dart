@@ -17,8 +17,12 @@ class TaskRepository {
   }
 
   void syncFromRemote() async {
-    final newTaskList = await _remoteDataSource.syncTaskList();
-    _localDatasource.syncTaskList(newTaskList);
+    try {
+      final newTaskList = await _remoteDataSource.syncTaskList();
+      _localDatasource.syncTaskList(newTaskList);
+    } catch (e) {
+      return;
+    }
   }
 
   Stream<List<TaskModel>> getTaskList() => _localDatasource.getTaskList;
@@ -38,5 +42,13 @@ class TaskRepository {
     final newTask = await _remoteDataSource.createTask(task);
     _localDatasource.createTask(newTask);
     return newTask;
+  }
+
+  List<TaskModel> searchTask(String query) {
+    return _localDatasource.searchTask(query);
+  }
+
+  Future<void> dispose() async {
+    return _localDatasource.dispose();
   }
 }

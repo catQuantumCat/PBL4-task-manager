@@ -67,4 +67,8 @@ class TaskLocalDatasource {
     }
     _taskStreamController.add(_tasks);
   }
+
+  List<TaskModel> searchTask(String query) {
+    return _tasks.where((task) => task.name.contains(query)).toList();
+  }
 }

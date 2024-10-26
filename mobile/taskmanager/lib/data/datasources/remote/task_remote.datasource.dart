@@ -12,13 +12,18 @@ class TaskRemoteDataSource {
   TaskRemoteDataSource({required Dio dio}) : _dio = dio;
 
   Future<List<TaskModel>> syncTaskList() async {
-    final Response response = await _dio.get(
-      ApiConstants.task.value,
-    );
+    try {
+      final Response response = await _dio.get(
+        ApiConstants.task.value,
+      );
 
-    return response.data["data"]
-        .map<TaskModel>((task) => TaskModel.fromJson(task))
-        .toList();
+      return response.data["data"]
+          .map<TaskModel>((task) => TaskModel.fromJson(task))
+          .toList();
+    } catch (e) {
+      log('Error syncing task list: $e');
+      rethrow;
+    }
   }
 
   Future<TaskModel> editTask(TaskDTO task, int taskId) async {

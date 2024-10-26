@@ -1,31 +1,31 @@
 part of 'search_bloc.dart';
 
 class SearchState extends Equatable {
-  const SearchState({required this.status, this.errorMessage, this.taskList});
+  const SearchState({
+    this.status = StateStatus.initial,
+    this.taskList = const [],
+    this.errorMessage,
+    this.query = ""
+  });
 
   final StateStatus status;
-  final List<TaskModel>? taskList;
+  final List<TaskModel> taskList;
   final String? errorMessage;
+  final String query;
 
-  const SearchState.success({
-    this.status = StateStatus.success,
-    this.errorMessage,
-    required this.taskList,
-  });
-
-  const SearchState.initial({
-    this.status = StateStatus.initial,
-    this.errorMessage,
-    this.taskList,
-  });
-
-  const SearchState.failed(
-      {this.status = StateStatus.failed,
-      required this.errorMessage,
-      this.taskList});
-
-  const SearchState.loading(
-      {this.status = StateStatus.loading, this.errorMessage, this.taskList});
+  SearchState copyWith({
+    StateStatus? status,
+    List<TaskModel>? taskList,
+    String? errorMessage,
+    String? query
+  }) {
+    return SearchState(
+      status: status ?? this.status,
+      taskList: taskList ?? this.taskList,
+      errorMessage: errorMessage ?? this.errorMessage,
+      query: query ?? this.query
+    );
+  }
 
   @override
   List<Object?> get props => [status, taskList, errorMessage];

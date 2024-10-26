@@ -20,6 +20,11 @@ class TaskListBloc extends Bloc<TaskListEvent, TaskListState> {
   }
 
   final TaskRepository _taskRepository;
+  @override
+  Future<void> close() async {
+    await _taskRepository.dispose();
+    return super.close();
+  }
 
   void _syncFromRemote(
       ForceReloadTask event, Emitter<TaskListState> emit) async {
@@ -27,6 +32,7 @@ class TaskListBloc extends Bloc<TaskListEvent, TaskListState> {
     try {
       _taskRepository.syncFromRemote();
     } catch (e) {
+      emit(state.copyWith(status: StateStatus.failed));
       log(e.toString());
     }
   }
