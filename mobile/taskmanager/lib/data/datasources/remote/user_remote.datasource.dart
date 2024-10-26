@@ -15,7 +15,6 @@ class UserRemoteDatasource {
     final response = await _dio.post(ApiConstants.authLogin.value,
         data: credentials.toJson());
 
-    //TODO: remove
     log(AuthResponseDTO.fromMap(response.data).toString());
 
     return AuthResponseDTO.fromMap(response.data);
@@ -24,7 +23,7 @@ class UserRemoteDatasource {
   Future<AuthResponseDTO> submitRegister(AuthRegisterDTO credentials) async {
     final response = await _dio.post(ApiConstants.authRegister.value,
         data: credentials.toJson());
-    //TODO: remove
+
     log(AuthResponseDTO.fromMap(response.data).toString());
     return AuthResponseDTO.fromMap(response.data);
   }

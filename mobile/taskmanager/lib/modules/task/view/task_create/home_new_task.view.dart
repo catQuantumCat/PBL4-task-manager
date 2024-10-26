@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:taskmanager/common/widget/common_pill_outlined_button.widget.dart';
 import 'package:taskmanager/modules/task/bloc/task_create/task_create.bloc.dart';
-import 'package:taskmanager/modules/task/widget/task_create/task_create_property_button.widget.dart';
 
 class TaskCreateView extends StatefulWidget {
   const TaskCreateView({super.key});
@@ -101,7 +101,7 @@ class _TaskCreateViewState extends State<TaskCreateView> {
                       children: [
                         BlocBuilder<TaskCreateBloc, TaskCreateStatus>(
                           builder: (context, state) {
-                            return TaskCreateProprertyButton(
+                            return CommonPillOutlinedButton(
                               label: state.dateLabel,
                               icon: const Icon(Icons.date_range),
                               color: Colors.deepPurple,
@@ -114,7 +114,7 @@ class _TaskCreateViewState extends State<TaskCreateView> {
                         ),
                         BlocBuilder<TaskCreateBloc, TaskCreateStatus>(
                           builder: (context, state) {
-                            return TaskCreateProprertyButton(
+                            return CommonPillOutlinedButton(
                               label: state.timeLabel,
                               icon: const Icon(Icons.access_time_outlined),
                               color: Colors.deepPurple,

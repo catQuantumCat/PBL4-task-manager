@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
-class HomeListAppbarWidget extends StatelessWidget {
-  const HomeListAppbarWidget(
+class CommonTitleAppbar extends StatelessWidget {
+  const CommonTitleAppbar(
       {super.key,
       required this.child,
       required Widget topWidget,

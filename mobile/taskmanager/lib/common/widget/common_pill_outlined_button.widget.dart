@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
-class TaskCreateProprertyButton extends StatelessWidget {
-  const TaskCreateProprertyButton({
+class CommonPillOutlinedButton extends StatelessWidget {
+  const CommonPillOutlinedButton({
     super.key,
     required this.label,
     required this.icon,

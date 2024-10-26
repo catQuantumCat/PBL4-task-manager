@@ -1,15 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:taskmanager/common/constants/state_status.constant.dart';
+import 'package:taskmanager/common/widget/common_title_appbar.widget.dart';
 import 'package:taskmanager/data/repositories/task.repository.dart';
 import 'package:taskmanager/main.dart';
 
-
 import 'package:taskmanager/modules/home/cubit/home_cubit.dart';
 
-
-
-import 'package:taskmanager/modules/home/widget/list/home_list_appbar.widget.dart';
 import 'package:taskmanager/modules/task/bloc/task_create/task_create.bloc.dart';
 import 'package:taskmanager/modules/task/bloc/task_list/task_list.bloc.dart';
 import 'package:taskmanager/modules/task/view/task_create/home_new_task.view.dart';
@@ -65,7 +62,7 @@ class HomeView extends StatelessWidget {
       ),
       body: RefreshIndicator(
         onRefresh: () async => taskListBloc.add(const ForceReloadTask()),
-        child: HomeListAppbarWidget(
+        child: CommonTitleAppbar(
           topWidget: const Text(
             "Today",
             style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
