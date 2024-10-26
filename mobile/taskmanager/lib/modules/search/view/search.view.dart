@@ -20,7 +20,7 @@ class SearchPage extends StatelessWidget {
     return BlocProvider(
       create: (context) => SearchBloc(
           taskRepository: getIt<TaskRepository>(),
-          homeListBloc: BlocProvider.of<HomeListBloc>(context)),
+          homeListBloc: BlocProvider.of<TaskListBloc>(context)),
       child: const SearchView(),
     );
   }

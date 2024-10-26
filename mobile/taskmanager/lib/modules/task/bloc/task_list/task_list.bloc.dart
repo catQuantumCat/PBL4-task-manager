@@ -5,10 +5,10 @@ import 'package:taskmanager/data/repositories/task.repository.dart';
 import 'package:taskmanager/data/task_model.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-part 'home_list.state.dart';
-part 'home_list.event.dart';
+part 'task_list.state.dart';
+part 'task_list.event.dart';
 
-class TaskListBloc extends Bloc<HomeListEvent, TaskListState> {
+class TaskListBloc extends Bloc<TaskListEvent, TaskListState> {
   TaskListBloc({required TaskRepository taskRepository})
       : _taskRepository = taskRepository,
         super(const TaskListState()) {

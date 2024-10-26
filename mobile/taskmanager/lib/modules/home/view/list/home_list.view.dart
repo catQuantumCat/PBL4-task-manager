@@ -5,6 +5,7 @@ import 'package:taskmanager/data/repositories/task.repository.dart';
 import 'package:taskmanager/main.dart';
 import 'package:taskmanager/modules/home/bloc/list/home_list.bloc.dart';
 import 'package:taskmanager/modules/home/bloc/new/home_new_task.bloc.dart';
+import 'package:taskmanager/modules/home/view/list/cubit/home_cubit.dart';
 
 import 'package:taskmanager/modules/home/view/new/home_new_task.view.dart';
 import 'package:taskmanager/modules/home/widget/list/home_list.widget.dart';
@@ -15,16 +16,16 @@ class HomeListPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return BlocProvider.value(
-      value: BlocProvider.of<HomeListBloc>(context),
-      child: BlocListener<HomeListBloc, HomeListState>(
-        listener: (context, state) {
-          if (state.status == StateStatus.initial) {
-            // context.read<HomeListBloc>().add(const FetchTaskList());
-          }
-        },
-        child: const HomeListView(),
-      ),
+    return MultiBlocProvider(
+      providers: [
+        BlocProvider.value(
+          value: BlocProvider.of<TaskListBloc>(context),
+        ),
+        BlocProvider(
+          create: (context) => HomeCubit(),
+        ),
+      ],
+      child: const HomeListView(),
     );
   }
 }
@@ -46,6 +47,7 @@ class HomeListView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final TaskListBloc taskListBloc = context.read<TaskListBloc>();
     return Scaffold(
       floatingActionButton: FloatingActionButton(
         elevation: 4,
@@ -59,13 +61,13 @@ class HomeListView extends StatelessWidget {
       ),
       body: RefreshIndicator(
         onRefresh: () async =>
-            context.read<HomeListBloc>().add(const ForceReloadTask()),
+            taskListBloc.add(const ForceReloadTask()),
         child: HomeListAppbarWidget(
           topWidget: const Text(
             "Today",
             style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
           ),
-          child: BlocBuilder<HomeListBloc, HomeListState>(
+          child: BlocBuilder<TaskListBloc, TaskListState>(
             builder: (context, state) {
               switch (state.status) {
                 case StateStatus.initial:
@@ -81,7 +83,7 @@ class HomeListView extends StatelessWidget {
                 case StateStatus.success:
                   return HomeListWidget(
                     taskList: state.taskList,
-                    onDismissed: (index) => context.read<HomeListBloc>().add(
+                    onDismissed: (index) => taskListBloc.add(
                           RemoveOneTask(taskToRemoveIndex: index),
                         ),
                   );

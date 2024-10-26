@@ -8,19 +8,19 @@ import 'package:taskmanager/modules/home/bloc/detail/home_detail_task.bloc.dart'
 import 'package:taskmanager/modules/home/bloc/list/home_list.bloc.dart';
 import 'package:taskmanager/modules/home/view/detail/home_detail_task.view.dart';
 
-class HomeListTileWidget extends StatefulWidget {
+class TaskListTile extends StatefulWidget {
   final TaskModel task;
 
-  const HomeListTileWidget({
+  const TaskListTile({
     super.key,
     required this.task,
   });
 
   @override
-  State<HomeListTileWidget> createState() => _HomeListTileWidgetState();
+  State<TaskListTile> createState() => _TaskListTileState();
 }
 
-class _HomeListTileWidgetState extends State<HomeListTileWidget> {
+class _TaskListTileState extends State<TaskListTile> {
   late bool _taskStatus;
 
   @override
@@ -30,20 +30,17 @@ class _HomeListTileWidgetState extends State<HomeListTileWidget> {
   }
 
   Future<void> _showDetailTaskSheet() async {
-    final homeDetailTaskBloc =
-        HomeDetailTaskBloc(taskRepository: getIt<TaskRepository>())
-          ..add(HomeDetailTaskOpen(task: widget.task));
-
     await showModalBottomSheet<bool>(
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
       isScrollControlled: true,
       enableDrag: true,
       context: context,
       builder: (BuildContext context) {
-        return BlocProvider.value(
-          value: homeDetailTaskBloc,
-          child: const HomeDetailTaskView(),
-        );
+      return BlocProvider(
+        create: (context) => HomeDetailTaskBloc(taskRepository: getIt<TaskRepository>())
+        ..add(HomeDetailTaskOpen(task: widget.task)),
+        child: const HomeDetailTaskView(),
+      );
       },
     );
   }

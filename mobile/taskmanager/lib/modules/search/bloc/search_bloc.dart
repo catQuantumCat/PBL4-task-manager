@@ -10,11 +10,11 @@ part 'search_state.dart';
 
 class SearchBloc extends Bloc<SearchEvent, SearchState> {
   final TaskRepository _taskRepository;
-  final HomeListBloc _homeListBloc;
+  final TaskListBloc _homeListBloc;
 
   SearchBloc(
       {required TaskRepository taskRepository,
-      required HomeListBloc homeListBloc})
+      required TaskListBloc homeListBloc})
       : _taskRepository = taskRepository,
         _homeListBloc = homeListBloc,
         super(const SearchState.initial()) {

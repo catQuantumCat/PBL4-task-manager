@@ -1,4 +1,4 @@
-part of "home_list.bloc.dart";
+part of "task_list.bloc.dart";
 
 class TaskListState extends Equatable {
   final List<TaskModel> taskList;

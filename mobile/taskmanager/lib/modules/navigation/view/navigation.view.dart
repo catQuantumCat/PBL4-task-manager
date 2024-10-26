@@ -22,7 +22,7 @@ class NavigationPage extends StatelessWidget {
         ),
         BlocProvider(
           create: (context) =>
-              HomeListBloc(taskRepository: getIt<TaskRepository>())
+              TaskListBloc(taskRepository: getIt<TaskRepository>())
                 ..add(const FetchTaskList()),
         ),
       ],
