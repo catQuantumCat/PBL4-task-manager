@@ -3,7 +3,7 @@ import 'package:equatable/equatable.dart';
 import 'package:taskmanager/common/constants/state_status.constant.dart';
 import 'package:taskmanager/data/repositories/task.repository.dart';
 import 'package:taskmanager/data/task_model.dart';
-import 'package:taskmanager/modules/home/bloc/list/home_list.bloc.dart';
+import 'package:taskmanager/modules/task/bloc/task_list/task_list.bloc.dart';
 
 part 'search_event.dart';
 part 'search_state.dart';

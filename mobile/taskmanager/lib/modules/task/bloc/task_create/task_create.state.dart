@@ -1,8 +1,8 @@
-part of 'home_new_task.bloc.dart';
+part of 'task_create.bloc.dart';
 
 enum NewHomeStatus { initial, loading, success, failure }
 
-class HomeNewTaskStatus extends Equatable {
+class TaskCreateStatus extends Equatable {
   final NewHomeStatus status;
   final DateTime date;
   final TimeOfDay time;
@@ -15,7 +15,7 @@ class HomeNewTaskStatus extends Equatable {
   List<Object?> get props =>
       [status, date, dateLabel, timeLabel, missionName, description];
 
-  const HomeNewTaskStatus({
+  const TaskCreateStatus({
     required this.status,
     required this.date,
     required this.time,
@@ -25,7 +25,7 @@ class HomeNewTaskStatus extends Equatable {
     this.description,
   });
 
-  HomeNewTaskStatus.initial()
+  TaskCreateStatus.initial()
       : this(
             status: NewHomeStatus.initial,
             date: DateTime.now(),
@@ -33,7 +33,7 @@ class HomeNewTaskStatus extends Equatable {
             dateLabel: "Today",
             timeLabel: TimeOfDay.now().toLabel());
 
-  HomeNewTaskStatus copyWith(
+  TaskCreateStatus copyWith(
       {NewHomeStatus? status,
       DateTime? date,
       TimeOfDay? time,
@@ -41,7 +41,7 @@ class HomeNewTaskStatus extends Equatable {
       String? timeLabel,
       String? missionName,
       String? description}) {
-    return HomeNewTaskStatus(
+    return TaskCreateStatus(
         status: status ?? this.status,
         date: date ?? this.date,
         time: time ?? this.time,

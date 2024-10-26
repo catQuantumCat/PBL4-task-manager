@@ -6,8 +6,8 @@ import 'package:taskmanager/common/datetime_extension.dart';
 import 'package:taskmanager/data/repositories/task.repository.dart';
 import 'package:taskmanager/data/task_model.dart';
 import 'package:taskmanager/main.dart';
-import 'package:taskmanager/modules/home/bloc/list/home_list.bloc.dart';
 import 'package:taskmanager/modules/task/bloc/task_detail/task_detail.bloc.dart';
+import 'package:taskmanager/modules/task/bloc/task_list/task_list.bloc.dart';
 import 'package:taskmanager/modules/task/view/task_detail/task_detail.view.dart';
 
 class TaskListTile extends StatefulWidget {
@@ -41,7 +41,7 @@ class _TaskListTileState extends State<TaskListTile> {
         return BlocProvider(
           create: (context) {
             log(widget.task.toString());
-            
+
             return TaskDetailBloc(taskRepository: getIt<TaskRepository>())
               ..add(HomeDetailTaskOpen(task: widget.task));
           },

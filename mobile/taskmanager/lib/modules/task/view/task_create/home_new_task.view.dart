@@ -1,38 +1,37 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:taskmanager/modules/task/bloc/task_create/task_create.bloc.dart';
+import 'package:taskmanager/modules/task/widget/task_create/task_create_property_button.widget.dart';
 
-import 'package:taskmanager/modules/home/bloc/new/home_new_task.bloc.dart';
-import 'package:taskmanager/modules/home/widget/new/new_task_button.widget.dart';
-
-class HomeNewTaskView extends StatefulWidget {
-  const HomeNewTaskView({super.key});
+class TaskCreateView extends StatefulWidget {
+  const TaskCreateView({super.key});
 
   @override
-  State<HomeNewTaskView> createState() => _HomeNewTaskViewState();
+  State<TaskCreateView> createState() => _TaskCreateViewState();
 }
 
-class _HomeNewTaskViewState extends State<HomeNewTaskView> {
+class _TaskCreateViewState extends State<TaskCreateView> {
   final taskFieldController = TextEditingController();
   final descriptionFieldController = TextEditingController();
 
-  void _showDateHandle(HomeNewTaskStatus state) async {
+  void _showDateHandle(TaskCreateStatus state) async {
     final DateTime? selectedDate = await showDatePicker(
-        initialDate: context.read<HomeNewTaskBloc>().state.date,
+        initialDate: context.read<TaskCreateBloc>().state.date,
         context: context,
         firstDate: DateTime.now(),
         lastDate: DateTime(2032));
 
     if (!mounted) return;
-    context.read<HomeNewTaskBloc>().add(NewHomeDateTapped(date: selectedDate));
+    context.read<TaskCreateBloc>().add(NewHomeDateTapped(date: selectedDate));
   }
 
-  void _showTimeHandle(HomeNewTaskStatus state) async {
+  void _showTimeHandle(TaskCreateStatus state) async {
     final TimeOfDay? time = await showTimePicker(
         context: context, initialTime: TimeOfDay.fromDateTime(state.date));
     if (!mounted) {
       return;
     }
-    context.read<HomeNewTaskBloc>().add(NewHomeTimeTapped(time: time));
+    context.read<TaskCreateBloc>().add(NewHomeTimeTapped(time: time));
   }
 
   @override
@@ -44,7 +43,7 @@ class _HomeNewTaskViewState extends State<HomeNewTaskView> {
 
   @override
   Widget build(BuildContext context) {
-    return BlocConsumer<HomeNewTaskBloc, HomeNewTaskStatus>(
+    return BlocConsumer<TaskCreateBloc, TaskCreateStatus>(
         listener: (context, state) async {
       if (state.status case NewHomeStatus.success) {
         Navigator.pop(context, "success");
@@ -100,9 +99,9 @@ class _HomeNewTaskViewState extends State<HomeNewTaskView> {
                     child: ListView(
                       scrollDirection: Axis.horizontal,
                       children: [
-                        BlocBuilder<HomeNewTaskBloc, HomeNewTaskStatus>(
+                        BlocBuilder<TaskCreateBloc, TaskCreateStatus>(
                           builder: (context, state) {
-                            return NewTaskButtonWidget(
+                            return TaskCreateProprertyButton(
                               label: state.dateLabel,
                               icon: const Icon(Icons.date_range),
                               color: Colors.deepPurple,
@@ -113,9 +112,9 @@ class _HomeNewTaskViewState extends State<HomeNewTaskView> {
                         const SizedBox(
                           width: 8,
                         ),
-                        BlocBuilder<HomeNewTaskBloc, HomeNewTaskStatus>(
+                        BlocBuilder<TaskCreateBloc, TaskCreateStatus>(
                           builder: (context, state) {
-                            return NewTaskButtonWidget(
+                            return TaskCreateProprertyButton(
                               label: state.timeLabel,
                               icon: const Icon(Icons.access_time_outlined),
                               color: Colors.deepPurple,
@@ -130,7 +129,7 @@ class _HomeNewTaskViewState extends State<HomeNewTaskView> {
                   const SizedBox(height: 32),
                   IconButton.filled(
                       onPressed: () {
-                        context.read<HomeNewTaskBloc>().add(NewHomeSubmitTapped(
+                        context.read<TaskCreateBloc>().add(NewHomeSubmitTapped(
                             missionName: taskFieldController.text,
                             description: descriptionFieldController.text));
                       },

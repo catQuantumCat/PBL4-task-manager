@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
-class NewTaskButtonWidget extends StatelessWidget {
-  const NewTaskButtonWidget({
+class TaskCreateProprertyButton extends StatelessWidget {
+  const TaskCreateProprertyButton({
     super.key,
     required this.label,
     required this.icon,

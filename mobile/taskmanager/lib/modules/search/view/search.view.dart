@@ -5,11 +5,12 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:taskmanager/common/constants/state_status.constant.dart';
 import 'package:taskmanager/data/repositories/task.repository.dart';
 import 'package:taskmanager/main.dart';
-import 'package:taskmanager/modules/home/bloc/list/home_list.bloc.dart';
+
 import 'package:taskmanager/modules/home/widget/list/home_list_appbar.widget.dart';
 import 'package:taskmanager/modules/search/bloc/search_bloc.dart';
 import 'package:taskmanager/modules/search/widget/appbar_searchbar.widget.dart';
 import 'package:taskmanager/modules/search/widget/search_initial.widget.dart';
+import 'package:taskmanager/modules/task/bloc/task_list/task_list.bloc.dart';
 import 'package:taskmanager/modules/task/view/task_list/task_list.view.dart';
 
 class SearchPage extends StatelessWidget {

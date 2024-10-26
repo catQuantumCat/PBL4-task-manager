@@ -7,20 +7,20 @@ import 'package:taskmanager/data/dtos/task.dto.dart';
 import 'package:taskmanager/common/datetime_extension.dart';
 import 'package:taskmanager/common/timeofday_extension.dart';
 import 'package:taskmanager/data/repositories/task.repository.dart';
-part 'home_new_task.event.dart';
-part 'home_new_task.state.dart';
+part 'task_create.event.dart';
+part 'task_create.state.dart';
 
-class HomeNewTaskBloc extends Bloc<HomeNewTaskEvent, HomeNewTaskStatus> {
+class TaskCreateBloc extends Bloc<TaskCreateEvent, TaskCreateStatus> {
   final TaskRepository _taskRepository;
-  HomeNewTaskBloc({required TaskRepository taskRepository})
+  TaskCreateBloc({required TaskRepository taskRepository})
       : _taskRepository = taskRepository,
-        super(HomeNewTaskStatus.initial()) {
+        super(TaskCreateStatus.initial()) {
     on<NewHomeDateTapped>(_onDateTapped);
     on<NewHomeTimeTapped>(_onTimeTapped);
     on<NewHomeSubmitTapped>(_onSubmitTapped);
   }
 
-  void _onDateTapped(NewHomeDateTapped event, Emitter<HomeNewTaskStatus> emit) {
+  void _onDateTapped(NewHomeDateTapped event, Emitter<TaskCreateStatus> emit) {
     if (event.date == null) {
       return;
     }
@@ -35,7 +35,7 @@ class HomeNewTaskBloc extends Bloc<HomeNewTaskEvent, HomeNewTaskStatus> {
     emit(newState);
   }
 
-  void _onTimeTapped(NewHomeTimeTapped event, Emitter<HomeNewTaskStatus> emit) {
+  void _onTimeTapped(NewHomeTimeTapped event, Emitter<TaskCreateStatus> emit) {
     if (event.time == null) {
       return;
     }
@@ -52,7 +52,7 @@ class HomeNewTaskBloc extends Bloc<HomeNewTaskEvent, HomeNewTaskStatus> {
   }
 
   void _onSubmitTapped(
-      NewHomeSubmitTapped event, Emitter<HomeNewTaskStatus> emit) async {
+      NewHomeSubmitTapped event, Emitter<TaskCreateStatus> emit) async {
     if (event.missionName == null || event.missionName!.isEmpty) {
       return;
     }

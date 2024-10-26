@@ -3,13 +3,16 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:taskmanager/common/constants/state_status.constant.dart';
 import 'package:taskmanager/data/repositories/task.repository.dart';
 import 'package:taskmanager/main.dart';
-import 'package:taskmanager/modules/home/bloc/list/home_list.bloc.dart';
-import 'package:taskmanager/modules/home/bloc/new/home_new_task.bloc.dart';
+
+
 import 'package:taskmanager/modules/home/cubit/home_cubit.dart';
 
-import 'package:taskmanager/modules/home/view/new/home_new_task.view.dart';
+
 
 import 'package:taskmanager/modules/home/widget/list/home_list_appbar.widget.dart';
+import 'package:taskmanager/modules/task/bloc/task_create/task_create.bloc.dart';
+import 'package:taskmanager/modules/task/bloc/task_list/task_list.bloc.dart';
+import 'package:taskmanager/modules/task/view/task_create/home_new_task.view.dart';
 import 'package:taskmanager/modules/task/view/task_list/task_list.view.dart';
 
 class HomePage extends StatelessWidget {
@@ -41,8 +44,8 @@ class HomeView extends StatelessWidget {
         context: context,
         builder: (BuildContext context) => BlocProvider(
               create: (context) =>
-                  HomeNewTaskBloc(taskRepository: getIt<TaskRepository>()),
-              child: const HomeNewTaskView(),
+                  TaskCreateBloc(taskRepository: getIt<TaskRepository>()),
+              child: const TaskCreateView(),
             ));
   }
 
