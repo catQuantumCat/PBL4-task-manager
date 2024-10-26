@@ -5,14 +5,15 @@ import 'package:taskmanager/data/repositories/task.repository.dart';
 import 'package:taskmanager/main.dart';
 import 'package:taskmanager/modules/home/bloc/list/home_list.bloc.dart';
 import 'package:taskmanager/modules/home/bloc/new/home_new_task.bloc.dart';
-import 'package:taskmanager/modules/home/view/list/cubit/home_cubit.dart';
+import 'package:taskmanager/modules/home/cubit/home_cubit.dart';
 
 import 'package:taskmanager/modules/home/view/new/home_new_task.view.dart';
-import 'package:taskmanager/modules/home/widget/list/home_list.widget.dart';
-import 'package:taskmanager/modules/home/widget/list/home_list_appbar.widget.dart';
 
-class HomeListPage extends StatelessWidget {
-  const HomeListPage({super.key});
+import 'package:taskmanager/modules/home/widget/list/home_list_appbar.widget.dart';
+import 'package:taskmanager/modules/task/view/task_list/task_list.view.dart';
+
+class HomePage extends StatelessWidget {
+  const HomePage({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -25,13 +26,13 @@ class HomeListPage extends StatelessWidget {
           create: (context) => HomeCubit(),
         ),
       ],
-      child: const HomeListView(),
+      child: const HomeView(),
     );
   }
 }
 
-class HomeListView extends StatelessWidget {
-  const HomeListView({super.key});
+class HomeView extends StatelessWidget {
+  const HomeView({super.key});
 
   void _showNewTaskSheet(BuildContext context) {
     showModalBottomSheet(
@@ -60,8 +61,7 @@ class HomeListView extends StatelessWidget {
         child: const Icon(Icons.add),
       ),
       body: RefreshIndicator(
-        onRefresh: () async =>
-            taskListBloc.add(const ForceReloadTask()),
+        onRefresh: () async => taskListBloc.add(const ForceReloadTask()),
         child: HomeListAppbarWidget(
           topWidget: const Text(
             "Today",
@@ -81,11 +81,8 @@ class HomeListView extends StatelessWidget {
                 case StateStatus.loading:
                   return const Center(child: CircularProgressIndicator());
                 case StateStatus.success:
-                  return HomeListWidget(
+                  return TaskListView(
                     taskList: state.taskList,
-                    onDismissed: (index) => taskListBloc.add(
-                          RemoveOneTask(taskToRemoveIndex: index),
-                        ),
                   );
               }
             },

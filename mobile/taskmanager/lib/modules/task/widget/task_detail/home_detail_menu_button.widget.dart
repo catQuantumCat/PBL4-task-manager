@@ -1,17 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:taskmanager/modules/home/bloc/detail/home_detail_task.bloc.dart';
+import 'package:taskmanager/modules/task/bloc/task_detail/task_detail.bloc.dart';
 
-class HomeDetailMenuButtonWidget extends StatefulWidget {
-  const HomeDetailMenuButtonWidget({super.key});
+class TaskDetailMenuButton extends StatefulWidget {
+  const TaskDetailMenuButton({super.key});
 
   @override
-  State<HomeDetailMenuButtonWidget> createState() =>
-      _HomeDetailMenuButtonWidgetState();
+  State<TaskDetailMenuButton> createState() =>
+      _TaskDetailMenuButtonState();
 }
 
-class _HomeDetailMenuButtonWidgetState
-    extends State<HomeDetailMenuButtonWidget> {
+class _TaskDetailMenuButtonState
+    extends State<TaskDetailMenuButton> {
   void _onDelete() {
     showDialog(
         context: context,
@@ -23,7 +23,7 @@ class _HomeDetailMenuButtonWidgetState
               TextButton(
                   onPressed: () {
                     context
-                        .read<HomeDetailTaskBloc>()
+                        .read<TaskDetailBloc>()
                         .add(HomeDetailTaskDelete());
                     Navigator.pop(dialogContext);
                   },
@@ -50,7 +50,7 @@ class _HomeDetailMenuButtonWidgetState
           return [
             PopupMenuItem(
               onTap: () =>
-                  context.read<HomeDetailTaskBloc>().add(HomeDetailTaskEdit()),
+                  context.read<TaskDetailBloc>().add(HomeDetailTaskEdit()),
               child: const Text("Edit"),
             ),
             PopupMenuItem(

@@ -4,7 +4,7 @@ import 'package:taskmanager/data/repositories/task.repository.dart';
 import 'package:taskmanager/main.dart';
 import 'package:taskmanager/modules/home/bloc/list/home_list.bloc.dart';
 
-import 'package:taskmanager/modules/home/view/list/home_list.view.dart';
+import 'package:taskmanager/modules/home/list/home.view.dart';
 import 'package:taskmanager/modules/navigation/bloc/navigation_bloc.dart';
 import 'package:taskmanager/modules/navigation/widget/navigation.widget.dart';
 import 'package:taskmanager/modules/profile/view/profile.view.dart';
@@ -41,7 +41,7 @@ class NavigationView extends StatelessWidget {
         return Scaffold(
           bottomNavigationBar: const NavigationWidget(),
           body: <Widget>[
-            const HomeListPage(),
+            const HomePage(),
             const SearchPage(),
             const ProfilePage(),
           ][state.index],

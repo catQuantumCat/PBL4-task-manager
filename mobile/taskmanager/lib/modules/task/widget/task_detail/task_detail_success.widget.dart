@@ -2,47 +2,48 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:taskmanager/common/datetime_extension.dart';
 import 'package:taskmanager/common/timeofday_extension.dart';
-import 'package:taskmanager/modules/home/bloc/detail/home_detail_task.bloc.dart';
-import 'package:taskmanager/modules/home/widget/detail/home_detail_menu_button.widget.dart';
 
-class HomeDetailLoadedView extends StatelessWidget {
-  const HomeDetailLoadedView({super.key});
+import 'package:taskmanager/modules/task/bloc/task_detail/task_detail.bloc.dart';
+import 'package:taskmanager/modules/task/widget/task_detail/home_detail_menu_button.widget.dart';
 
-  void _showDateHandle(HomeDetailTaskState state, BuildContext context) async {
+class TaskDetailSuccess extends StatelessWidget {
+  const TaskDetailSuccess({super.key});
+
+  void _showDateHandle(TaskDetailState state, BuildContext context) async {
     final DateTime? selectedDate = await showDatePicker(
         context: context, firstDate: DateTime.now(), lastDate: DateTime(2032));
 
     if (!context.mounted) return;
     context
-        .read<HomeDetailTaskBloc>()
+        .read<TaskDetailBloc>()
         .add(HomeDetailTaskChangeDateTime(date: selectedDate));
   }
 
-  void _showTimeHandle(HomeDetailTaskState state, BuildContext context) async {
+  void _showTimeHandle(TaskDetailState state, BuildContext context) async {
     final TimeOfDay? selectedTime =
         await showTimePicker(context: context, initialTime: TimeOfDay.now());
 
     if (!context.mounted) return;
     context
-        .read<HomeDetailTaskBloc>()
+        .read<TaskDetailBloc>()
         .add(HomeDetailTaskChangeDateTime(time: selectedTime));
   }
 
   void _checkBoxHandle(
-      HomeDetailTaskState state, BuildContext context, bool? newStatus) async {
+      TaskDetailState state, BuildContext context, bool? newStatus) async {
     context
-        .read<HomeDetailTaskBloc>()
+        .read<TaskDetailBloc>()
         .add(HomeDetailTaskCompleteTask(status: newStatus));
   }
 
   void _openEditHandle(BuildContext context) {
-    context.read<HomeDetailTaskBloc>().add(HomeDetailTaskEdit());
+    context.read<TaskDetailBloc>().add(HomeDetailTaskEdit());
   }
 
   @override
   Widget build(BuildContext context) {
     {
-      final state = context.read<HomeDetailTaskBloc>().state;
+      final state = context.read<TaskDetailBloc>().state;
       return ListView(
         primary: false,
         padding: const EdgeInsets.fromLTRB(20, 0, 20, 20),
@@ -69,14 +70,14 @@ class HomeDetailLoadedView extends StatelessWidget {
               Wrap(
                 crossAxisAlignment: WrapCrossAlignment.center,
                 children: [
-                  const HomeDetailMenuButtonWidget(),
+                  const TaskDetailMenuButton(),
                   IconButton.filled(
                     constraints: const BoxConstraints(),
                     padding: const EdgeInsets.all(4),
                     onPressed: () {
                       if (context.mounted) {
                         context
-                            .read<HomeDetailTaskBloc>()
+                            .read<TaskDetailBloc>()
                             .add(HomeTaskDetailClose());
                       }
                     },

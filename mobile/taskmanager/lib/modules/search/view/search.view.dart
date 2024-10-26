@@ -6,11 +6,11 @@ import 'package:taskmanager/common/constants/state_status.constant.dart';
 import 'package:taskmanager/data/repositories/task.repository.dart';
 import 'package:taskmanager/main.dart';
 import 'package:taskmanager/modules/home/bloc/list/home_list.bloc.dart';
-import 'package:taskmanager/modules/home/widget/list/home_list.widget.dart';
 import 'package:taskmanager/modules/home/widget/list/home_list_appbar.widget.dart';
 import 'package:taskmanager/modules/search/bloc/search_bloc.dart';
 import 'package:taskmanager/modules/search/widget/appbar_searchbar.widget.dart';
 import 'package:taskmanager/modules/search/widget/search_initial.widget.dart';
+import 'package:taskmanager/modules/task/view/task_list/task_list.view.dart';
 
 class SearchPage extends StatelessWidget {
   const SearchPage({super.key});
@@ -71,7 +71,7 @@ class _SearchViewState extends State<SearchView> {
                 case (StateStatus.initial):
                   return const SearchInitialWidget();
                 case (StateStatus.success):
-                  return HomeListWidget(taskList: state.taskList!);
+                  return TaskListView(taskList: state.taskList!);
                 default:
                   return const Center(
                     child: Text(""),

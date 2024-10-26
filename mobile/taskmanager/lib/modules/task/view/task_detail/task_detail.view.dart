@@ -4,18 +4,18 @@ import 'package:flutter/material.dart';
 
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:taskmanager/common/sheet.constants.dart';
-import 'package:taskmanager/modules/home/bloc/detail/home_detail_task.bloc.dart';
-import 'package:taskmanager/modules/home/view/detail/home_detail_edit.view.dart';
-import 'package:taskmanager/modules/home/view/detail/home_detail_loaded.view.dart';
+import 'package:taskmanager/modules/task/bloc/task_detail/task_detail.bloc.dart';
+import 'package:taskmanager/modules/task/widget/task_detail/task_detail_edit.widget.dart';
+import 'package:taskmanager/modules/task/widget/task_detail/task_detail_success.widget.dart';
 
-class HomeDetailTaskView extends StatefulWidget {
-  const HomeDetailTaskView({super.key});
+class TaskDetailView extends StatefulWidget {
+  const TaskDetailView({super.key});
 
   @override
-  State<HomeDetailTaskView> createState() => _HomeDetailTaskViewState();
+  State<TaskDetailView> createState() => _TaskDetailViewState();
 }
 
-class _HomeDetailTaskViewState extends State<HomeDetailTaskView> {
+class _TaskDetailViewState extends State<TaskDetailView> {
   double _initialSheetHeight = SheetConstants.minHeight;
   bool _closeOnMinHeight = true;
 
@@ -34,10 +34,10 @@ class _HomeDetailTaskViewState extends State<HomeDetailTaskView> {
   @override
   Widget build(BuildContext context) {
     {
-      return BlocConsumer<HomeDetailTaskBloc, HomeDetailTaskState>(
+      return BlocConsumer<TaskDetailBloc, TaskDetailState>(
         listener: (context, state) {
           if (state.status == DetailHomeStatus.finished) {
-            Navigator.pop(context, state.isEdited);
+            Navigator.pop(context);
           }
 
           if (state.status == DetailHomeStatus.initial) {
@@ -59,9 +59,7 @@ class _HomeDetailTaskViewState extends State<HomeDetailTaskView> {
                   if (_initialSheetHeight < SheetConstants.minHeight &&
                       _closeOnMinHeight) {
                     //swipe to exit
-                    context
-                        .read<HomeDetailTaskBloc>()
-                        .add(HomeTaskDetailClose());
+                    context.read<TaskDetailBloc>().add(HomeTaskDetailClose());
                   } else {
                     _initialSheetHeight = SheetConstants.minHeight;
                   }
@@ -91,11 +89,11 @@ class _HomeDetailTaskViewState extends State<HomeDetailTaskView> {
                   switch (state.status) {
                     case DetailHomeStatus.finished:
                     case DetailHomeStatus.initial:
-                      return const HomeDetailLoadedView();
+                      return const TaskDetailSuccess();
                     case DetailHomeStatus.loading:
                       return const Center(child: CircularProgressIndicator());
                     case DetailHomeStatus.editing:
-                      return const HomeDetailTaskEditView();
+                      return const TaskDetailEdit();
                     case DetailHomeStatus.failed:
                     default:
                       return Container();

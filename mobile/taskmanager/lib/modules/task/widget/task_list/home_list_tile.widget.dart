@@ -1,12 +1,14 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:taskmanager/common/datetime_extension.dart';
 import 'package:taskmanager/data/repositories/task.repository.dart';
 import 'package:taskmanager/data/task_model.dart';
 import 'package:taskmanager/main.dart';
-import 'package:taskmanager/modules/home/bloc/detail/home_detail_task.bloc.dart';
 import 'package:taskmanager/modules/home/bloc/list/home_list.bloc.dart';
-import 'package:taskmanager/modules/home/view/detail/home_detail_task.view.dart';
+import 'package:taskmanager/modules/task/bloc/task_detail/task_detail.bloc.dart';
+import 'package:taskmanager/modules/task/view/task_detail/task_detail.view.dart';
 
 class TaskListTile extends StatefulWidget {
   final TaskModel task;
@@ -36,11 +38,15 @@ class _TaskListTileState extends State<TaskListTile> {
       enableDrag: true,
       context: context,
       builder: (BuildContext context) {
-      return BlocProvider(
-        create: (context) => HomeDetailTaskBloc(taskRepository: getIt<TaskRepository>())
-        ..add(HomeDetailTaskOpen(task: widget.task)),
-        child: const HomeDetailTaskView(),
-      );
+        return BlocProvider(
+          create: (context) {
+            log(widget.task.toString());
+            
+            return TaskDetailBloc(taskRepository: getIt<TaskRepository>())
+              ..add(HomeDetailTaskOpen(task: widget.task));
+          },
+          child: const TaskDetailView(),
+        );
       },
     );
   }

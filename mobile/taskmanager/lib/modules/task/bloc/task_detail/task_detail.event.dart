@@ -1,13 +1,13 @@
-part of 'home_detail_task.bloc.dart';
+part of 'task_detail.bloc.dart';
 
-abstract class HomeDetailTaskEvent extends Equatable {
+abstract class TaskDetailEvent extends Equatable {
   @override
   List<Object?> get props => [];
 }
 
-class HomeTaskDetailClose extends HomeDetailTaskEvent {}
+class HomeTaskDetailClose extends TaskDetailEvent {}
 
-class HomeDetailTaskOpen extends HomeDetailTaskEvent {
+class HomeDetailTaskOpen extends TaskDetailEvent {
   final TaskModel task;
 
   HomeDetailTaskOpen({required this.task});
@@ -16,7 +16,7 @@ class HomeDetailTaskOpen extends HomeDetailTaskEvent {
   List<Object?> get props => [task];
 }
 
-class HomeDetailTaskChangeDateTime extends HomeDetailTaskEvent {
+class HomeDetailTaskChangeDateTime extends TaskDetailEvent {
   final DateTime? date;
   final TimeOfDay? time;
 
@@ -26,7 +26,7 @@ class HomeDetailTaskChangeDateTime extends HomeDetailTaskEvent {
   List<Object?> get props => [date, time];
 }
 
-class HomeDetailTaskCompleteTask extends HomeDetailTaskEvent {
+class HomeDetailTaskCompleteTask extends TaskDetailEvent {
   final bool? status;
 
   HomeDetailTaskCompleteTask({required this.status});
@@ -35,17 +35,17 @@ class HomeDetailTaskCompleteTask extends HomeDetailTaskEvent {
   List<Object?> get props => [status];
 }
 
-class HomeDetailTaskEdit extends HomeDetailTaskEvent {
+class HomeDetailTaskEdit extends TaskDetailEvent {
   @override
   List<Object?> get props => [];
 }
 
-class HomeDetailTaskCancelEdit extends HomeDetailTaskEvent {
+class HomeDetailTaskCancelEdit extends TaskDetailEvent {
   @override
   List<Object?> get props => [];
 }
 
-class HomeDetailTaskSaveEdit extends HomeDetailTaskEvent {
+class HomeDetailTaskSaveEdit extends TaskDetailEvent {
   final String? taskName;
   final String? taskDescription;
 
@@ -56,7 +56,7 @@ class HomeDetailTaskSaveEdit extends HomeDetailTaskEvent {
   List<Object?> get props => [taskName, taskDescription];
 }
 
-class HomeDetailTaskDelete extends HomeDetailTaskEvent {
+class HomeDetailTaskDelete extends TaskDetailEvent {
   @override
   List<Object?> get props => [];
 }

@@ -1,16 +1,16 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:taskmanager/data/task_model.dart';
-import 'package:taskmanager/modules/home/widget/list/home_list_tile.widget.dart';
+import 'package:taskmanager/modules/home/bloc/list/home_list.bloc.dart';
+import 'package:taskmanager/modules/task/widget/task_list/home_list_tile.widget.dart';
 
 class TaskListView extends StatelessWidget {
   final List<TaskModel> taskList;
-  final void Function(int)? onDismissed;
 
-  const TaskListView({
-    super.key,
-    required this.taskList,
-    this.onDismissed,
-  });
+  final bool allowDissiable;
+
+  const TaskListView(
+      {super.key, required this.taskList, this.allowDissiable = true});
 
   Future<bool?> _deleteConfirm(BuildContext context) async {
     return await showDialog<bool>(
@@ -37,14 +37,15 @@ class TaskListView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final taskListBloc = context.read<TaskListBloc>();
     return ListView.builder(
       primary: false,
       shrinkWrap: true,
       addAutomaticKeepAlives: false,
       itemCount: taskList.length,
       itemBuilder: (_, index) {
-        if (onDismissed == null) {
-          return HomeListTileWidget(
+        if (allowDissiable == false) {
+          return TaskListTile(
             task: taskList[index],
           );
         }
@@ -66,10 +67,9 @@ class TaskListView extends StatelessWidget {
           confirmDismiss: (direction) async {
             return _deleteConfirm(context);
           },
-          onDismissed: (_) {
-            onDismissed!(taskList[index].id);
-          },
-          child: HomeListTileWidget(
+          onDismissed: (_) => taskListBloc
+              .add(RemoveOneTask(taskToRemoveIndex: taskList[index].id)),
+          child: TaskListTile(
             task: taskList[index],
           ),
         );

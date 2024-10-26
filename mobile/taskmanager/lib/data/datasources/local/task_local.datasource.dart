@@ -40,9 +40,10 @@ class TaskLocalDatasource {
     final index = _tasks.indexWhere((task) => task.id == taskID);
 
     if (index != -1) {
-      developer.log('Task ID not found: $taskID',
-          name: 'TaskLocalDatasource', level: 900);
-      throw (Exception("ID not found - RemoveTask localTaskList"));
+      _tasks.removeAt(index);
+      _taskStreamController.add(_tasks);
+
+      return;
     }
     developer.log('Task ID not found: $taskID',
         name: 'TaskLocalDatasource', level: 900);

@@ -1,15 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:taskmanager/modules/home/bloc/detail/home_detail_task.bloc.dart';
+import 'package:taskmanager/modules/task/bloc/task_detail/task_detail.bloc.dart';
 
-class HomeDetailTaskEditView extends StatefulWidget {
-  const HomeDetailTaskEditView({super.key});
+class TaskDetailEdit extends StatefulWidget {
+  const TaskDetailEdit({super.key});
 
   @override
-  State<HomeDetailTaskEditView> createState() => _HomeDetailTaskEditViewState();
+  State<TaskDetailEdit> createState() => _TaskDetailEditState();
 }
 
-class _HomeDetailTaskEditViewState extends State<HomeDetailTaskEditView> {
+class _TaskDetailEditState extends State<TaskDetailEdit> {
   final TextEditingController nameFieldController = TextEditingController();
   final TextEditingController descriptionFieldController =
       TextEditingController();
@@ -17,18 +17,17 @@ class _HomeDetailTaskEditViewState extends State<HomeDetailTaskEditView> {
   @override
   void initState() {
     super.initState();
-    nameFieldController.text =
-        context.read<HomeDetailTaskBloc>().state.task!.name;
+    nameFieldController.text = context.read<TaskDetailBloc>().state.task!.name;
     descriptionFieldController.text =
-        context.read<HomeDetailTaskBloc>().state.task!.description ?? "";
+        context.read<TaskDetailBloc>().state.task!.description ?? "";
   }
 
   void _cancelTapped() {
-    context.read<HomeDetailTaskBloc>().add(HomeDetailTaskCancelEdit());
+    context.read<TaskDetailBloc>().add(HomeDetailTaskCancelEdit());
   }
 
   void _saveTapped() {
-    context.read<HomeDetailTaskBloc>().add(HomeDetailTaskSaveEdit(
+    context.read<TaskDetailBloc>().add(HomeDetailTaskSaveEdit(
         taskName: nameFieldController.text,
         taskDescription: descriptionFieldController.text));
   }
