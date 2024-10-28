@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:taskmanager/common/constants/state_status.constant.dart';
@@ -35,7 +37,6 @@ class SearchView extends StatelessWidget {
       context.read<SearchBloc>().add(const SearchCancel());
       return;
     }
-
     context.read<SearchBloc>().add(SearchEnterQuery(query: query));
   }
 
@@ -58,6 +59,7 @@ class SearchView extends StatelessWidget {
                   return const SearchInitialWidget();
                 case (StateStatus.success):
                   if (state.taskList.isEmpty) {
+                    log(state.query);
                     return SearchEmptyWidget(query: state.query);
                   } else {
                     return TaskListView(

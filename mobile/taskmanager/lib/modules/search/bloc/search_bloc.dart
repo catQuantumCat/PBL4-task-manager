@@ -43,10 +43,13 @@ class SearchBloc extends Bloc<SearchEvent, SearchState> {
 
   Future<void> _onEnterQuery(
       SearchEnterQuery event, Emitter<SearchState> emit) async {
-    emit(state.copyWith(
-        status: StateStatus.success,
-        taskList: _taskRepository.searchTask(event.query),
-        query: event.query));
+    
+    emit(
+      state.copyWith(
+          status: StateStatus.success,
+          taskList: _taskRepository.searchTask(event.query),
+          query: event.query),
+    );
   }
 
   void _onCancelSearch(SearchCancel event, Emitter<SearchState> emit) {

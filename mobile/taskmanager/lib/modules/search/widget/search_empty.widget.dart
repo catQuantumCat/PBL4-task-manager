@@ -1,22 +1,29 @@
 import 'package:flutter/material.dart';
 
 class SearchEmptyWidget extends StatelessWidget {
-  const SearchEmptyWidget({super.key, required String query})
-      : _query = query;
+  const SearchEmptyWidget({super.key, required String query}) : _query = query;
 
   final String _query;
 
   @override
   Widget build(BuildContext context) {
-    return Container(
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 16),
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
+        crossAxisAlignment: CrossAxisAlignment.center,
         children: [
           const Icon(
+            color: Colors.black54,
             Icons.search_off_outlined,
-            size: 50.0,
+            size: 140.0,
           ),
-          Text("No result for $_query")
+          Center(
+            child: Text(
+              "No result for \"$_query\"",
+              textAlign: TextAlign.center,
+            ),
+          ),
         ],
       ),
     );

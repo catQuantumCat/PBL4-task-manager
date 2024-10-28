@@ -46,11 +46,8 @@ class CommonTitleAppbar extends StatelessWidget {
           ),
           stretch: true,
         ),
-        SliverToBoxAdapter(
-          child: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 16.0),
-            child: child,
-          ),
+        SliverFillRemaining(
+          child: child,
         )
       ],
     );
