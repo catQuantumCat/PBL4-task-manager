@@ -31,8 +31,7 @@ class SearchBloc extends Bloc<SearchEvent, SearchState> {
         final filteredList =
             newList.where((task) => task.name.contains(state.query)).toList();
 
-        return state.copyWith(
-            status: StateStatus.success, taskList: filteredList);
+        return state.copyWith(taskList: filteredList);
       },
       onError: (error, stackTrace) {
         log(error.toString());
@@ -43,7 +42,6 @@ class SearchBloc extends Bloc<SearchEvent, SearchState> {
 
   Future<void> _onEnterQuery(
       SearchEnterQuery event, Emitter<SearchState> emit) async {
-    
     emit(
       state.copyWith(
           status: StateStatus.success,
