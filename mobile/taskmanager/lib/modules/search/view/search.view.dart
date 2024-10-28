@@ -7,6 +7,7 @@ import 'package:taskmanager/main.dart';
 
 import 'package:taskmanager/modules/search/bloc/search_bloc.dart';
 import 'package:taskmanager/modules/search/widget/appbar_searchbar.widget.dart';
+import 'package:taskmanager/modules/search/widget/search_empty.widget.dart';
 import 'package:taskmanager/modules/search/widget/search_initial.widget.dart';
 import 'package:taskmanager/modules/task/bloc/task_list/task_list.bloc.dart';
 import 'package:taskmanager/modules/task/view/task_list/task_list.view.dart';
@@ -56,7 +57,14 @@ class SearchView extends StatelessWidget {
                 case (StateStatus.initial):
                   return const SearchInitialWidget();
                 case (StateStatus.success):
-                  return TaskListView(taskList: state.taskList, allowDissiable: false,);
+                  if (state.taskList.isEmpty) {
+                    return SearchEmptyWidget(query: state.query);
+                  } else {
+                    return TaskListView(
+                      taskList: state.taskList,
+                      allowDissiable: false,
+                    );
+                  }
                 default:
                   return const Center(
                     child: Text(""),
