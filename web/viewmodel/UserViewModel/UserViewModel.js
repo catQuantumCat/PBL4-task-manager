@@ -1,15 +1,14 @@
-
-import UserView from '../../view/UserLogicView/UserView.js';
+import UserView from "../../view/UserLogicView/UserView.js";
 
 export default class UserViewModel {
-    constructor(userModel) {
-        this.userModel = userModel;
+    constructor(userRepository) {
+        this.userRepo = userRepository
         this.users = [];
     }
 
     async fetchAndUpdateUsers() {
         try {
-            this.users = await this.userModel.getAllUsers();
+            this.users = await this.userRepo.getAllUsers();
             this.updateView();
         } catch (error) {
             console.error('Error updating view:', error);
