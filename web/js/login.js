@@ -1,3 +1,6 @@
+import LoginDto from "../dtos/login/LoginDto.js";
+import LoginRepository from "../repository/LoginRepository.js";
+
 const loginContainer = document.querySelector('.login-container');
 const signupContainer = document.querySelector('.signup-container');
 const switchLinks = document.querySelectorAll('.switch');
@@ -14,24 +17,11 @@ document.getElementById("login").onclick = function() {
     const username = document.getElementById("username").value;
     const password = document.getElementById("password").value;
 
-    const data = {
-        username: username,
-        password: password
-    };
+    const loginDto = new LoginDto({username, password});
 
-    fetch('http://localhost:5245/backend/account/loginadmin', {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(data) 
-    })
-    .then(response => {
-        if (!response.ok) {
-            throw new Error('Network response was not ok');
-        }
-        return response.json();
-    })
+    const loginRepo = new LoginRepository();
+    
+    loginRepo.Login(loginDto)
     .then(data => {
         console.log('Success:', data);
         window.location.href = "../admin.html"

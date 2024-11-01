@@ -9,7 +9,7 @@
 <body>
     <div class="container">
         <h1>Add New User</h1>
-        <form action="#" method="POST">
+        <div style="display: flex; flex-direction: column;">
             <label for="name">Username</label>
             <input type="text" id="username" name="name" placeholder="Enter user name" required>
 
@@ -23,8 +23,9 @@
             <input type="password" id="password" name="password" placeholder="Enter user password" required>
 
             <button type="submit" id="add_user">Add User</button>
-        </form>
+        </div>
+            
     </div>
 </body>
-<script src="../../js/user/add-user.js"></script>
+<script type="module" src="../../js/user/add-user.js"></script>
 </html>
