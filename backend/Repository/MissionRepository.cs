@@ -74,7 +74,7 @@ namespace backend.Repository
                 }
             }
 
-            return await missions.ToListAsync();
+            return await missions.Where(x => x.AppUserId == appUserId).ToListAsync();
         }
 
         public async Task<Mission?> GetByIdAsync(int id)
