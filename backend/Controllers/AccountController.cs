@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using backend.Dtos.Account;
 using backend.Interfaces;
 using backend.Models;
+using backend.Repository;
 using backend.Services;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.Data;
@@ -21,13 +22,15 @@ namespace backend.Controllers
     public class AccountController : ControllerBase
     {
         private readonly UserManager<AppUser> _userManager;
+        private readonly IAccountRepository _accountRepo;
         private readonly ITokenService _tokenService;
         private readonly SignInManager<AppUser> _signInManager;
-        public AccountController(UserManager<AppUser> userManager, ITokenService tokenService, SignInManager<AppUser> signInManager)
+        public AccountController(UserManager<AppUser> userManager, ITokenService tokenService, SignInManager<AppUser> signInManager, IAccountRepository accountRepo)
         {
             _userManager = userManager;
             _tokenService = tokenService;
             _signInManager = signInManager;
+            _accountRepo = accountRepo;
         }        
         [HttpPost("register")]
         public async Task<IActionResult> Register([FromBody] RegisterDto registerDto)  
@@ -193,7 +196,7 @@ namespace backend.Controllers
             var result = user.Select(x => new { x.UserName, x.Email}).ToList();
             return Ok(result);
         }
-
+                
         [HttpPut("editUser")]
         public async Task<IActionResult> EditAccount([FromBody] EditUserDto editUser)
         {
@@ -202,30 +205,43 @@ namespace backend.Controllers
                 return BadRequest(ModelState);
             }
 
-            var user = await _userManager.FindByNameAsync(editUser.Username);
+            var user = await _accountRepo.UpdateAsync(editUser, _userManager);
+
             if(user == null)
             {
                 return NotFound("User not found");
             }
 
-            user.Email = editUser.Email;
-            var removePasswordHash = await _userManager.RemovePasswordAsync(user);
-            if(!removePasswordHash.Succeeded)
+
+            if(!user.Success)
             {
-                return BadRequest(removePasswordHash.Errors);
+                return StatusCode(503, user.Error);
             }
 
-            var addPasswordHash = await _userManager.AddPasswordAsync(user, editUser.Password);
-            if(addPasswordHash.Succeeded)
+            return Ok(new EditUserDto
             {
-                return Ok(new EditUserDto{
-                    Username = user.UserName,
-                    Email = user.Email,
-                    Password = editUser.Password,
-                });
+                Username = user.user.UserName,
+                Password = editUser.Password,
+                Email = user.user.Email
+            });
+        }
+
+        [HttpDelete("delete")]
+        public async Task<IActionResult> DeleteAccount([FromBody] DeleteAccountDto deleteAccountDto)
+        {
+            if(!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
             }
+
+            var user = await _userManager.FindByNameAsync(deleteAccountDto.username);
             
-            return BadRequest(addPasswordHash.Errors); 
+            if(user == null) {
+                return NotFound("User not exist");
+            }
+
+            await _userManager.DeleteAsync(user);
+            return NoContent();
         }
     }
 }
