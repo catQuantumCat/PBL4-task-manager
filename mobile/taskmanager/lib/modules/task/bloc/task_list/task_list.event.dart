@@ -50,3 +50,12 @@ class SearchTasks extends TaskListEvent {
   @override
   List<Object?> get props => [query];
 }
+
+class TapOneTask extends TaskListEvent {
+  final TaskModel task;
+
+  const TapOneTask({required this.task});
+
+  @override
+  List<Object?> get props => [task];
+}

@@ -1,23 +1,22 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:taskmanager/modules/task/bloc/task_list/task_list.bloc.dart';
+import 'package:taskmanager/modules/task/view/task_list/task_list.view.dart';
 
 class SearchInitialWidget extends StatelessWidget {
   const SearchInitialWidget({super.key});
 
   @override
   Widget build(BuildContext context) {
-    return const Padding(
-      padding: EdgeInsets.symmetric(horizontal: 16),
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          Icon(
-            color: Colors.black54,
-            Icons.search,
-            size: 140,
-          ),
-          Text("Search for any task.")
-        ],
-      ),
+    return BlocBuilder<TaskListBloc, TaskListState>(
+      buildWhen: (previous, current) =>
+          previous.recentlyViewedTasks != current.recentlyViewedTasks,
+      builder: (context, state) {
+        return TaskListView(
+          taskList: state.recentlyViewedTasks,
+          allowDissiable: false,
+        );
+      },
     );
   }
 }

@@ -16,7 +16,7 @@ class TaskListBloc extends Bloc<TaskListEvent, TaskListState> {
     on<RemoveOneTask>(_removeTask);
     on<ListHomeCheckTask>(_editTask);
     on<ForceReloadTask>(_syncFromRemote);
-    // _listenToStream();
+    on<TapOneTask>(_tapOneTask);
   }
 
   final TaskRepository _taskRepository;
@@ -45,10 +45,14 @@ class TaskListBloc extends Bloc<TaskListEvent, TaskListState> {
       onData: (newList) {
         log("NEW DATA INCOMING");
         log("LATEST DATA: ${newList.last.toString()}");
+
         return state.copyWith(
-          status: StateStatus.success,
-          taskList: [...newList],
-        );
+            status: StateStatus.success,
+            taskList: [...newList],
+            recentlyViewedTasks: newList
+                .where((task) => state.recentlyViewedTasks
+                    .any((recentlyViewed) => task.id == recentlyViewed.id))
+                .toList());
       },
       onError: (error, stackTrace) {
         log(error.toString());
@@ -79,6 +83,28 @@ class TaskListBloc extends Bloc<TaskListEvent, TaskListState> {
       // emit(state.copyWith(status: StateStatus.success));
     } catch (e) {
       emit(state.copyWith(status: StateStatus.failed));
+    }
+  }
+
+  void _tapOneTask(TapOneTask event, Emitter<TaskListState> emit) {
+    // if (state.recentlyViewedTasks.isNotEmpty &&
+    //     event.task.id == state.recentlyViewedTasks.last.id) {
+    //   return;
+    // }
+
+    emit(state.copyWith(status: StateStatus.loading));
+
+    final List<TaskModel> recentlyViewed = List.from(state.recentlyViewedTasks)
+      ..removeWhere((task) => task.id == event.task.id)
+      ..insert(0, event.task);
+
+    if (recentlyViewed.length > 6) {
+      emit(state.copyWith(
+          status: StateStatus.success,
+          recentlyViewedTasks: recentlyViewed.sublist(0, 6)));
+    } else {
+      emit(state.copyWith(
+          status: StateStatus.success, recentlyViewedTasks: recentlyViewed));
     }
   }
 }

@@ -31,7 +31,7 @@ class _TaskListTileState extends State<TaskListTile> {
     _taskStatus = widget.task.status;
   }
 
-  Future<void> _showDetailTaskSheet() async {
+  Future<void> _showDetailTaskSheet(BuildContext context) async {
     await showModalBottomSheet<bool>(
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
       isScrollControlled: true,
@@ -61,7 +61,10 @@ class _TaskListTileState extends State<TaskListTile> {
   @override
   Widget build(BuildContext context) {
     return ListTile(
-      onTap: _showDetailTaskSheet,
+      onTap: () {
+        context.read<TaskListBloc>().add(TapOneTask(task: widget.task));
+        _showDetailTaskSheet(context);
+      },
       leading: Transform.scale(
         scale: 1.5,
         child: Checkbox(

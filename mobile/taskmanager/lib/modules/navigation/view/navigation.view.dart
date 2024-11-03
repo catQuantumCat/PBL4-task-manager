@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:taskmanager/data/repositories/task.repository.dart';
 import 'package:taskmanager/main.dart';
+import 'package:taskmanager/modules/home/bloc/home_bloc.dart';
 
 import 'package:taskmanager/modules/home/view/home.view.dart';
 import 'package:taskmanager/modules/navigation/bloc/navigation_bloc.dart';
@@ -24,6 +25,10 @@ class NavigationPage extends StatelessWidget {
           create: (context) =>
               TaskListBloc(taskRepository: getIt<TaskRepository>())
                 ..add(const FetchTaskList()),
+        ),
+        BlocProvider(
+          create: (context) => HomeBloc(taskRepository: getIt<TaskRepository>())
+            ..add(const HomeOpen()),
         ),
       ],
       child: const NavigationView(),

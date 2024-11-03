@@ -49,7 +49,7 @@ class SearchView extends StatelessWidget {
             searchBar: AppbarSearchbarWidget(
                 onChanged: (query) => _onTextChange(context, query)),
             searchBarHeight: 60,
-            topWidget: const Text(
+            title: const Text(
               "Search",
               style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
             ),

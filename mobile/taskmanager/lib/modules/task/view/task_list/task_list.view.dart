@@ -2,8 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:taskmanager/data/task_model.dart';
 import 'package:taskmanager/modules/task/bloc/task_list/task_list.bloc.dart';
-
-import 'package:taskmanager/common/widget/common_task_list_tile.widget.dart';
+import 'package:taskmanager/modules/task/widget/task_list/common_task_list_tile.widget.dart';
 
 class TaskListView extends StatelessWidget {
   final List<TaskModel> taskList;
@@ -49,11 +48,8 @@ class TaskListView extends StatelessWidget {
       itemCount: taskList.length,
       itemBuilder: (_, index) {
         if (allowDissiable == false) {
-          return Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 16),
-            child: TaskListTile(
-              task: taskList[index],
-            ),
+          TaskListTile(
+            task: taskList[index],
           );
         }
         return Dismissible(
@@ -75,11 +71,8 @@ class TaskListView extends StatelessWidget {
             return _deleteConfirm(context, taskList[index].id);
           },
           onDismissed: (_) => (),
-          child: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 16),
-            child: TaskListTile(
-              task: taskList[index],
-            ),
+          child: TaskListTile(
+            task: taskList[index],
           ),
         );
       },
