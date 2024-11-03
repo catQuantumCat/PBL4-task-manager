@@ -43,6 +43,23 @@ class HomeView extends StatelessWidget {
             ));
   }
 
+  List<CommonListSection> _getSections(HomeState state) {
+    if (state.status == StateStatus.success) {
+      return [
+        CommonListSection(
+          title: "Overdue",
+          isHidden: state.overdueList.isEmpty,
+          child: TaskListView(taskList: state.overdueList),
+        ),
+        CommonListSection(
+          title: "Today",
+          child: TaskListView(taskList: state.todayList),
+        )
+      ];
+    }
+    return [];
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -61,46 +78,27 @@ class HomeView extends StatelessWidget {
             context.read<HomeBloc>().add(const HomeRefresh()),
         child: BlocBuilder<HomeBloc, HomeState>(
           buildWhen: (previous, current) =>
-              (previous.todayList != previous.todayList) ||
               (previous.overdueList != current.todayList),
           builder: (context, state) {
-            if (state.status == StateStatus.success) {
-              return CommonTitleAppbar(
-                title: const Text("Today",
-                    style:
-                        TextStyle(fontWeight: FontWeight.bold, fontSize: 20)),
-                section: [
-                  CommonListSection(
-                    title: "Overdue",
-                    child: TaskListView(taskList: state.overdueList),
-                  ),
-                  CommonListSection(
-                    title: "Today",
-                    child: TaskListView(taskList: state.todayList),
-                  )
-                ],
-              );
-            } else {
-              return CommonTitleAppbar(
-                title: const Text("Today",
-                    style:
-                        TextStyle(fontWeight: FontWeight.bold, fontSize: 20)),
-                child: Builder(builder: (context) {
-                  switch (state.status) {
-                    case StateStatus.initial:
-                      return const Center(
-                        child: Text("Initial state"),
-                      );
-                    case StateStatus.failed:
-                      return const Center(child: CircularProgressIndicator());
-                    case StateStatus.loading:
-                      return const Center(child: CircularProgressIndicator());
-                    case StateStatus.success:
-                      return const SizedBox.shrink();
-                  }
-                }),
-              );
-            }
+            return CommonTitleAppbar(
+              title: const Text("Today",
+                  style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20)),
+              section: _getSections(state),
+              child: Builder(builder: (context) {
+                switch (state.status) {
+                  case StateStatus.initial:
+                    return const Center(
+                      child: Text("Initial state"),
+                    );
+                  case StateStatus.failed:
+                    return const Center(child: CircularProgressIndicator());
+                  case StateStatus.loading:
+                    return const Center(child: CircularProgressIndicator());
+                  case StateStatus.success:
+                    return const SizedBox.shrink();
+                }
+              }),
+            );
           },
         ),
       ),

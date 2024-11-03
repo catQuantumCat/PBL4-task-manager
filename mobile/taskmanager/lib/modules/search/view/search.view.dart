@@ -1,20 +1,14 @@
-import 'dart:developer';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:taskmanager/common/constants/state_status.constant.dart';
 import 'package:taskmanager/common/widget/common_list_section.dart';
 import 'package:taskmanager/common/widget/common_title_appbar.widget.dart';
-import 'package:taskmanager/data/repositories/task.repository.dart';
-import 'package:taskmanager/main.dart';
 
 import 'package:taskmanager/modules/search/bloc/search_bloc.dart';
 import 'package:taskmanager/modules/search/widget/appbar_searchbar.widget.dart';
 import 'package:taskmanager/modules/search/widget/recently_search.section.dart';
-import 'package:taskmanager/modules/search/widget/recently_searched.tile.dart';
 import 'package:taskmanager/modules/search/widget/search_empty.widget.dart';
 import 'package:taskmanager/modules/search/widget/search_initial.widget.dart';
-import 'package:taskmanager/modules/task/bloc/task_list/task_list.bloc.dart';
 import 'package:taskmanager/modules/task/view/task_list/task_list.view.dart';
 
 class SearchPage extends StatelessWidget {

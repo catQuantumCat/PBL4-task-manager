@@ -43,55 +43,22 @@ class TaskListBloc extends Bloc<TaskListEvent, TaskListState> {
     await emit.forEach<List<TaskModel>>(
       _taskRepository.getTaskList(),
       onData: (newList) {
-        // log("NEW DATA INCOMING");
-        // log("LATEST DATA: ${newList.last.toString()}");
-        List<TaskModel> c = [];
+        final recentlyViewedTasksList = newList
+            .where((task) =>
+                state.recentlyViewedTasks.any((recent) => recent.id == task.id))
+            .toList();
 
-        final iSet = state.recentlyViewedTasks.map((e) => e.id).toSet();
+        log(recentlyViewedTasksList.toString(), name: "UPDATED RECENT");
 
-        for (var i in iSet) {
-          for (var k in newList) {
-            if (k.id == i) {
-              c.add(k);
-            }
-          }
-        }
-
-        log(c.toString(), name: "UPDATED RECENT");
-        // log(
-        //     state.recentlyViewedTasks
-        //         .where((task) => newList
-        //             .any((recentlyViewed) => task.id == recentlyViewed.id))
-        //         .toList()
-        //         .toString(),
-        //     name: "UPDATED RECENT");
         return state.copyWith(
             status: StateStatus.success,
-            taskList: [...newList],
-            recentlyViewedTasks: c);
+            recentlyViewedTasks: recentlyViewedTasksList);
       },
       onError: (error, stackTrace) {
         log(error.toString());
         return state.copyWith(status: StateStatus.failed);
       },
     );
-
-    // await emit.forEach<List<TaskModel>>(
-    //   _taskRepository.getTaskList(),
-    //   onData: (newList) {
-
-    //     return state.copyWith(
-    //         status: StateStatus.success,
-    //         recentlyViewedTasks: newList
-    //             .where((task) => state.recentlyViewedTasks
-    //                 .any((recentlyViewed) => task.id == recentlyViewed.id))
-    //             .toList());
-    //   },
-    //   onError: (error, stackTrace) {
-    //     log(error.toString());
-    //     return state.copyWith(status: StateStatus.failed);
-    //   },
-    // );
   }
 
   void _removeTask(RemoveOneTask event, Emitter<TaskListState> emit) async {
@@ -104,14 +71,11 @@ class TaskListBloc extends Bloc<TaskListEvent, TaskListState> {
   }
 
   void _editTask(ListHomeCheckTask event, Emitter<TaskListState> emit) async {
-    // final taskWithIndex = await _taskRepository.getTaskById(event.taskId);
-    // if (taskWithIndex == null) {
-    //   emit(state.copyWith(status: StateStatus.failed));
-    //   return;
-    // }
-
-    final taskWithIndex =
-        state.taskList.firstWhere((task) => task.id == event.taskId);
+    final taskWithIndex = await _taskRepository.getTaskById(event.taskId);
+    if (taskWithIndex == null) {
+      emit(state.copyWith(status: StateStatus.failed));
+      return;
+    }
 
     final data = taskWithIndex.toResponse(status: event.taskStatus);
 

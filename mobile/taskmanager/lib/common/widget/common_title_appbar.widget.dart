@@ -53,8 +53,7 @@ class CommonTitleAppbar extends StatelessWidget {
           ),
           stretch: true,
         ),
-        SliverToBoxAdapter(child: child),
-        ...section,
+        if (section.isEmpty) SliverFillRemaining(child: child) else ...section,
       ],
     );
   }
