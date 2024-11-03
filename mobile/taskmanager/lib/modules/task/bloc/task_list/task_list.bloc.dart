@@ -12,11 +12,12 @@ class TaskListBloc extends Bloc<TaskListEvent, TaskListState> {
   TaskListBloc({required TaskRepository taskRepository})
       : _taskRepository = taskRepository,
         super(const TaskListState()) {
-    on<FetchTaskList>(_fetchList);
+    on<initTaskList>(_initTaskList);
     on<RemoveOneTask>(_removeTask);
     on<ListHomeCheckTask>(_editTask);
     on<ForceReloadTask>(_syncFromRemote);
     on<TapOneTask>(_tapOneTask);
+  
   }
 
   final TaskRepository _taskRepository;
@@ -37,7 +38,7 @@ class TaskListBloc extends Bloc<TaskListEvent, TaskListState> {
     }
   }
 
-  void _fetchList(FetchTaskList event, Emitter<TaskListState> emit) async {
+  void _initTaskList(initTaskList event, Emitter<TaskListState> emit) async {
     emit(state.copyWith(status: StateStatus.loading));
 
     await emit.forEach<List<TaskModel>>(
@@ -48,7 +49,6 @@ class TaskListBloc extends Bloc<TaskListEvent, TaskListState> {
 
         return state.copyWith(
             status: StateStatus.success,
-            taskList: [...newList],
             recentlyViewedTasks: newList
                 .where((task) => state.recentlyViewedTasks
                     .any((recentlyViewed) => task.id == recentlyViewed.id))
@@ -71,27 +71,22 @@ class TaskListBloc extends Bloc<TaskListEvent, TaskListState> {
   }
 
   void _editTask(ListHomeCheckTask event, Emitter<TaskListState> emit) async {
-    // emit(state.copyWith(status: StateStatus.loading));
-    final TaskModel task = state.taskList.firstWhere((task) {
-      return task.id == event.taskId;
-    });
-
-    final data = task.toResponse(status: event.taskStatus);
+    final taskWithIndex = await _taskRepository.getTaskById(event.taskId);
+    if (taskWithIndex == null) {
+      emit(state.copyWith(status: StateStatus.failed));
+      return;
+    }
+    final data = taskWithIndex.toResponse(status: event.taskStatus);
 
     try {
       _taskRepository.editTask(data, event.taskId);
-      // emit(state.copyWith(status: StateStatus.success));
+      emit(state.copyWith(status: StateStatus.success));
     } catch (e) {
       emit(state.copyWith(status: StateStatus.failed));
     }
   }
 
   void _tapOneTask(TapOneTask event, Emitter<TaskListState> emit) {
-    // if (state.recentlyViewedTasks.isNotEmpty &&
-    //     event.task.id == state.recentlyViewedTasks.last.id) {
-    //   return;
-    // }
-
     emit(state.copyWith(status: StateStatus.loading));
 
     final List<TaskModel> recentlyViewed = List.from(state.recentlyViewedTasks)

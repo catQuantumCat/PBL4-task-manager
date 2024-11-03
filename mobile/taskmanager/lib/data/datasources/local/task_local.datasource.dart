@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'dart:developer' as developer;
+import 'package:get_it/get_it.dart';
 import 'package:taskmanager/data/task_model.dart';
 
 class TaskLocalDatasource {
@@ -70,5 +71,13 @@ class TaskLocalDatasource {
 
   List<TaskModel> searchTask(String query) {
     return _tasks.where((task) => task.name.contains(query)).toList();
+  }
+
+  TaskModel? getTaskById(int taskId) {
+    try {
+      return _tasks.firstWhere((task) => task.id == taskId);
+    } catch (e) {
+      return null;
+    }
   }
 }

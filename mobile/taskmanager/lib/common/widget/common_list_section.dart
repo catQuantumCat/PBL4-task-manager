@@ -6,26 +6,28 @@ class CommonListSection extends MultiSliver {
     super.key,
     required String title,
     Color headerColor = Colors.white,
+    Widget? trailing,
     Color titleColor = Colors.black,
     required Widget child,
+    bool isHidden = false,
   }) : super(
           pushPinnedChildren: true,
-          children: [
-            SliverPinnedHeader(
-              child: ColoredBox(
-                color: headerColor,
-                child: ListTile(
-                  textColor: titleColor,
-                  title: Text(title),
-                ),
-              ),
-            ),
-            // SliverList(
-            //   delegate: SliverChildListDelegate.fixed(items),
-            // )
-            SliverToBoxAdapter(
-              child: child,
-            )
-          ],
+          children: isHidden == true
+              ? []
+              : [
+                  SliverPinnedHeader(
+                    child: ColoredBox(
+                      color: headerColor,
+                      child: ListTile(
+                        trailing: trailing,
+                        textColor: titleColor,
+                        title: Text(title),
+                      ),
+                    ),
+                  ),
+                  SliverToBoxAdapter(
+                    child: child,
+                  )
+                ],
         );
 }

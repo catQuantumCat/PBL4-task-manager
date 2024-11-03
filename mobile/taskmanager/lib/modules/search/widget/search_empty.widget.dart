@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
-class SearchEmptyWidget extends StatelessWidget {
-  const SearchEmptyWidget({super.key, required String query}) : _query = query;
+class SearchFailedWidget extends StatelessWidget {
+  const SearchFailedWidget({super.key, required String query}) : _query = query;
 
   final String _query;
 
@@ -20,7 +20,7 @@ class SearchEmptyWidget extends StatelessWidget {
           ),
           Center(
             child: Text(
-              "No result for \"$_query\"",
+              _query,
               textAlign: TextAlign.center,
             ),
           ),

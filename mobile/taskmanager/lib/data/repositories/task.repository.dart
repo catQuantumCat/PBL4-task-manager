@@ -48,6 +48,12 @@ class TaskRepository {
     return _localDatasource.searchTask(query);
   }
 
+  Future<TaskModel?> getTaskById(int taskId) async{
+    TaskModel? toReturn = _localDatasource.getTaskById(taskId);
+    toReturn ??= await _remoteDataSource.getTaskById(taskId);
+    return toReturn;
+  }
+
   Future<void> dispose() async {
     return _localDatasource.dispose();
   }

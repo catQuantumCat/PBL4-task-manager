@@ -48,7 +48,7 @@ class TaskListView extends StatelessWidget {
       itemCount: taskList.length,
       itemBuilder: (_, index) {
         if (allowDissiable == false) {
-          TaskListTile(
+          return TaskListTile(
             task: taskList[index],
           );
         }

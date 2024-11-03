@@ -43,4 +43,10 @@ class TaskRemoteDataSource {
         await _dio.post(ApiConstants.task.value, data: task.toJson());
     return TaskModel.fromJson(response.data);
   }
+
+  Future<TaskModel> getTaskById(int taskId) async {
+    final response = await _dio.get("${ApiConstants.task.value}/$taskId");
+    
+    return TaskModel.fromJson(response.data);
+  }
 }

@@ -22,11 +22,6 @@ class HomePage extends StatelessWidget {
         BlocProvider.value(
           value: BlocProvider.of<TaskListBloc>(context),
         ),
-        // BlocProvider(
-        //   create: (context) =>
-        //       HomeBloc(taskRepository: getIt.get<TaskRepository>())
-        //         ..add(const HomeOpen()),
-        // ),
       ],
       child: const HomeView(),
     );
