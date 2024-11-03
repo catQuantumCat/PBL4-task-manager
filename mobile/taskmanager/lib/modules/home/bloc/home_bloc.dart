@@ -46,7 +46,7 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
     emit(state.copyWith(status: StateStatus.loading));
     try {
       _taskRepository.syncFromRemote();
-      add(HomeOpen()); // Trigger HomeOpen event to refresh the state
+      add(const HomeOpen());
     } catch (e) {
       emit(state.copyWith(
           status: StateStatus.failed, errorMessage: e.toString()));

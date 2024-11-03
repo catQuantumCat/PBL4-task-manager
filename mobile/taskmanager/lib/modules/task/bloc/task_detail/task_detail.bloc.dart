@@ -31,8 +31,6 @@ class TaskDetailBloc extends Bloc<TaskDetailEvent, TaskDetailState> {
   }
 
   void _onOpen(HomeDetailTaskOpen event, Emitter<TaskDetailState> emit) async {
-    log("Open a new task with data");
-
     emit(state.copyWith(status: DetailHomeStatus.initial, task: event.task));
   }
 

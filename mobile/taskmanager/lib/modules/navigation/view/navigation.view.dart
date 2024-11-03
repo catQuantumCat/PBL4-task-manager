@@ -25,7 +25,7 @@ class NavigationPage extends StatelessWidget {
         BlocProvider<TaskListBloc>(
           create: (context) =>
               TaskListBloc(taskRepository: getIt<TaskRepository>())
-                ..add(const initTaskList()),
+                ..add(const InitTaskList()),
         ),
         BlocProvider<HomeBloc>(
           create: (context) => HomeBloc(taskRepository: getIt<TaskRepository>())

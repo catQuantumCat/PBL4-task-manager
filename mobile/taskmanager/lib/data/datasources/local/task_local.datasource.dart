@@ -1,6 +1,5 @@
 import 'dart:async';
 import 'dart:developer' as developer;
-import 'package:get_it/get_it.dart';
 import 'package:taskmanager/data/task_model.dart';
 
 class TaskLocalDatasource {

@@ -83,6 +83,7 @@ class TaskModel {
 
   @override
   String toString() {
-    return 'TaskModel(id: $id, name: $name, description: $description, createTime: $createTime, deadTime: $deadTime, status: $status)';
+    return 'Task[$name]: $status';
+    // return 'TaskModel(id: $id, name: $name, description: $description, createTime: $createTime, deadTime: $deadTime, status: $status)';
   }
 }

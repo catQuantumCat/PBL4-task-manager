@@ -13,9 +13,9 @@ class ForceReloadTask extends TaskListEvent {
   List<Object?> get props => [];
 }
 
-class initTaskList extends TaskListEvent {
+class InitTaskList extends TaskListEvent {
   final String? query;
-  const initTaskList({
+  const InitTaskList({
     this.query,
   });
 
