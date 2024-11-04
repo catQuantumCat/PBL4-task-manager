@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:taskmanager/common/datetime_extension.dart';
 import 'package:taskmanager/data/repositories/task.repository.dart';
-import 'package:taskmanager/data/task_model.dart';
+import 'package:taskmanager/data/model/task_model.dart';
 import 'package:taskmanager/main.dart';
 import 'package:taskmanager/modules/task/bloc/task_detail/task_detail.bloc.dart';
 import 'package:taskmanager/modules/task/bloc/task_list/task_list.bloc.dart';

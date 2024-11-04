@@ -1,19 +1,25 @@
 import 'dart:async';
 import 'dart:developer' as developer;
-import 'package:taskmanager/data/task_model.dart';
+import 'package:taskmanager/data/model/task_model.dart';
 
 class TaskLocalDatasource {
-  final _taskStreamController = StreamController<List<TaskModel>>.broadcast();
+  late StreamController<List<TaskModel>> _taskStreamController;
   List<TaskModel> _tasks = [];
 
-  Stream<List<TaskModel>> get getTaskList =>
-      _taskStreamController.stream.asBroadcastStream();
+  Stream<List<TaskModel>> get getTaskList {
+    return _taskStreamController.stream.asBroadcastStream();
+  }
+
+  void init() {
+    _taskStreamController = StreamController<List<TaskModel>>.broadcast();
+  }
 
   Future<void> dispose() async {
     await _taskStreamController.close();
   }
 
   void syncTaskList(List<TaskModel> remoteTaskList) async {
+    if (_taskStreamController.isClosed) return;
     developer.log('Syncing task list with remote tasks',
         name: 'TaskLocalDatasource');
     _tasks = remoteTaskList;
@@ -22,6 +28,7 @@ class TaskLocalDatasource {
 
   Future<void> editTask(TaskModel remoteTask) async {
     final index = _tasks.indexWhere((task) => task.id == remoteTask.id);
+    if (_taskStreamController.isClosed) return;
 
     if (index != -1) {
       _tasks[index] = remoteTask;
@@ -35,6 +42,7 @@ class TaskLocalDatasource {
   }
 
   Future<void> deleteTask(int taskID) async {
+    if (_taskStreamController.isClosed) return;
     developer.log('Deleting task: $taskID', name: 'TaskLocalDatasource');
 
     final index = _tasks.indexWhere((task) => task.id == taskID);
@@ -51,6 +59,7 @@ class TaskLocalDatasource {
   }
 
   Future<void> createTask(TaskModel taskFromRemote) async {
+    if (_taskStreamController.isClosed) return;
     developer.log('Creating task: ${taskFromRemote.id}',
         name: 'TaskLocalDatasource');
 

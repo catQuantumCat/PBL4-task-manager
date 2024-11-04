@@ -2,7 +2,7 @@ import 'dart:developer';
 import 'package:equatable/equatable.dart';
 import 'package:taskmanager/common/constants/state_status.constant.dart';
 import 'package:taskmanager/data/repositories/task.repository.dart';
-import 'package:taskmanager/data/task_model.dart';
+import 'package:taskmanager/data/model/task_model.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 part 'task_list.state.dart';
@@ -12,11 +12,13 @@ class TaskListBloc extends Bloc<TaskListEvent, TaskListState> {
   TaskListBloc({required TaskRepository taskRepository})
       : _taskRepository = taskRepository,
         super(const TaskListState()) {
+    taskRepository.init();
     on<InitTaskList>(_initTaskList);
     on<RemoveOneTask>(_removeTask);
     on<ListHomeCheckTask>(_editTask);
     on<ForceReloadTask>(_syncFromRemote);
     on<TapOneTask>(_tapOneTask);
+    add(const InitTaskList());
   }
 
   final TaskRepository _taskRepository;

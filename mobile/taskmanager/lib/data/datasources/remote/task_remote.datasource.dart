@@ -4,7 +4,7 @@ import 'dart:developer';
 import 'package:dio/dio.dart';
 import 'package:taskmanager/common/constants/api_constant.dart';
 import 'package:taskmanager/data/dtos/task.dto.dart';
-import 'package:taskmanager/data/task_model.dart';
+import 'package:taskmanager/data/model/task_model.dart';
 
 class TaskRemoteDataSource {
   final Dio _dio;

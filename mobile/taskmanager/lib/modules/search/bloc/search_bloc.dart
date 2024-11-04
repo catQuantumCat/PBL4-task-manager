@@ -4,7 +4,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:equatable/equatable.dart';
 import 'package:taskmanager/common/constants/state_status.constant.dart';
 import 'package:taskmanager/data/repositories/task.repository.dart';
-import 'package:taskmanager/data/task_model.dart';
+import 'package:taskmanager/data/model/task_model.dart';
 
 part 'search_event.dart';
 part 'search_state.dart';

@@ -1,7 +1,7 @@
 import 'package:taskmanager/data/datasources/local/task_local.datasource.dart';
 import 'package:taskmanager/data/datasources/remote/task_remote.datasource.dart';
 import 'package:taskmanager/data/dtos/task.dto.dart';
-import 'package:taskmanager/data/task_model.dart';
+import 'package:taskmanager/data/model/task_model.dart';
 
 class TaskRepository {
   final TaskRemoteDataSource _remoteDataSource;
@@ -12,7 +12,10 @@ class TaskRepository {
       {required TaskRemoteDataSource remoteDataSource,
       required TaskLocalDatasource localDataSource})
       : _remoteDataSource = remoteDataSource,
-        _localDatasource = localDataSource {
+        _localDatasource = localDataSource;
+
+  void init() {
+    _localDatasource.init();
     syncFromRemote();
   }
 
@@ -48,7 +51,7 @@ class TaskRepository {
     return _localDatasource.searchTask(query);
   }
 
-  Future<TaskModel?> getTaskById(int taskId) async{
+  Future<TaskModel?> getTaskById(int taskId) async {
     TaskModel? toReturn = _localDatasource.getTaskById(taskId);
     toReturn ??= await _remoteDataSource.getTaskById(taskId);
     return toReturn;

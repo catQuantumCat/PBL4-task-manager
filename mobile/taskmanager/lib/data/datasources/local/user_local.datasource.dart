@@ -18,9 +18,7 @@ class UserLocalDatasource {
 
   Stream<AuthEvent> get authEventStream => _authEventController.stream;
 
-
-
-    Future<void> dispose() async {
+  Future<void> dispose() async {
     await _authEventController.close();
   }
 

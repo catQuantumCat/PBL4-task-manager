@@ -6,7 +6,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:taskmanager/common/datetime_extension.dart';
 import 'package:taskmanager/data/dtos/task.dto.dart';
 import 'package:taskmanager/data/repositories/task.repository.dart';
-import 'package:taskmanager/data/task_model.dart';
+import 'package:taskmanager/data/model/task_model.dart';
 part 'task_detail.event.dart';
 part 'task_detail.state.dart';
 
