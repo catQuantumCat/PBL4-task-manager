@@ -26,4 +26,14 @@ extension DatetimeExtension on DateTime {
   bool isSameDate(DateTime incomingDate) {
     return DateUtils.isSameDay(this, incomingDate);
   }
+  
+  bool isPast({required DateTime of}) {
+    final futureDate = of;
+
+    if (futureDate.year > year) return true;
+    if (futureDate.month > month) return true;
+    if (futureDate.day > day) return true;
+
+    return false;
+  }
 }

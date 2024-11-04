@@ -1,18 +1,25 @@
 import 'package:flutter/material.dart';
 
+import 'package:taskmanager/common/widget/common_list_section.dart';
+
+const APPBARHEIGHT = 96;
+
 class CommonTitleAppbar extends StatelessWidget {
   const CommonTitleAppbar(
       {super.key,
-      required this.child,
-      required Widget topWidget,
+      // required this.child,
+      required Widget title,
       Widget? searchBar,
-      this.searchBarHeight = 0})
+      this.searchBarHeight = 0,
+      this.section = const [],
+      this.child})
       : _searchBar = searchBar,
-        _topWidget = topWidget;
-  final Widget _topWidget;
+        _title = title;
+  final Widget _title;
   final Widget? _searchBar;
   final double searchBarHeight;
-  final Widget child;
+  final Widget? child;
+  final List<CommonListSection> section;
 
   @override
   Widget build(BuildContext context) {
@@ -36,22 +43,17 @@ class CommonTitleAppbar extends StatelessWidget {
                 ))
           ],
           primary: true,
-          expandedHeight: 96 + searchBarHeight,
+          expandedHeight: APPBARHEIGHT + searchBarHeight,
           pinned: true,
           floating: false,
           flexibleSpace: FlexibleSpaceBar(
             titlePadding: EdgeInsets.only(
                 left: 16, right: 16, top: 0, bottom: searchBarHeight + 10),
-            title: _topWidget,
+            title: _title,
           ),
           stretch: true,
         ),
-        SliverToBoxAdapter(
-          child: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 16.0),
-            child: child,
-          ),
-        )
+        if (section.isEmpty) SliverFillRemaining(child: child) else ...section,
       ],
     );
   }

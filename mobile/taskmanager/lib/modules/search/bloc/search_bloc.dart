@@ -1,53 +1,78 @@
+import 'dart:developer';
+
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:equatable/equatable.dart';
 import 'package:taskmanager/common/constants/state_status.constant.dart';
 import 'package:taskmanager/data/repositories/task.repository.dart';
-import 'package:taskmanager/data/task_model.dart';
-import 'package:taskmanager/modules/task/bloc/task_list/task_list.bloc.dart';
+import 'package:taskmanager/data/model/task_model.dart';
 
 part 'search_event.dart';
 part 'search_state.dart';
 
 class SearchBloc extends Bloc<SearchEvent, SearchState> {
   final TaskRepository _taskRepository;
-  final TaskListBloc _homeListBloc;
 
-  SearchBloc(
-      {required TaskRepository taskRepository,
-      required TaskListBloc homeListBloc})
-      : _taskRepository = taskRepository,
-        _homeListBloc = homeListBloc,
-        super(const SearchState.initial()) {
+  SearchBloc({
+    required TaskRepository taskRepository,
+  })  : _taskRepository = taskRepository,
+        super(const SearchState(status: StateStatus.initial)) {
     on<SearchOpen>(_onOpenSearch);
     on<SearchEnterQuery>(_onEnterQuery);
     on<SearchCancel>(_onCancelSearch);
+    on<SearchReturnTapped>(_onReturnTapped);
+    on<SearchClearRecent>(_onClearRecentSearch);
   }
 
-  void _onOpenSearch(SearchOpen event, Emitter<SearchState> emit) {
-    emit(const SearchState.initial());
+  Future<void> _onOpenSearch(
+      SearchOpen event, Emitter<SearchState> emit) async {
+    await emit.forEach<List<TaskModel>>(
+      _taskRepository.getTaskList(),
+      onData: (newList) {
+        final filteredList =
+            newList.where((task) => task.name.contains(state.query)).toList();
+
+        return state.copyWith(taskList: filteredList);
+      },
+      onError: (error, stackTrace) {
+        log(error.toString());
+        return state.copyWith(
+            status: StateStatus.failed,
+            errorMessage: "Search cannot be initialized!");
+      },
+    );
   }
 
   Future<void> _onEnterQuery(
+      SearchEnterQuery event, Emitter<SearchState> emit) async {
+    final taskList = _taskRepository.searchTask(event.query);
 
-      // _homeListBloc.add(FetchTaskList(query: event.query));
-
-      //   emit(SearchState.success(taskList: _homeListBloc.state.taskList));
-
-      SearchEnterQuery event,
-      Emitter<SearchState> emit) async {
-    // emit(const SearchState.loading());
-
-    emit(const SearchState.failed(errorMessage: "Not implemented"));
-
-    // try {
-    //   final taskList =
-    //       await _taskRepository.getTaskList(queryName: event.query);
-
-    //   emit(SearchState.success(taskList: taskList));
-    // } catch (e) {}
+    if (taskList.isEmpty) {
+      emit(state.copyWith(
+          status: StateStatus.failed,
+          errorMessage: "No result for \"${event.query}\"",
+          query: event.query));
+      return;
+    }
+    emit(
+      state.copyWith(
+          status: StateStatus.success,
+          taskList: _taskRepository.searchTask(event.query),
+          query: event.query),
+    );
   }
 
   void _onCancelSearch(SearchCancel event, Emitter<SearchState> emit) {
-    emit(const SearchState.initial());
+    emit(state.copyWith(status: StateStatus.initial, query: ""));
+  }
+
+  void _onReturnTapped(SearchReturnTapped event, Emitter<SearchState> emit) {
+    emit(state.copyWith(
+        recentlySearched:
+            [event.query, ...state.recentlySearched].take(6).toList()));
+  }
+
+  void _onClearRecentSearch(
+      SearchClearRecent event, Emitter<SearchState> emit) {
+    emit(state.copyWith(recentlySearched: []));
   }
 }

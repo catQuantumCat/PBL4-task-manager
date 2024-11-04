@@ -42,7 +42,6 @@ class AppRoutes {
             return const SearchPage();
           },
         );
-
       default:
         return MaterialPageRoute(
             builder: (_) => const Scaffold(

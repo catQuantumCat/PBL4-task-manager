@@ -13,9 +13,9 @@ class ForceReloadTask extends TaskListEvent {
   List<Object?> get props => [];
 }
 
-class FetchTaskList extends TaskListEvent {
+class InitTaskList extends TaskListEvent {
   final String? query;
-  const FetchTaskList({
+  const InitTaskList({
     this.query,
   });
 
@@ -49,4 +49,13 @@ class SearchTasks extends TaskListEvent {
 
   @override
   List<Object?> get props => [query];
+}
+
+class TapOneTask extends TaskListEvent {
+  final TaskModel task;
+
+  const TapOneTask({required this.task});
+
+  @override
+  List<Object?> get props => [task];
 }

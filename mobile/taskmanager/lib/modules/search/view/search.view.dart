@@ -1,16 +1,14 @@
-import 'dart:async';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:taskmanager/common/constants/state_status.constant.dart';
+import 'package:taskmanager/common/widget/common_list_section.dart';
 import 'package:taskmanager/common/widget/common_title_appbar.widget.dart';
-import 'package:taskmanager/data/repositories/task.repository.dart';
-import 'package:taskmanager/main.dart';
 
 import 'package:taskmanager/modules/search/bloc/search_bloc.dart';
 import 'package:taskmanager/modules/search/widget/appbar_searchbar.widget.dart';
+import 'package:taskmanager/modules/search/widget/recently_search.section.dart';
+import 'package:taskmanager/modules/search/widget/search_empty.widget.dart';
 import 'package:taskmanager/modules/search/widget/search_initial.widget.dart';
-import 'package:taskmanager/modules/task/bloc/task_list/task_list.bloc.dart';
 import 'package:taskmanager/modules/task/view/task_list/task_list.view.dart';
 
 class SearchPage extends StatelessWidget {
@@ -18,12 +16,7 @@ class SearchPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return BlocProvider(
-      create: (context) => SearchBloc(
-          taskRepository: getIt<TaskRepository>(),
-          homeListBloc: BlocProvider.of<TaskListBloc>(context)),
-      child: const SearchView(),
-    );
+    return const SearchView();
   }
 }
 
@@ -35,24 +28,69 @@ class SearchView extends StatefulWidget {
 }
 
 class _SearchViewState extends State<SearchView> {
-  Timer? _debounce;
+  final TextEditingController _textController = TextEditingController();
 
-  String previousSearch = "";
+  @override
+  void initState() {
+    _textController.text = context.read<SearchBloc>().state.query;
+    _textController.addListener(() => _onTextChange());
+    super.initState();
+  }
 
-  void _onTextChange(String query) {
-    if (_debounce?.isActive ?? false) _debounce!.cancel();
+  @override
+  void dispose() {
+    _textController.dispose();
+    super.dispose();
+  }
 
+  void _onTextChange() {
+    final query = _textController.text;
     if (query.isEmpty) {
       context.read<SearchBloc>().add(const SearchCancel());
       return;
     }
+    context.read<SearchBloc>().add(SearchEnterQuery(query: query));
+  }
 
-    setState(() {
-      previousSearch = query;
-    });
+  void _onReturnTapped() {
+    final searchQuery = _textController.text;
+    if (searchQuery.isEmpty) return;
+    context.read<SearchBloc>().add(SearchReturnTapped(query: searchQuery));
+  }
 
-    _debounce = Timer(const Duration(milliseconds: 500),
-        () => context.read<SearchBloc>().add(SearchEnterQuery(query: query)));
+  void _onRecentSearchQueryTapped(String tappedQuery) {
+    _textController.text = tappedQuery;
+    context.read<SearchBloc>().add(SearchEnterQuery(query: tappedQuery));
+  }
+
+  void _onClearRecentTapped() {
+    context.read<SearchBloc>().add(const SearchClearRecent());
+  }
+
+  List<CommonListSection> _buildSections(SearchState state) {
+    if (state.status == StateStatus.initial) {
+      return [
+        CommonListSection(
+          title: "Recent searches",
+          trailing: TextButton(
+            onPressed: _onClearRecentTapped,
+            child: const Text("Clear"),
+          ),
+          isHidden: state.recentlySearched.isEmpty,
+          child: RecentlySearchedListTile(
+            recentlySearched: state.recentlySearched,
+            onTap: (tappedQuery) {
+              _onRecentSearchQueryTapped(tappedQuery);
+            },
+          ),
+        ),
+        CommonListSection(
+          title: "Recently Viewed",
+          child: const SearchInitialWidget(),
+        ),
+      ];
+    }
+    return [];
   }
 
   @override
@@ -61,22 +99,28 @@ class _SearchViewState extends State<SearchView> {
       builder: (context, state) {
         return Scaffold(
           body: CommonTitleAppbar(
-            searchBar: AppbarSearchbarWidget(onChanged: _onTextChange),
+            section: _buildSections(state),
+            searchBar: AppbarSearchbarWidget(
+              textController: _textController,
+              onReturn: (query) => _onReturnTapped(),
+            ),
             searchBarHeight: 60,
-            topWidget: const Text(
+            title: const Text(
               "Search",
               style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
             ),
             child: Builder(builder: (context) {
               switch (state.status) {
-                case (StateStatus.initial):
-                  return const SearchInitialWidget();
+                case (StateStatus.failed):
+                  return SearchFailedWidget(
+                      query: state.errorMessage ?? "Something went wrong!");
                 case (StateStatus.success):
-                  return TaskListView(taskList: state.taskList!);
-                default:
-                  return const Center(
-                    child: Text(""),
+                  return TaskListView(
+                    taskList: state.taskList,
+                    allowDissiable: false,
                   );
+                default:
+                  return const SizedBox.shrink();
               }
             }),
           ),

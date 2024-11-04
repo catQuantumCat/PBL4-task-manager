@@ -1,14 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:taskmanager/common/constants/state_status.constant.dart';
+import 'package:taskmanager/common/widget/common_list_section.dart';
 import 'package:taskmanager/common/widget/common_title_appbar.widget.dart';
 import 'package:taskmanager/data/repositories/task.repository.dart';
 import 'package:taskmanager/main.dart';
-
-import 'package:taskmanager/modules/home/cubit/home_cubit.dart';
+import 'package:taskmanager/modules/home/bloc/home_bloc.dart';
 
 import 'package:taskmanager/modules/task/bloc/task_create/task_create.bloc.dart';
 import 'package:taskmanager/modules/task/bloc/task_list/task_list.bloc.dart';
+
 import 'package:taskmanager/modules/task/view/task_create/home_new_task.view.dart';
 import 'package:taskmanager/modules/task/view/task_list/task_list.view.dart';
 
@@ -21,9 +22,6 @@ class HomePage extends StatelessWidget {
       providers: [
         BlocProvider.value(
           value: BlocProvider.of<TaskListBloc>(context),
-        ),
-        BlocProvider(
-          create: (context) => HomeCubit(),
         ),
       ],
       child: const HomeView(),
@@ -46,9 +44,25 @@ class HomeView extends StatelessWidget {
             ));
   }
 
+  List<CommonListSection> _getSections(HomeState state) {
+    if (state.status == StateStatus.success) {
+      return [
+        CommonListSection(
+          title: "Overdue",
+          isHidden: state.overdueList.isEmpty,
+          child: TaskListView(taskList: state.overdueList),
+        ),
+        CommonListSection(
+          title: "Today",
+          child: TaskListView(taskList: state.todayList),
+        )
+      ];
+    }
+    return [];
+  }
+
   @override
   Widget build(BuildContext context) {
-    final TaskListBloc taskListBloc = context.read<TaskListBloc>();
     return Scaffold(
       floatingActionButton: FloatingActionButton(
         elevation: 4,
@@ -61,32 +75,32 @@ class HomeView extends StatelessWidget {
         child: const Icon(Icons.add),
       ),
       body: RefreshIndicator(
-        onRefresh: () async => taskListBloc.add(const ForceReloadTask()),
-        child: CommonTitleAppbar(
-          topWidget: const Text(
-            "Today",
-            style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
-          ),
-          child: BlocBuilder<TaskListBloc, TaskListState>(
-            builder: (context, state) {
-              switch (state.status) {
-                case StateStatus.initial:
-                  return const Center(
-                    child: Text("Initial state"),
-                  );
-                case StateStatus.failed:
-                  return const Center(
-                    child: Text("Fetching data failed "),
-                  );
-                case StateStatus.loading:
-                  return const Center(child: CircularProgressIndicator());
-                case StateStatus.success:
-                  return TaskListView(
-                    taskList: state.taskList,
-                  );
-              }
-            },
-          ),
+        onRefresh: () async =>
+            context.read<HomeBloc>().add(const HomeRefresh()),
+        child: BlocBuilder<HomeBloc, HomeState>(
+          buildWhen: (previous, current) =>
+              (previous.overdueList != current.todayList),
+          builder: (context, state) {
+            return CommonTitleAppbar(
+              title: const Text("Today",
+                  style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20)),
+              section: _getSections(state),
+              child: Builder(builder: (context) {
+                switch (state.status) {
+                  case StateStatus.initial:
+                    return const Center(
+                      child: Text("Initial state"),
+                    );
+                  case StateStatus.failed:
+                    return const Center(child: CircularProgressIndicator());
+                  case StateStatus.loading:
+                    return const Center(child: CircularProgressIndicator());
+                  case StateStatus.success:
+                    return const SizedBox.shrink();
+                }
+              }),
+            );
+          },
         ),
       ),
     );

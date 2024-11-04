@@ -22,3 +22,19 @@ class SearchEnterQuery extends SearchEvent {
 class SearchCancel extends SearchEvent {
   const SearchCancel();
 }
+
+class SearchReturnTapped extends SearchEvent {
+  final String query;
+
+  const SearchReturnTapped({required this.query});
+  @override
+  List<Object?> get props => [query];
+}
+
+class SearchClearRecent extends SearchEvent {
+  
+
+  const SearchClearRecent();
+  @override
+  List<Object?> get props => [];
+}

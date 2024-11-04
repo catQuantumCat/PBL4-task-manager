@@ -2,7 +2,7 @@ import 'dart:developer';
 import 'package:equatable/equatable.dart';
 import 'package:taskmanager/common/constants/state_status.constant.dart';
 import 'package:taskmanager/data/repositories/task.repository.dart';
-import 'package:taskmanager/data/task_model.dart';
+import 'package:taskmanager/data/model/task_model.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 part 'task_list.state.dart';
@@ -12,14 +12,21 @@ class TaskListBloc extends Bloc<TaskListEvent, TaskListState> {
   TaskListBloc({required TaskRepository taskRepository})
       : _taskRepository = taskRepository,
         super(const TaskListState()) {
-    on<FetchTaskList>(_fetchList);
+    taskRepository.init();
+    on<InitTaskList>(_initTaskList);
     on<RemoveOneTask>(_removeTask);
     on<ListHomeCheckTask>(_editTask);
     on<ForceReloadTask>(_syncFromRemote);
-    // _listenToStream();
+    on<TapOneTask>(_tapOneTask);
+    add(const InitTaskList());
   }
 
   final TaskRepository _taskRepository;
+  @override
+  Future<void> close() async {
+    await _taskRepository.dispose();
+    return super.close();
+  }
 
   void _syncFromRemote(
       ForceReloadTask event, Emitter<TaskListState> emit) async {
@@ -27,22 +34,27 @@ class TaskListBloc extends Bloc<TaskListEvent, TaskListState> {
     try {
       _taskRepository.syncFromRemote();
     } catch (e) {
+      emit(state.copyWith(status: StateStatus.failed));
       log(e.toString());
     }
   }
 
-  void _fetchList(FetchTaskList event, Emitter<TaskListState> emit) async {
+  void _initTaskList(InitTaskList event, Emitter<TaskListState> emit) async {
     emit(state.copyWith(status: StateStatus.loading));
 
     await emit.forEach<List<TaskModel>>(
       _taskRepository.getTaskList(),
       onData: (newList) {
-        log("NEW DATA INCOMING");
-        log("LATEST DATA: ${newList.last.toString()}");
+        final recentlyViewedTasksList = newList
+            .where((task) =>
+                state.recentlyViewedTasks.any((recent) => recent.id == task.id))
+            .toList();
+
+        log(recentlyViewedTasksList.toString(), name: "UPDATED RECENT");
+
         return state.copyWith(
-          status: StateStatus.success,
-          taskList: [...newList],
-        );
+            status: StateStatus.success,
+            recentlyViewedTasks: recentlyViewedTasksList);
       },
       onError: (error, stackTrace) {
         log(error.toString());
@@ -61,18 +73,31 @@ class TaskListBloc extends Bloc<TaskListEvent, TaskListState> {
   }
 
   void _editTask(ListHomeCheckTask event, Emitter<TaskListState> emit) async {
-    // emit(state.copyWith(status: StateStatus.loading));
-    final TaskModel task = state.taskList.firstWhere((task) {
-      return task.id == event.taskId;
-    });
+    final taskWithIndex = await _taskRepository.getTaskById(event.taskId);
+    if (taskWithIndex == null) {
+      emit(state.copyWith(status: StateStatus.failed));
+      return;
+    }
 
-    final data = task.toResponse(status: event.taskStatus);
+    final data = taskWithIndex.toResponse(status: event.taskStatus);
 
     try {
       _taskRepository.editTask(data, event.taskId);
-      // emit(state.copyWith(status: StateStatus.success));
+      emit(state.copyWith(status: StateStatus.success));
     } catch (e) {
       emit(state.copyWith(status: StateStatus.failed));
     }
+  }
+
+  void _tapOneTask(TapOneTask event, Emitter<TaskListState> emit) {
+    emit(state.copyWith(status: StateStatus.loading));
+    final recentlyViewed = [
+      event.task,
+      ...state.recentlyViewedTasks.where((task) => task.id != event.task.id)
+    ].take(6).toList();
+
+    log(recentlyViewed.toString(), name: "TAP RECENT");
+    emit(state.copyWith(
+        status: StateStatus.success, recentlyViewedTasks: recentlyViewed));
   }
 }

@@ -1,4 +1,4 @@
-import 'package:taskmanager/data/task_model.dart';
+import 'package:taskmanager/data/model/task_model.dart';
 
 final List<TaskModel> dummyData = [
   TaskModel(

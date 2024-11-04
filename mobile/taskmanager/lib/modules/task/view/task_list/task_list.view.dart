@@ -1,9 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:taskmanager/data/task_model.dart';
+import 'package:taskmanager/data/model/task_model.dart';
 import 'package:taskmanager/modules/task/bloc/task_list/task_list.bloc.dart';
-
-import 'package:taskmanager/modules/task/widget/task_list/home_list_tile.widget.dart';
+import 'package:taskmanager/modules/task/widget/task_list/common_task_list.tile.dart';
 
 class TaskListView extends StatelessWidget {
   final List<TaskModel> taskList;
@@ -13,7 +12,7 @@ class TaskListView extends StatelessWidget {
   const TaskListView(
       {super.key, required this.taskList, this.allowDissiable = true});
 
-  Future<bool?> _deleteConfirm(BuildContext context) async {
+  Future<bool?> _deleteConfirm(BuildContext context, int taskId) async {
     return await showDialog<bool>(
         context: context,
         builder: (dialogContext) {
@@ -28,6 +27,10 @@ class TaskListView extends StatelessWidget {
                   child: const Text("Cancel")),
               TextButton(
                   onPressed: () {
+                    context
+                        .read<TaskListBloc>()
+                        .add(RemoveOneTask(taskToRemoveIndex: taskId));
+
                     Navigator.pop(dialogContext, true);
                   },
                   child: const Text("Delete"))
@@ -38,7 +41,6 @@ class TaskListView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final taskListBloc = context.read<TaskListBloc>();
     return ListView.builder(
       primary: false,
       shrinkWrap: true,
@@ -47,6 +49,7 @@ class TaskListView extends StatelessWidget {
       itemBuilder: (_, index) {
         if (allowDissiable == false) {
           return TaskListTile(
+            key: UniqueKey(),
             task: taskList[index],
           );
         }
@@ -66,10 +69,9 @@ class TaskListView extends StatelessWidget {
             ),
           ),
           confirmDismiss: (direction) async {
-            return _deleteConfirm(context);
+            return _deleteConfirm(context, taskList[index].id);
           },
-          onDismissed: (_) => taskListBloc
-              .add(RemoveOneTask(taskToRemoveIndex: taskList[index].id)),
+          onDismissed: (_) => (),
           child: TaskListTile(
             task: taskList[index],
           ),
