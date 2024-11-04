@@ -1,6 +1,8 @@
 import 'dart:async';
+import 'dart:developer';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:equatable/equatable.dart';
+import 'package:taskmanager/data/dtos/auth_response.dto.dart';
 import 'package:taskmanager/data/repositories/user.repository.dart';
 
 part 'auth_event.dart';
@@ -14,7 +16,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
     _userRepository.authEventStream.listen(
       (event) => add(event),
     );
-    on<AuthSetToken>(_setToken);
+    on<AuthSetInfo>(_setCredentials);
     on<AuthCheckToken>(_onCheckToken);
     on<AuthLogOut>(_onLogOut);
   }
@@ -40,9 +42,9 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
     _changeAuthState(tokenString, emit);
   }
 
-  void _setToken(AuthSetToken event, Emitter<AuthState> emit) {
-    _userRepository.setToken(event.tokenString);
-    _changeAuthState(event.tokenString, emit);
+  void _setCredentials(AuthSetInfo event, Emitter<AuthState> emit) {
+    _userRepository.setCredentials(event.userCredentials);
+    _changeAuthState(event.userCredentials.token, emit);
   }
 
   void _onLogOut(AuthLogOut event, Emitter<AuthState> emit) async {

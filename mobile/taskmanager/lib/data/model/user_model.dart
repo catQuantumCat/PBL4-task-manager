@@ -23,4 +23,8 @@ class UserModel {
       username: map['username'] as String,
     );
   }
+
+  String toJsonString() => json.encode(toJson());
+
+  factory UserModel.fromJsonString(String source) => UserModel.fromJson(json.decode(source) as Map<String, dynamic>);
 }

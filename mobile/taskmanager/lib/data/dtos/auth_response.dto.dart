@@ -1,3 +1,4 @@
+// ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'dart:convert';
 
 class AuthResponseDTO {
@@ -10,7 +11,7 @@ class AuthResponseDTO {
     required this.token,
   });
 
-  factory AuthResponseDTO.fromMap(Map<String, dynamic> map) {
+  factory AuthResponseDTO.fromJson(Map<String, dynamic> map) {
     return AuthResponseDTO(
       username: map['username'] as String,
       email: map['email'] as String,
@@ -18,6 +19,11 @@ class AuthResponseDTO {
     );
   }
 
-  factory AuthResponseDTO.fromJson(String source) =>
-      AuthResponseDTO.fromMap(json.decode(source) as Map<String, dynamic>);
+  Map<String, dynamic> toJson() {
+    return <String, dynamic>{
+      'username': username,
+      'email': email,
+      'token': token,
+    };
+  }
 }

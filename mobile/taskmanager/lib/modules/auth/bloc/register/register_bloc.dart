@@ -25,12 +25,12 @@ class RegisterBloc extends Bloc<RegisterEvent, RegisterState> {
     emit(const RegisterState.loading());
 
     try {
-      final token = await _userRepository.submitRegister(
+      final userCredentials = await _userRepository.submitRegister(
           email: event.email,
           username: event.username,
           password: event.password);
 
-      _authBloc.add(AuthSetToken(tokenString: token));
+      _authBloc.add(AuthSetInfo(userCredentials: userCredentials));
 
       emit(const RegisterState.success());
     } catch (e) {
