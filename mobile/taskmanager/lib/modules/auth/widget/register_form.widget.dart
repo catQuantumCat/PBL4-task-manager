@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:taskmanager/common/utils/validation.utils.dart';
-import 'package:taskmanager/modules/auth/widget/round_text_form_field.widget.dart';
+import 'package:taskmanager/common/widget/common.text_form_field.dart';
 
 class RegisterForm extends StatelessWidget {
   const RegisterForm({
@@ -25,17 +25,17 @@ class RegisterForm extends StatelessWidget {
       key: _formkey,
       child: Column(
         children: [
-          RoundTextFormField(
+          CommonTextFormField(
               validator: (p0) => ValidationUtils.validateEmail(p0),
               hintText: "Email",
               controller: _emailFieldController),
           const SizedBox(height: 16),
-          RoundTextFormField(
+          CommonTextFormField(
               validator: (p0) => ValidationUtils.validateField(p0),
               hintText: "Username",
               controller: _usernameFieldController),
           const SizedBox(height: 16),
-          RoundTextFormField(
+          CommonTextFormField(
               validator: (p0) => ValidationUtils.validatePassword(p0),
               hintText: "Password",
               obscureText: true,

@@ -1,7 +1,6 @@
-import 'dart:developer';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:taskmanager/common/bottomSheet/common_bottom_sheet.dart';
 import 'package:taskmanager/common/datetime_extension.dart';
 import 'package:taskmanager/data/repositories/task.repository.dart';
 import 'package:taskmanager/data/model/task_model.dart';
@@ -32,16 +31,11 @@ class _TaskListTileState extends State<TaskListTile> {
   }
 
   Future<void> _showDetailTaskSheet(BuildContext context) async {
-    await showModalBottomSheet<bool>(
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
-      isScrollControlled: true,
-      enableDrag: true,
+    CommonBottomSheet.showBottomSheet(
       context: context,
       builder: (BuildContext context) {
         return BlocProvider(
           create: (context) {
-            log(widget.task.toString());
-
             return TaskDetailBloc(taskRepository: getIt<TaskRepository>())
               ..add(HomeDetailTaskOpen(task: widget.task));
           },

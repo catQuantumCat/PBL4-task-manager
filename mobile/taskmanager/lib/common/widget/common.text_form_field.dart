@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
-class RoundTextFormField extends StatelessWidget {
-  const RoundTextFormField(
+class CommonTextFormField extends StatelessWidget {
+  const CommonTextFormField(
       {super.key,
       this.obscureText = false,
       required this.controller,

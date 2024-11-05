@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:taskmanager/common/bottomSheet/common_bottom_sheet.dart';
 import 'package:taskmanager/modules/task/bloc/task_detail/task_detail.bloc.dart';
 
 class TaskDetailEdit extends StatefulWidget {
@@ -34,47 +35,8 @@ class _TaskDetailEditState extends State<TaskDetailEdit> {
 
   @override
   Widget build(BuildContext context) {
-    return ListView(
-      primary: false,
-      padding: const EdgeInsets.fromLTRB(20, 0, 20, 20),
+    final body = Column(
       children: [
-        Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Container(
-              margin: const EdgeInsets.symmetric(vertical: 8),
-              height: 6,
-              width: 54,
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(20),
-                color: Colors.grey,
-              ),
-            ),
-          ],
-        ),
-        Row(
-          crossAxisAlignment: CrossAxisAlignment.center,
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            TextButton(
-              style: TextButton.styleFrom(
-                  minimumSize: Size.zero,
-                  tapTargetSize: MaterialTapTargetSize.shrinkWrap,
-                  padding: EdgeInsets.zero),
-              onPressed: () => _cancelTapped(),
-              child: const Text("Cancel"),
-            ),
-            TextButton(
-              style: TextButton.styleFrom(
-                  minimumSize: Size.zero,
-                  tapTargetSize: MaterialTapTargetSize.shrinkWrap,
-                  padding: EdgeInsets.zero),
-              onPressed: () => _saveTapped(),
-              child: const Text("Save"),
-            )
-          ],
-        ),
-        const SizedBox(height: 28),
         Row(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -115,6 +77,12 @@ class _TaskDetailEditState extends State<TaskDetailEdit> {
           ],
         )
       ],
+    );
+
+    return CommonBottomSheet.inputSheet(
+      onSave: _saveTapped,
+      onCancel: _cancelTapped,
+      body: body,
     );
   }
 }
