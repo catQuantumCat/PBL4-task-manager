@@ -7,6 +7,7 @@ using System.Text;
 using System.Threading.Tasks;
 using backend.Interfaces;
 using backend.Models;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.IdentityModel.Tokens;
 
 
@@ -16,10 +17,12 @@ namespace backend.Services
     {
         private readonly IConfiguration _config;
         private readonly SymmetricSecurityKey _key;
-        public TokenService(IConfiguration config)
+        private readonly UserManager<AppUser> _userManager;
+        public TokenService(IConfiguration config, UserManager<AppUser> userManager)
         {
             _config = config;   
             _key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_config["JWT:SigningKey"]));
+            _userManager = userManager;
         }
 
         public string CreateToken(AppUser user)
@@ -49,7 +52,7 @@ namespace backend.Services
             return tokenHandler.WriteToken(token);
         }
 
-        public string? getAppUserIdFromToken(string token)
+        public async Task<string?> getAppUserIdFromToken(string token)
         {
             if(string.IsNullOrEmpty(token))
                 throw new ArgumentNullException(nameof(token));
@@ -60,10 +63,18 @@ namespace backend.Services
             {
                 var jwtToken = handler.ReadJwtToken(token) as JwtSecurityToken;
 
+                var username = jwtToken.Claims.FirstOrDefault(c => c.Type == "given_name").Value;
+
+                var user = await _userManager.FindByNameAsync(username);
+
+                if(user == null)
+                {
+                    return "UA";
+                }
+
                 var userId = jwtToken.Claims.FirstOrDefault(c => c.Type == "nameid").Value;
 
                 return userId;
-
             }
 
             return null;

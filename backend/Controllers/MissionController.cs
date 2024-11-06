@@ -44,11 +44,16 @@ namespace backend.Controllers
                 return Unauthorized("Token is expired") ;
             }
             
-            var userId = _tokenService.getAppUserIdFromToken(token);
+            var userId = await _tokenService.getAppUserIdFromToken(token);
             
             if(string.IsNullOrEmpty(userId))
             {
                 return BadRequest("Invalid access token");
+            }
+
+            if(userId.Equals("UA"))
+            {
+                return Unauthorized();
             }
 
             var mission = await _missionRepo.GetByAppUserIdWithQueryAsync(userId, query);
@@ -103,11 +108,16 @@ namespace backend.Controllers
                 return Unauthorized("Token is expired") ;
             }
 
-            var userId = _tokenService.getAppUserIdFromToken(token);
+            var userId = await _tokenService.getAppUserIdFromToken(token);
             
             if(string.IsNullOrEmpty(userId))
             {
                 return BadRequest("Invalid access token");
+            }
+
+            if(userId.Equals("UA"))
+            {
+                return Unauthorized();
             }
 
             var mission = await _missionRepo.GetByAppUserIdAsync(userId);
@@ -143,11 +153,16 @@ namespace backend.Controllers
                 return Unauthorized("Token is expired") ;
             }
 
-            var userId = _tokenService.getAppUserIdFromToken(token);
+            var userId = await _tokenService.getAppUserIdFromToken(token);
             
             if(string.IsNullOrEmpty(userId))
             {
                 return BadRequest("Invalid access token");
+            }
+
+            if(userId.Equals("UA"))
+            {
+                return Unauthorized();
             }
 
             var mission = await _missionRepo.GetByAppUserIdAsync(userId);
