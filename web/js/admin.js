@@ -25,3 +25,7 @@ window.deleteUser = async(userName) => {
     }
     
 };
+
+window.taskOfUser = async(userName) => {
+    window.location.href = `../html/task/user-tasks.html?username='${encodeURIComponent(userName)}'`;
+}

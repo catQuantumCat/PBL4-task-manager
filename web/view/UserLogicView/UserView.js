@@ -9,7 +9,7 @@ export default class UserView {
                     <td>
                         <button onclick="editUser('${user.userName}')" class="edit-btn">Edit</button>
                         <button onclick="deleteUser('${user.userName}')" class="delete-btn">Delete</button>
-                        <button class="task-btn">Tasks</button>
+                        <button onclick="taskOfUser('${user.userName}')" class="task-btn">Tasks</button>
                     </td>
                 </tr>`;
         }).join("");
