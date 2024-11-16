@@ -196,6 +196,7 @@ namespace backend.Controllers
             var result = user.Select(x => new { x.UserName, x.Email}).ToList();
             return Ok(result);
         }
+
                 
         [HttpPut("editUser")]
         public async Task<IActionResult> EditAccount([FromBody] EditUserDto editUser)

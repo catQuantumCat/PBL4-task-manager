@@ -67,6 +67,23 @@ namespace backend.Controllers
             return Ok(result);
         }
 
+        [HttpPost("GetByUsername")]
+        public async Task<IActionResult> GetByUsername([FromBody] string username)
+        {
+            var user = await _userManager.FindByNameAsync(username);
+            
+            if(user == null)
+            {
+                return NotFound();
+            }
+            
+            var mission = await _missionRepo.GetByAppUserIdAsync(user.Id);
+
+            var result = mission.Select(s => s.toMissionDto()).ToList();
+
+            return Ok(result);   
+        }
+
         [HttpGet("{id}")]
         [Authorize]
         public async Task<IActionResult> GetById([FromRoute] int id)
