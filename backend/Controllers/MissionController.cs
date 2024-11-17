@@ -116,6 +116,17 @@ namespace backend.Controllers
             return CreatedAtAction(nameof(GetById), new { id = missionModel.Id }, missionModel.toMissionDto());
         }
 
+        [HttpPost]
+        [Route("createAdmin")]
+        public async Task<IActionResult> CreateMissionAdmin([FromBody] CreateRequestMissionDto missionDto)
+        {
+            var username = Request.Query["username"];
+            var appUser = await _userManager.FindByNameAsync(username);
+            var missionModel = missionDto.toMissionFromCreateDto(appUser);
+            await _missionRepo.CreateAsync(missionModel);
+            return CreatedAtAction(nameof(GetById), new { id = missionModel.Id }, missionModel.toMissionDto());
+        }
+        
         [HttpPut]
         [Route("{id}")]
         [Authorize]
