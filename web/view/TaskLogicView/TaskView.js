@@ -12,8 +12,8 @@ export default class TaskView {
                     <td>${task.status}</td>
                     <td>
                         <div class="button-group">
-                            <button class="edit-btn">Edit</button>
-                            <button class="delete-btn">Delete</button>
+                            <button onclick="editTask('${task.id}')" class="edit-btn">Edit</button>
+                            <button onclick="deleteTask('${task.id}')" class="delete-btn">Delete</button>
                         </div>
                     </td>
                 </tr>`;

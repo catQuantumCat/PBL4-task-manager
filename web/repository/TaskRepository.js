@@ -27,4 +27,37 @@ export default class TaskRepository {
             ));
         });
     }
+
+    async updateTask(id, taskModel) {
+        console.log(id);
+        console.log(JSON.stringify(taskModel));
+        return fetch(`http://localhost:5245/backend/mission/updateAdmin/${id}`, {
+            method: 'PUT',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(taskModel)
+        })
+        .then(response => {
+            if (!response.ok) {
+                throw new Error('Network response was not ok');
+            }
+            return response.json();
+        });
+    }
+
+    async deleteTask(id) {
+        return fetch(`http://localhost:5245/backend/mission/deleteAdmin/${id}`, {
+            method: 'DELETE',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+        })
+        .then(response => {
+            if(!response.ok) {
+                throw new Error('Network response is not ok');
+            }
+            alert("Xoa task thanh cong");
+        })
+    }
 }

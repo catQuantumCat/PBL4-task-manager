@@ -10,3 +10,16 @@ window.getAllTask = async() => {
     const tasks = await taskRepo.getAllTask(username);
     taskViewModel.fetchAndUpdateTasks(tasks);
 }
+
+window.editTask = async(taskId) => {
+    window.location.href = `../../html/task/edit-task.html?id='${encodeURIComponent(taskId)}'&username='${encodeURIComponent(username)}'`;
+}
+
+window.deleteTask = async(taskId) => {
+    try {
+        taskRepo.deleteTask(taskId);
+        window.location.reload();
+    } catch (err) {
+        console.log("Something went wrong" + err);
+    }
+}

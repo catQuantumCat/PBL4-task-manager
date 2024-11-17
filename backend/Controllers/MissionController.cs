@@ -84,6 +84,8 @@ namespace backend.Controllers
             return Ok(result);   
         }
 
+
+
         [HttpGet("{id}")]
         [Authorize]
         public async Task<IActionResult> GetById([FromRoute] int id)
@@ -159,6 +161,26 @@ namespace backend.Controllers
             return Ok(missionModel.toMissionDto());
         }
 
+        [HttpPut]
+        [Route("updateAdmin/{id}")]
+        public async Task<IActionResult> UpdateMissionAdmin([FromRoute] int id, [FromBody] UpdateRequestMissionDto updateRequestMissionDto)
+        {
+            var updateMission = await _missionRepo.GetByIdAsync(id);
+            if(updateMission == null)
+            {
+                return NotFound();
+            }
+            
+            var missionModel = await _missionRepo.UpdateAsync(id, updateRequestMissionDto);
+            
+            if(missionModel == null)
+            {
+                return NotFound();
+            }
+
+            return Ok(missionModel.toMissionDto());
+        }
+
         [HttpDelete]
         [Route("{id}")]
         [Authorize]
@@ -194,6 +216,20 @@ namespace backend.Controllers
                 return NotFound();
             }
 
+            var missionModel = await _missionRepo.DeleteAsync(id);  
+
+            if(missionModel == null)
+            {
+                return NotFound();
+            }
+
+            return NoContent(); 
+        }
+
+        [HttpDelete]
+        [Route("deleteAdmin/{id}")]
+        public async Task<IActionResult> DeleteMissionAdmin([FromRoute] int id)
+        {
             var missionModel = await _missionRepo.DeleteAsync(id);  
 
             if(missionModel == null)
