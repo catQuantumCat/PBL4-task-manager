@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 
 import 'package:taskmanager/common/bottomSheet/common_bottom_sheet.dart';
+import 'package:taskmanager/common/bottomSheet/custom_sheet.dart';
+import 'package:taskmanager/common/context_extension.dart';
 import 'package:taskmanager/common/utils/ux_writing.util.dart';
 import 'package:taskmanager/common/utils/validation.utils.dart';
 
@@ -102,7 +104,10 @@ class _ProfilePasswordEditState extends State<ProfilePasswordEdit> {
 
   @override
   Widget build(BuildContext context) {
-    return CommonBottomSheet.inputSheet(
+    return CustomSheet(
+      enableControl: true,
+      backgroundColor: context.palette.scaffoldBackgroundDim,
+      showHandle: false,
       onCancel: () => _onCancel(context),
       onSave: _isSaveEnabled == false ? null : () => _onSave(context),
       header: "Edit email",

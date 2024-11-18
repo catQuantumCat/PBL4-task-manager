@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:taskmanager/common/constants/state_status.constant.dart';
+import 'package:taskmanager/common/context_extension.dart';
+import 'package:taskmanager/common/datetime_extension.dart';
 import 'package:taskmanager/common/widget/common_list_section.dart';
 import 'package:taskmanager/common/widget/common_title_appbar.widget.dart';
 import 'package:taskmanager/data/repositories/task.repository.dart';
@@ -10,7 +12,7 @@ import 'package:taskmanager/modules/home/bloc/home_bloc.dart';
 import 'package:taskmanager/modules/task/bloc/task_create/task_create.bloc.dart';
 import 'package:taskmanager/modules/task/bloc/task_list/task_list.bloc.dart';
 
-import 'package:taskmanager/modules/task/view/task_create/home_new_task.view.dart';
+import 'package:taskmanager/modules/task/view/task_create/task_create.view.dart';
 import 'package:taskmanager/modules/task/view/task_list/task_list.view.dart';
 
 class HomePage extends StatelessWidget {
@@ -32,29 +34,21 @@ class HomePage extends StatelessWidget {
 class HomeView extends StatelessWidget {
   const HomeView({super.key});
 
-  void _showNewTaskSheet(BuildContext context) {
-    showModalBottomSheet(
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
-        isScrollControlled: true,
-        context: context,
-        builder: (BuildContext context) => BlocProvider(
-              create: (context) =>
-                  TaskCreateBloc(taskRepository: getIt<TaskRepository>()),
-              child: const TaskCreateView(),
-            ));
-  }
-
-  List<CommonListSection> _getSections(HomeState state) {
+  List<CommonListSection> _getSections(BuildContext context, HomeState state) {
     if (state.status == StateStatus.success) {
       return [
         CommonListSection(
+          context: context,
           title: "Overdue",
           isHidden: state.overdueList.isEmpty,
           child: TaskListView(taskList: state.overdueList),
         ),
         CommonListSection(
-          title: "Today",
-          child: TaskListView(taskList: state.todayList),
+          context: context,
+          title: DateTime.now().dateToString(),
+          child: (state.todayList.isNotEmpty)
+              ? TaskListView(taskList: state.todayList)
+              : null,
         )
       ];
     }
@@ -64,17 +58,10 @@ class HomeView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      floatingActionButton: FloatingActionButton(
-        elevation: 4,
-        shape: const CircleBorder(),
-        backgroundColor: Colors.red[400],
-        foregroundColor: Colors.white,
-        onPressed: () {
-          _showNewTaskSheet(context);
-        },
-        child: const Icon(Icons.add),
-      ),
+      backgroundColor: context.palette.scaffoldBackground,
       body: RefreshIndicator(
+        color: context.palette.primaryColor,
+        backgroundColor: context.palette.onPrimary,
         onRefresh: () async =>
             context.read<HomeBloc>().add(const HomeRefresh()),
         child: BlocBuilder<HomeBloc, HomeState>(
@@ -82,9 +69,8 @@ class HomeView extends StatelessWidget {
               (previous.overdueList != current.todayList),
           builder: (context, state) {
             return CommonTitleAppbar(
-              title: const Text("Today",
-                  style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20)),
-              section: _getSections(state),
+              title: "Today",
+              section: _getSections(context, state),
               child: Builder(builder: (context) {
                 switch (state.status) {
                   case StateStatus.initial:

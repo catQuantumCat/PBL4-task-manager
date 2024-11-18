@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:taskmanager/common/constants/state_status.constant.dart';
+import 'package:taskmanager/common/context_extension.dart';
 import 'package:taskmanager/common/widget/common_list_section.dart';
 import 'package:taskmanager/common/widget/common_title_appbar.widget.dart';
 
@@ -71,6 +72,7 @@ class _SearchViewState extends State<SearchView> {
     if (state.status == StateStatus.initial) {
       return [
         CommonListSection(
+          context: context,
           title: "Recent searches",
           trailing: TextButton(
             onPressed: _onClearRecentTapped,
@@ -85,6 +87,7 @@ class _SearchViewState extends State<SearchView> {
           ),
         ),
         CommonListSection(
+          context: context,
           title: "Recently Viewed",
           child: const SearchInitialWidget(),
         ),
@@ -98,17 +101,14 @@ class _SearchViewState extends State<SearchView> {
     return BlocBuilder<SearchBloc, SearchState>(
       builder: (context, state) {
         return Scaffold(
+          backgroundColor: context.palette.scaffoldBackground,
           body: CommonTitleAppbar(
             section: _buildSections(state),
             searchBar: AppbarSearchbarWidget(
               textController: _textController,
               onReturn: (query) => _onReturnTapped(),
             ),
-            searchBarHeight: 60,
-            title: const Text(
-              "Search",
-              style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
-            ),
+            title: "Search",
             child: Builder(builder: (context) {
               switch (state.status) {
                 case (StateStatus.failed):

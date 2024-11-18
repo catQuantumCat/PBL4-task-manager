@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:taskmanager/common/bottomSheet/common_bottom_sheet.dart';
-import 'package:taskmanager/common/sheet.constants.dart';
+import 'package:taskmanager/common/context_extension.dart';
+import 'package:taskmanager/common/bottomSheet/sheet.constants.dart';
 import 'package:taskmanager/modules/auth/bloc/auth/auth_bloc.dart';
 import 'package:taskmanager/modules/profile/bloc/profile_bloc.dart';
 import 'package:taskmanager/modules/profile/widget/edit/profile_email_edit.dart';
@@ -9,6 +10,7 @@ import 'package:taskmanager/modules/profile/widget/profile_field_group.widget.da
 
 import 'package:taskmanager/modules/profile/widget/edit/profile_password_edit.dart';
 import 'package:taskmanager/modules/profile/widget/edit/profile_username_edit.dart';
+import 'package:taskmanager/modules/search/view/search.view.dart';
 
 class ProfileSuccessWidget extends StatelessWidget {
   const ProfileSuccessWidget({super.key, required this.state});
@@ -67,10 +69,8 @@ class ProfileSuccessWidget extends StatelessWidget {
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  Text(
-                    state.userInfo?.username ?? "",
-                    style: const TextStyle(color: Colors.black),
-                  ),
+                  Text(state.userInfo?.username ?? "",
+                      style: context.appTextStyles.buttonLabel),
                   const Icon(Icons.chevron_right)
                 ],
               ),

@@ -18,7 +18,7 @@ class TaskDetailBloc extends Bloc<TaskDetailEvent, TaskDetailState> {
         super(const TaskDetailState.loading()) {
     on<HomeTaskDetailClose>(_onCloseDown);
     on<HomeDetailTaskOpen>(_onOpen);
-    on<HomeDetailTaskChangeDateTime>(_onChangeDateTime);
+    on<DetailPropertiesChange>(_onChangeProperties);
     on<HomeDetailTaskEdit>(_onOpenEdit);
     on<HomeDetailTaskCancelEdit>(_onCancelEdit);
     on<HomeDetailTaskSaveEdit>(_onSaveEdit);
@@ -55,22 +55,36 @@ class TaskDetailBloc extends Bloc<TaskDetailEvent, TaskDetailState> {
     }
   }
 
-  void _onChangeDateTime(
-      HomeDetailTaskChangeDateTime event, Emitter<TaskDetailState> emit) async {
+  void _onChangeProperties(
+      DetailPropertiesChange event, Emitter<TaskDetailState> emit) async {
     if (state.task == null) {
       return;
     }
 
-    if (event.date == null && event.time == null) {
+    if (event.date == null && event.time == null && event.priority == null) {
       return;
     }
 
     final DateTime date = (event.date ?? state.task!.deadTime)
         .at(event.time ?? TimeOfDay.fromDateTime(state.task!.deadTime));
 
-    final TaskDTO data = state.task!.copyWith(deadTime: date).toResponse();
+    if (state.task!.deadTime.isSameDate(date) &&
+        state.task!.priority == event.priority) {
+      emit(
+        state.copyWith(
+          status: DetailHomeStatus.initial,
+        ),
+      );
+      return;
+    }
+
+    final TaskDTO data = state.task!
+        .copyWith(deadTime: date, priority: event.priority)
+        .toResponse();
 
     emit(state.copyWith(status: DetailHomeStatus.loading));
+
+    await Future.delayed(const Duration(seconds: 3));
     try {
       final editedTask = await _taskRepository.editTask(data, state.task!.id);
 
@@ -87,7 +101,8 @@ class TaskDetailBloc extends Bloc<TaskDetailEvent, TaskDetailState> {
   }
 
   void _onOpenEdit(HomeDetailTaskEdit event, Emitter<TaskDetailState> emit) {
-    emit(state.copyWith(status: DetailHomeStatus.editing));
+    emit(TaskDetailStateEditing(
+        task: state.task, focusOnTitle: event.focusOnTitle));
   }
 
   void _onCancelEdit(

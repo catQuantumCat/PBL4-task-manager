@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-
+import 'package:taskmanager/common/context_extension.dart';
 
 class AuthElevatedButton extends StatelessWidget {
   const AuthElevatedButton({super.key, required this.label, this.onPressed});
@@ -12,7 +12,7 @@ class AuthElevatedButton extends StatelessWidget {
     return ElevatedButton(
       style: const ButtonStyle().copyWith(
         elevation: const WidgetStatePropertyAll(0),
-        backgroundColor: const WidgetStatePropertyAll(Colors.redAccent),
+        backgroundColor: WidgetStatePropertyAll(context.palette.primaryColor),
         shape: const WidgetStatePropertyAll(
           RoundedRectangleBorder(
             borderRadius: BorderRadius.all(Radius.circular(8)),

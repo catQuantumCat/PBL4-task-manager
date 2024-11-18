@@ -2,8 +2,9 @@ part of 'task_create.bloc.dart';
 
 enum NewHomeStatus { initial, loading, success, failure }
 
-class TaskCreateStatus extends Equatable {
+class TaskCreateState extends Equatable {
   final NewHomeStatus status;
+  final int priority;
   final DateTime date;
   final TimeOfDay time;
   final String dateLabel;
@@ -13,10 +14,11 @@ class TaskCreateStatus extends Equatable {
 
   @override
   List<Object?> get props =>
-      [status, date, dateLabel, timeLabel, missionName, description];
+      [status, date, dateLabel, timeLabel, missionName, description, priority];
 
-  const TaskCreateStatus({
+  const TaskCreateState({
     required this.status,
+    this.priority = 0,
     required this.date,
     required this.time,
     required this.dateLabel,
@@ -25,7 +27,7 @@ class TaskCreateStatus extends Equatable {
     this.description,
   });
 
-  TaskCreateStatus.initial()
+  TaskCreateState.initial()
       : this(
             status: NewHomeStatus.initial,
             date: DateTime.now(),
@@ -33,16 +35,18 @@ class TaskCreateStatus extends Equatable {
             dateLabel: "Today",
             timeLabel: TimeOfDay.now().toLabel());
 
-  TaskCreateStatus copyWith(
+  TaskCreateState copyWith(
       {NewHomeStatus? status,
+      int? priority,
       DateTime? date,
       TimeOfDay? time,
       String? dateLabel,
       String? timeLabel,
       String? missionName,
       String? description}) {
-    return TaskCreateStatus(
+    return TaskCreateState(
         status: status ?? this.status,
+        priority: priority ?? this.priority,
         date: date ?? this.date,
         time: time ?? this.time,
         dateLabel: dateLabel ?? this.dateLabel,
@@ -59,6 +63,7 @@ class TaskCreateStatus extends Equatable {
     return TaskDTO(
       name: missionName!,
       description: description,
+      priority: priority,
       createTime: DateTime.now(),
       deadTime: date.at(time),
       status: false,

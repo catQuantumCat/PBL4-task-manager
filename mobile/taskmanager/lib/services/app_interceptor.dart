@@ -14,6 +14,8 @@ class AppInterceptor extends QueuedInterceptor {
   void onRequest(RequestOptions options, RequestInterceptorHandler handler) {
     final token = _tokenBox.get(HiveConstant.token);
 
+    log(token.toString(), name: "TOKEN");
+
     if (token != null) {
       options.headers
           .addAll({HttpHeaders.authorizationHeader: "Bearer $token"});

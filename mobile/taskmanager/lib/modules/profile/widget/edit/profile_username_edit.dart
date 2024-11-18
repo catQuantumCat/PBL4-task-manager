@@ -3,6 +3,8 @@ import 'dart:developer';
 import 'package:flutter/material.dart';
 
 import 'package:taskmanager/common/bottomSheet/common_bottom_sheet.dart';
+import 'package:taskmanager/common/bottomSheet/custom_sheet.dart';
+import 'package:taskmanager/common/context_extension.dart';
 
 import 'package:taskmanager/modules/profile/widget/profile_field_group.widget.dart';
 import 'package:taskmanager/modules/profile/widget/profile_labaled_textfield.dart';
@@ -79,31 +81,12 @@ class _ProfileUsernameEditState extends State<ProfileUsernameEdit> {
     }
   }
 
-  // void _onListen(BuildContext context, ProfileState state) {
-  //   if (state.status == StateStatus.success) {
-  //     Navigator.pop(context);
-  //   }
-
-  //   if (state.status == StateStatus.failed) {
-  //     showDialog(
-  //         context: context,
-  //         builder: (dialogContext) {
-  //           return AlertDialog(
-  //             actions: [
-  //               TextButton(
-  //                   onPressed: () => Navigator.pop(dialogContext),
-  //                   child: const Text("Try again"))
-  //             ],
-  //             title: const Text("Cannot proceed"),
-  //             content: Text(state.errorMessage ?? ""),
-  //           );
-  //         });
-  //   }
-  // }
-
   @override
   Widget build(BuildContext context) {
-    return CommonBottomSheet.inputSheet(
+    return CustomSheet(
+      enableControl: true,
+      backgroundColor: context.palette.scaffoldBackgroundDim,
+      showHandle: false,
       onCancel: () => _onCancel(context),
       onSave: _isSaveEnabled == false ? null : () => _onSave(context),
       header: "Edit username",

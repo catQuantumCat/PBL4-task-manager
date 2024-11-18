@@ -4,6 +4,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:get_it/get_it.dart';
 import 'package:hive/hive.dart';
+import 'package:taskmanager/common/theme/palette.dart';
+import 'package:taskmanager/common/theme/text_style.dart';
+import 'package:taskmanager/common/theme/theme_sheet.dart';
 import 'package:taskmanager/config/router/app_routes.dart';
 import 'package:path_provider/path_provider.dart' as path_provider;
 import 'package:taskmanager/data/repositories/user.repository.dart';
@@ -40,6 +43,10 @@ class MyApp extends StatelessWidget {
       create: (context) => AuthBloc(userRepository: getIt<UserRepository>())
         ..add(const AuthCheckToken()),
       child: MaterialApp(
+        theme: ThemeSheet(
+                palette: Palette.light(),
+                appTextStyles: AppTextStyles.fromPalette(Palette.light()))
+            .themeData,
         navigatorKey: _navigatorKey,
         onGenerateRoute: _router.onGenerateRoute,
         initialRoute: "/",

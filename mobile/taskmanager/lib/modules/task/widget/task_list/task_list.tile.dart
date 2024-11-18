@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:taskmanager/common/bottomSheet/common_bottom_sheet.dart';
+import 'package:taskmanager/common/theme/color_enum.dart';
+import 'package:taskmanager/common/context_extension.dart';
 import 'package:taskmanager/common/datetime_extension.dart';
 import 'package:taskmanager/data/repositories/task.repository.dart';
 import 'package:taskmanager/data/model/task_model.dart';
@@ -8,6 +10,7 @@ import 'package:taskmanager/main.dart';
 import 'package:taskmanager/modules/task/bloc/task_detail/task_detail.bloc.dart';
 import 'package:taskmanager/modules/task/bloc/task_list/task_list.bloc.dart';
 import 'package:taskmanager/modules/task/view/task_detail/task_detail.view.dart';
+import 'package:taskmanager/modules/task/widget/task_reactive.checkbox.dart';
 
 class TaskListTile extends StatefulWidget {
   final TaskModel task;
@@ -46,6 +49,10 @@ class _TaskListTileState extends State<TaskListTile> {
   }
 
   void changeTaskStatus(value) {
+    context
+        .read<TaskListBloc>()
+        .add(ListHomeCheckTask(taskId: widget.task.id, taskStatus: value!));
+
     widget.task.editStatus(value);
     setState(() {
       _taskStatus = value;
@@ -55,25 +62,26 @@ class _TaskListTileState extends State<TaskListTile> {
   @override
   Widget build(BuildContext context) {
     return ListTile(
+      titleAlignment: ListTileTitleAlignment.top,
+      tileColor: context.palette.scaffoldBackground,
       onTap: () {
         context.read<TaskListBloc>().add(TapOneTask(task: widget.task));
         _showDetailTaskSheet(context);
       },
-      leading: Transform.scale(
-        scale: 1.5,
-        child: Checkbox(
-            shape: const CircleBorder(),
-            visualDensity: VisualDensity.compact,
-            value: _taskStatus,
-            onChanged: (newVal) {
-              context.read<TaskListBloc>().add(ListHomeCheckTask(
-                  taskId: widget.task.id, taskStatus: newVal!));
-              changeTaskStatus(newVal);
-            }),
+      leading: ReactiveCheckbox(
+        taskPriority: widget.task.priority,
+        taskStatus: _taskStatus,
+        onChanged: (p0) => changeTaskStatus(p0),
       ),
-      title: Text(widget.task.name),
-      subtitle: Text(widget.task.deadTime.relativeToToday()),
-      trailing: const Icon(Icons.chevron_right),
+      title: Text(
+        widget.task.name,
+        style: widget.task.status == false
+            ? context.appTextStyles.body1
+            : context.appTextStyles.strikedBody1,
+      ),
+      subtitle: Text(
+        widget.task.deadTime.relativeToToday(),
+      ),
     );
   }
 }

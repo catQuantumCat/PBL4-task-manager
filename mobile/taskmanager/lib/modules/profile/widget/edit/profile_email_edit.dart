@@ -3,7 +3,10 @@ import 'dart:developer';
 import 'package:flutter/material.dart';
 
 import 'package:taskmanager/common/bottomSheet/common_bottom_sheet.dart';
+import 'package:taskmanager/common/bottomSheet/custom_sheet.dart';
+import 'package:taskmanager/common/context_extension.dart';
 import 'package:taskmanager/common/utils/validation.utils.dart';
+import 'package:taskmanager/common/widget/common_title_appbar.widget.dart';
 
 import 'package:taskmanager/modules/profile/widget/profile_field_group.widget.dart';
 import 'package:taskmanager/modules/profile/widget/profile_labaled_textfield.dart';
@@ -103,7 +106,10 @@ class _ProfileEmailEditState extends State<ProfileEmailEdit> {
 
   @override
   Widget build(BuildContext context) {
-    return CommonBottomSheet.inputSheet(
+    return CustomSheet(
+      enableControl: true,
+      backgroundColor: context.palette.scaffoldBackgroundDim,
+      showHandle: false,
       onCancel: () => _onCancel(context),
       onSave: _isSaveEnabled == false ? null : () => _onSave(context),
       header: "Edit email",

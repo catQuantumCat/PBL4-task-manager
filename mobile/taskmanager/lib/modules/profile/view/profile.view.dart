@@ -54,7 +54,7 @@ class ProfileView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return CommonTitleAppbar(
-      title: const Text("Account"),
+      title: "Account",
       child: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 16),
         child: BlocBuilder<ProfileBloc, ProfileState>(
