@@ -688,10 +688,9 @@ packages:
   table_calendar:
     dependency: "direct main"
     description:
-      name: table_calendar
-      sha256: "4ca32b2fc919452c9974abd4c6ea611a63e33b9e4f0b8c38dba3ac1f4a6549d1"
-      url: "https://pub.dev"
-    source: hosted
+      path: "table_calendar-3.1.2-fork"
+      relative: true
+    source: path
     version: "3.1.2"
   term_glyph:
     dependency: transitive

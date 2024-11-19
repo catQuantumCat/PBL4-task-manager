@@ -19,6 +19,7 @@ class NavigationWidget extends StatelessWidget {
           child: SizedBox(
             height: 64,
             child: BottomNavigationBar(
+              type: BottomNavigationBarType.fixed,
               backgroundColor: context.palette.navigationBarBackground,
               selectedItemColor: context.palette.primaryColor,
               unselectedItemColor: context.palette.normalText,
@@ -33,9 +34,14 @@ class NavigationWidget extends StatelessWidget {
               currentIndex: state.index,
               items: const [
                 BottomNavigationBarItem(
+                  icon: Icon(Icons.calendar_today_outlined),
+                  activeIcon: Icon(Icons.calendar_today),
+                  label: "Today",
+                ),
+                BottomNavigationBarItem(
                   icon: Icon(Icons.calendar_month_outlined),
                   activeIcon: Icon(Icons.calendar_month),
-                  label: "Today",
+                  label: "Upcoming",
                 ),
                 BottomNavigationBarItem(
                   icon: Icon(Icons.search),

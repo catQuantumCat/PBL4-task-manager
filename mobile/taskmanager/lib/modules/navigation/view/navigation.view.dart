@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:taskmanager/common/context_extension.dart';
 import 'package:taskmanager/data/repositories/task.repository.dart';
 import 'package:taskmanager/main.dart';
+import 'package:taskmanager/modules/calendar/view/calendar.view.dart';
 import 'package:taskmanager/modules/home/bloc/home_bloc.dart';
 
 import 'package:taskmanager/modules/home/view/home.view.dart';
@@ -78,8 +79,10 @@ class NavigationView extends StatelessWidget {
           bottomNavigationBar: const NavigationWidget(),
           body: <Widget>[
             const HomePage(),
+            const CalendarPage(),
             const SearchPage(),
             const ProfilePage(),
+            
           ][state.index],
         );
       },
