@@ -11,6 +11,7 @@ import 'package:taskmanager/common/widget/common_title_appbar.widget.dart';
 
 import 'package:taskmanager/modules/calendar/bloc/calendar_bloc.dart';
 import 'package:taskmanager/modules/calendar/widget/calendar_table.widget.dart';
+import 'package:taskmanager/modules/home/bloc/home_bloc.dart';
 
 import 'package:taskmanager/modules/task/view/task_list/task_list.view.dart';
 
@@ -42,17 +43,27 @@ class CalendarView extends StatelessWidget {
           title: "Upcoming",
           compactEnabled: true,
           stickyWidget: CalendarTableWidget(
+            focusedDay: context.read<CalendarBloc>().state.selectedDate,
+            deadlineSet: context.read<CalendarBloc>().state.fullTask,
             onDateChanged: (selectedDate) =>
                 _onDateTapped(selectedDate, context),
-            focusedDay: context.read<CalendarBloc>().state.selectedDate,
           ),
           section: [
+            if (isSameDay(state.selectedDate, DateTime.now()))
+              CommonListSection(
+                context: context,
+                title: "Overdue",
+                isHidden: context.read<HomeBloc>().state.overdueList.isEmpty,
+                child: TaskListView(
+                  taskList: context.read<HomeBloc>().state.overdueList,
+                ),
+              ),
             CommonListSection(
               context: context,
               title: state.selectedDate.dateToString(),
               child: TaskListView(
                   taskList: context.read<CalendarBloc>().state.filteredTask),
-            )
+            ),
           ],
           // TaskListView(taskList: context.read<HomeBloc>().state.overdueList),
         );

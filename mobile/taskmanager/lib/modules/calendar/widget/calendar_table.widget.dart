@@ -1,7 +1,7 @@
 import 'dart:developer';
 
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
+
 import 'package:table_calendar/table_calendar.dart';
 
 import 'package:intl/intl.dart';
@@ -9,16 +9,18 @@ import 'package:intl/intl.dart';
 import 'package:simple_gesture_detector/simple_gesture_detector.dart';
 import 'package:taskmanager/common/context_extension.dart';
 
-import 'package:taskmanager/modules/calendar/bloc/calendar_bloc.dart';
-
 class CalendarTableWidget extends StatefulWidget {
   const CalendarTableWidget(
       {super.key,
       required DateTime focusedDay,
+      required Set<DateTime> deadlineSet,
       required void Function(DateTime selectedDate) onDateChanged})
       : _focusedDay = focusedDay,
-        _onDateChanged = onDateChanged;
+        _onDateChanged = onDateChanged,
+        _deadlineSet = deadlineSet;
   final DateTime _focusedDay;
+
+  final Set<DateTime> _deadlineSet;
 
   final void Function(DateTime selectedDate) _onDateChanged;
 
@@ -50,58 +52,77 @@ class _CalendarTableWidgetState extends State<CalendarTableWidget> {
     }
   }
 
-  Icon _getIcon() {
-    switch (_calendarFormat) {
-      case CalendarFormat.week:
-        return const Icon(
-          Icons.keyboard_arrow_right_rounded,
-        );
-      case CalendarFormat.month:
-        return Icon(
-          Icons.keyboard_arrow_down_rounded,
-          color: context.palette.primaryColor,
-        );
-      default:
-        return Icon(
-          Icons.calendar_today,
-          color: context.palette.primaryColor,
-        );
-    }
+  Widget _getCalendarHeader(DateTime day) {
+    final headerForgroundColor = _calendarFormat == CalendarFormat.month
+        ? context.palette.primaryColor
+        : context.palette.normalText;
+
+    final calendarFormatIcon = _calendarFormat == CalendarFormat.month
+        ? Icons.keyboard_arrow_down_rounded
+        : Icons.keyboard_arrow_right_rounded;
+
+    return Row(children: [
+      Text(
+        DateFormat.yMMM().format(day),
+        style: context.appTextStyles.subHeading2
+            .copyWith(color: headerForgroundColor),
+      ),
+      IconButton(
+          onPressed: _onFormatButtonTapped,
+          icon: Icon(
+            calendarFormatIcon,
+            color: headerForgroundColor,
+          )),
+      if (!isSameDay(widget._focusedDay, DateTime.now()))
+        IconButton(
+            onPressed: _onReturnTodayTapped,
+            icon: Icon(
+              Icons.today,
+              color: context.palette.primaryColor,
+            ))
+    ]);
   }
 
   @override
   Widget build(BuildContext context) {
     return TableCalendar(
         onVerticalSwipe: (sw) => _onVerticalSwipe(sw),
+        eventLoader: (day) => widget._deadlineSet
+            .where((deadline) =>
+                isSameDay(deadline, day) &&
+                !isSameDay(deadline, widget._focusedDay))
+            .toList(),
         availableCalendarFormats: const {
           CalendarFormat.week: "",
           CalendarFormat.month: ""
         },
         calendarBuilders: CalendarBuilders(
-          headerTitleBuilder: (context, day) => Row(children: [
-            Text(
-              DateFormat.yMMM().format(day),
-              style: context.appTextStyles.subHeading2,
-            ),
-            IconButton(onPressed: _onFormatButtonTapped, icon: _getIcon()),
-            if (!isSameDay(widget._focusedDay, DateTime.now()))
-              IconButton(
-                  onPressed: _onReturnTodayTapped,
-                  icon: const Icon(
-                    Icons.today,
-                  ))
-          ]),
+          headerTitleBuilder: (context, day) => _getCalendarHeader(day),
         ),
         headerStyle: const HeaderStyle(
-            headerPadding: EdgeInsets.symmetric(vertical: 8, horizontal: 20),
+            headerPadding: EdgeInsets.symmetric(vertical: 8, horizontal: 16),
             formatButtonVisible: false,
             rightChevronVisible: false,
             leftChevronVisible: false),
-        calendarStyle: const CalendarStyle(
-            tablePadding: EdgeInsets.symmetric(horizontal: 6)),
+        calendarStyle: CalendarStyle(
+            defaultTextStyle: context.appTextStyles.body2,
+            selectedTextStyle: context.appTextStyles.body2
+                .copyWith(color: context.palette.onPrimary),
+            selectedDecoration: BoxDecoration(
+                color: context.palette.primaryColor, shape: BoxShape.circle),
+            todayDecoration: const BoxDecoration(shape: BoxShape.circle),
+            todayTextStyle: context.appTextStyles.body2
+                .copyWith(color: context.palette.primaryColor),
+            markerSize: 7,
+            markersMaxCount: 1,
+            markerDecoration: BoxDecoration(
+                color: context.palette.hintTextField, shape: BoxShape.circle)),
         calendarFormat: _calendarFormat,
         availableGestures: AvailableGestures.all,
         startingDayOfWeek: StartingDayOfWeek.monday,
+        onPageChanged: (focusedDay) => _calendarFormat == CalendarFormat.week
+            ? widget._onDateChanged(focusedDay)
+            : null,
         selectedDayPredicate: (day) {
           final toReturn = isSameDay(widget._focusedDay, day);
 

@@ -19,7 +19,8 @@ class CalendarBloc extends Bloc<CalendarEvent, CalendarState> {
   }
 
   Future<void> _onOpen(CalendarOpen event, Emitter<CalendarState> emit) async {
-    add(CalendarDateSelected(selectedDate: state.selectedDate));
+    _taskRepo.syncFromRemote();
+
     await emit.forEach(_taskRepo.getTaskStream(), onData: (taskList) {
       log("UPDATED", name: "OnCalendarOpens");
 
@@ -27,7 +28,9 @@ class CalendarBloc extends Bloc<CalendarEvent, CalendarState> {
           .where((task) => isSameDay(task.deadTime, state.selectedDate))
           .toList();
 
-      return state.copyWith(filteredTask: filteredTask);
+      return state.copyWith(
+          filteredTask: filteredTask,
+          fullTask: taskList.map((task) => task.deadTime).toSet());
     }, onError: (error, stackTrace) {
       log(error.toString());
       return CalendarFailed(errorMessage: error.toString());
@@ -36,11 +39,14 @@ class CalendarBloc extends Bloc<CalendarEvent, CalendarState> {
 
   Future<void> _onDateSelected(
       CalendarDateSelected event, Emitter<CalendarState> emit) async {
-    emit(state.copyWith(
+    emit(
+      state.copyWith(
         selectedDate: event.selectedDate,
         filteredTask: _taskRepo
             .getTaskList()
             .where((task) => isSameDay(task.deadTime, event.selectedDate))
-            .toList()));
+            .toList(),
+      ),
+    );
   }
 }

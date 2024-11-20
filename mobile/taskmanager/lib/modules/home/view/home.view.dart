@@ -5,14 +5,11 @@ import 'package:taskmanager/common/context_extension.dart';
 import 'package:taskmanager/common/datetime_extension.dart';
 import 'package:taskmanager/common/widget/common_list_section.dart';
 import 'package:taskmanager/common/widget/common_title_appbar.widget.dart';
-import 'package:taskmanager/data/repositories/task.repository.dart';
-import 'package:taskmanager/main.dart';
+
 import 'package:taskmanager/modules/home/bloc/home_bloc.dart';
 
-import 'package:taskmanager/modules/task/bloc/task_create/task_create.bloc.dart';
 import 'package:taskmanager/modules/task/bloc/task_list/task_list.bloc.dart';
 
-import 'package:taskmanager/modules/task/view/task_create/task_create.view.dart';
 import 'package:taskmanager/modules/task/view/task_list/task_list.view.dart';
 
 class HomePage extends StatelessWidget {
