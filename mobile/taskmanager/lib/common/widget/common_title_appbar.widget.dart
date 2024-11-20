@@ -9,13 +9,18 @@ class CommonTitleAppbar extends StatefulWidget {
   const CommonTitleAppbar(
       {super.key,
       required String title,
-      Widget? searchBar,
+      Widget? stickyWidget,
       this.section = const [],
-      this.child})
-      : _searchBar = searchBar,
-        _title = title;
+      this.child,
+      bool compactEnabled = false})
+      : _stickyWidget = stickyWidget,
+        _title = title,
+        _compactEnabled = compactEnabled;
   final String _title;
-  final Widget? _searchBar;
+  final Widget? _stickyWidget;
+
+  final bool _compactEnabled;
+
   final Widget? child;
   final List<CommonListSection> section;
 
@@ -53,6 +58,13 @@ class _CommonTitleAppbarState extends State<CommonTitleAppbar> {
         physics: const AlwaysScrollableScrollPhysics(),
         slivers: [
           SliverAppBar(
+            title: widget._compactEnabled == true
+                ? Text(
+                    widget._title,
+                    style: context.appTextStyles.subHeading1,
+                  )
+                : null,
+            centerTitle: true,
             scrolledUnderElevation: 0,
             actions: [
               IconButton(
@@ -63,20 +75,23 @@ class _CommonTitleAppbarState extends State<CommonTitleAppbar> {
                   ))
             ],
             primary: true,
-            expandedHeight: 96,
+            expandedHeight: widget._compactEnabled ? null : 96,
             pinned: true,
             floating: false,
-            flexibleSpace: FlexibleSpaceBar(
-              titlePadding: const EdgeInsets.only(
-                  left: 16, right: 16, top: 0, bottom: 16),
-              title:
-                  Text(widget._title, style: context.appTextStyles.subHeading1),
-            ),
+            flexibleSpace: widget._compactEnabled == true
+                ? null
+                : FlexibleSpaceBar(
+                    titlePadding: const EdgeInsets.only(
+                        left: 16, right: 16, top: 0, bottom: 16),
+                    title: Text(widget._title,
+                        style: context.appTextStyles.subHeading1),
+                  ),
             stretch: true,
           ),
-          if (widget._searchBar != null)
+          if (widget._stickyWidget != null)
             PinnedHeaderSliver(
-              child: Container(color: Colors.white, child: widget._searchBar),
+              child:
+                  Container(color: Colors.white, child: widget._stickyWidget),
             ),
           if (_isAppBarCollapsed)
             const PinnedHeaderSliver(

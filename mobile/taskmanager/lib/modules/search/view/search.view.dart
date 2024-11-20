@@ -104,7 +104,7 @@ class _SearchViewState extends State<SearchView> {
           backgroundColor: context.palette.scaffoldBackground,
           body: CommonTitleAppbar(
             section: _buildSections(state),
-            searchBar: AppbarSearchbarWidget(
+            stickyWidget: AppbarSearchbarWidget(
               textController: _textController,
               onReturn: (query) => _onReturnTapped(),
             ),

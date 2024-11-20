@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:taskmanager/common/context_extension.dart';
 import 'package:taskmanager/data/repositories/task.repository.dart';
 import 'package:taskmanager/main.dart';
+import 'package:taskmanager/modules/calendar/bloc/calendar_bloc.dart';
 import 'package:taskmanager/modules/calendar/view/calendar.view.dart';
 import 'package:taskmanager/modules/home/bloc/home_bloc.dart';
 
@@ -38,7 +39,11 @@ class NavigationPage extends StatelessWidget {
         BlocProvider<SearchBloc>(
             create: (context) =>
                 SearchBloc(taskRepository: getIt<TaskRepository>())
-                  ..add(const SearchOpen()))
+                  ..add(const SearchOpen())),
+        BlocProvider<CalendarBloc>(
+            create: (context) =>
+                CalendarBloc(taskRepository: getIt<TaskRepository>())
+                  ..add(const CalendarOpen())),
       ],
       child: const NavigationView(),
     );
@@ -82,7 +87,6 @@ class NavigationView extends StatelessWidget {
             const CalendarPage(),
             const SearchPage(),
             const ProfilePage(),
-            
           ][state.index],
         );
       },

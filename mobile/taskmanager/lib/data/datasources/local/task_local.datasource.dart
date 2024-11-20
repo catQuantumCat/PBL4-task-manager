@@ -6,7 +6,7 @@ class TaskLocalDatasource {
   late StreamController<List<TaskModel>> _taskStreamController;
   List<TaskModel> _tasks = [];
 
-  Stream<List<TaskModel>> get getTaskList {
+  Stream<List<TaskModel>> get getTaskStream {
     return _taskStreamController.stream.asBroadcastStream();
   }
 
@@ -79,6 +79,10 @@ class TaskLocalDatasource {
 
   List<TaskModel> searchTask(String query) {
     return _tasks.where((task) => task.name.contains(query)).toList();
+  }
+
+  List<TaskModel> getTaskList() {
+    return _tasks;
   }
 
   TaskModel? getTaskById(int taskId) {

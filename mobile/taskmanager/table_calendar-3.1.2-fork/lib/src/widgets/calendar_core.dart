@@ -46,7 +46,7 @@ class CalendarCore extends StatelessWidget {
     this.dowHeight,
     this.rowHeight,
     this.startingDayOfWeek = StartingDayOfWeek.sunday,
-    this.calendarFormat = CalendarFormat.month,
+    this.calendarFormat = CalendarFormat.week,
     this.pageController,
     this.focusedDay,
     this.previousIndex,
@@ -59,13 +59,16 @@ class CalendarCore extends StatelessWidget {
     this.tableBorder,
     this.tablePadding,
     this.scrollPhysics,
-  })  : assert(!dowVisible || (dowHeight != null && dowBuilder != null));
+  }) : assert(!dowVisible || (dowHeight != null && dowBuilder != null));
 
   @override
   Widget build(BuildContext context) {
     return PageView.builder(
       controller: pageController,
       physics: scrollPhysics,
+      scrollDirection: calendarFormat == CalendarFormat.month
+          ? Axis.vertical
+          : Axis.horizontal,
       itemCount: _getPageCount(calendarFormat, firstDay, lastDay),
       itemBuilder: (context, index) {
         final baseDay = _getBaseDay(calendarFormat, index);

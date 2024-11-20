@@ -43,7 +43,7 @@ class TaskListBloc extends Bloc<TaskListEvent, TaskListState> {
     emit(state.copyWith(status: StateStatus.loading));
 
     await emit.forEach<List<TaskModel>>(
-      _taskRepository.getTaskList(),
+      _taskRepository.getTaskStream(),
       onData: (newList) {
         final recentlyViewedTasksList = newList
             .where((task) =>
