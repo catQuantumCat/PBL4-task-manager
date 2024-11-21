@@ -133,6 +133,8 @@ class _CalendarTableWidgetState extends State<CalendarTableWidget> {
         },
         firstDay: DateTime.now(),
         lastDay: DateTime.utc(2030, 3, 14),
+        formatAnimationCurve: Easing.standard,
+        formatAnimationDuration: const Duration(milliseconds: 300),
         focusedDay: widget._focusedDay);
   }
 }
