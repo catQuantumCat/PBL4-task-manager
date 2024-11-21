@@ -49,22 +49,22 @@ class CalendarView extends StatelessWidget {
                 _onDateTapped(selectedDate, context),
           ),
           section: [
-            if (isSameDay(state.selectedDate, DateTime.now()))
+            if (isSameDay(state.selectedDate, DateTime.now()) &&
+                context.read<HomeBloc>().state.overdueList.isNotEmpty)
               CommonListSection(
-                context: context,
                 title: "Overdue",
-                isHidden: context.read<HomeBloc>().state.overdueList.isEmpty,
                 child: TaskListView(
                   taskList: context.read<HomeBloc>().state.overdueList,
                 ),
               ),
             CommonListSection(
-              context: context,
               title: state.selectedDate.dateToString(),
+              collapsedEnabled: false,
               child: TaskListView(
                   taskList: context.read<CalendarBloc>().state.filteredTask),
             ),
           ],
+
           // TaskListView(taskList: context.read<HomeBloc>().state.overdueList),
         );
       },

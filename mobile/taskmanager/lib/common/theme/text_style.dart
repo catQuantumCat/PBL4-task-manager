@@ -57,7 +57,8 @@ class AppTextStyles extends ThemeExtension<AppTextStyles> {
   final TextStyle disabledHeading2;
 
   final TextStyle disabledSubHeading1;
-  final TextStyle disabledsubHeading2;
+  final TextStyle disabledSubHeading2;
+  final TextStyle disabledSubHeading3;
 
   final TextStyle strikedSubHeading1;
   final TextStyle strikedSubHeading2;
@@ -84,7 +85,8 @@ class AppTextStyles extends ThemeExtension<AppTextStyles> {
     required this.disabledHeading1,
     required this.disabledHeading2,
     required this.disabledSubHeading1,
-    required this.disabledsubHeading2,
+    required this.disabledSubHeading2,
+    required this.disabledSubHeading3,
     required this.strikedSubHeading1,
     required this.strikedSubHeading2,
   });
@@ -115,7 +117,8 @@ class AppTextStyles extends ThemeExtension<AppTextStyles> {
       disabledHeading1: Fonts.s32w7.copyWith(color: palette.disabledText),
       disabledHeading2: Fonts.s24w7.copyWith(color: palette.disabledText),
       disabledSubHeading1: Fonts.s20w7.copyWith(color: palette.disabledText),
-      disabledsubHeading2: Fonts.s16w6.copyWith(color: palette.disabledText),
+      disabledSubHeading2: Fonts.s16w6.copyWith(color: palette.disabledText),
+      disabledSubHeading3: Fonts.s14w6.copyWith(color: palette.disabledText),
       strikedSubHeading1: Fonts.s20w7.copyWith(
         color: palette.disabledText,
         decoration: TextDecoration.lineThrough,
@@ -150,7 +153,8 @@ class AppTextStyles extends ThemeExtension<AppTextStyles> {
     TextStyle? disabledHeading1,
     TextStyle? disabledHeading2,
     TextStyle? disabledSubHeading1,
-    TextStyle? disabledsubHeading2,
+    TextStyle? disabledSubHeading2,
+    TextStyle? disabledSubHeading3,
     TextStyle? strikedSubHeading1,
     TextStyle? strikedSubHeading2,
   }) {
@@ -176,7 +180,8 @@ class AppTextStyles extends ThemeExtension<AppTextStyles> {
       disabledHeading1: disabledHeading1 ?? this.disabledHeading1,
       disabledHeading2: disabledHeading2 ?? this.disabledHeading2,
       disabledSubHeading1: disabledSubHeading1 ?? this.disabledSubHeading1,
-      disabledsubHeading2: disabledsubHeading2 ?? this.disabledsubHeading2,
+      disabledSubHeading2: disabledSubHeading2 ?? this.disabledSubHeading2,
+      disabledSubHeading3: disabledSubHeading3 ?? this.disabledSubHeading3,
       strikedSubHeading1: strikedSubHeading1 ?? this.strikedSubHeading1,
       strikedSubHeading2: strikedSubHeading2 ?? this.strikedSubHeading2,
     );
@@ -215,8 +220,10 @@ class AppTextStyles extends ThemeExtension<AppTextStyles> {
           TextStyle.lerp(disabledHeading2, other.disabledHeading2, t)!,
       disabledSubHeading1:
           TextStyle.lerp(disabledSubHeading1, other.disabledSubHeading1, t)!,
-      disabledsubHeading2:
-          TextStyle.lerp(disabledsubHeading2, other.disabledsubHeading2, t)!,
+      disabledSubHeading2:
+          TextStyle.lerp(disabledSubHeading2, other.disabledSubHeading2, t)!,
+      disabledSubHeading3:
+          TextStyle.lerp(disabledSubHeading3, other.disabledSubHeading3, t)!,
       strikedSubHeading1:
           TextStyle.lerp(strikedSubHeading1, other.strikedSubHeading1, t)!,
       strikedSubHeading2:

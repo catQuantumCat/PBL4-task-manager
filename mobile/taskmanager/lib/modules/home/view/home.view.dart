@@ -34,14 +34,12 @@ class HomeView extends StatelessWidget {
   List<CommonListSection> _getSections(BuildContext context, HomeState state) {
     if (state.status == StateStatus.success) {
       return [
+        if (state.overdueList.isEmpty == false)
+          CommonListSection(
+            title: "Overdue",
+            child: TaskListView(taskList: state.overdueList),
+          ),
         CommonListSection(
-          context: context,
-          title: "Overdue",
-          isHidden: state.overdueList.isEmpty,
-          child: TaskListView(taskList: state.overdueList),
-        ),
-        CommonListSection(
-          context: context,
           title: DateTime.now().dateToString(),
           child: (state.todayList.isNotEmpty)
               ? TaskListView(taskList: state.todayList)

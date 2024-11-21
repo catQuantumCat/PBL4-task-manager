@@ -6,23 +6,24 @@ import 'package:taskmanager/common/widget/common_list_section.dart';
 const APPBARHEIGHT = 96;
 
 class CommonTitleAppbar extends StatefulWidget {
-  const CommonTitleAppbar(
-      {super.key,
-      required String title,
-      Widget? stickyWidget,
-      this.section = const [],
-      this.child,
-      bool compactEnabled = false})
-      : _stickyWidget = stickyWidget,
+  const CommonTitleAppbar({
+    super.key,
+    required String title,
+    Widget? stickyWidget,
+    List<Widget> section = const [],
+    this.child,
+    bool compactEnabled = false,
+  })  : _stickyWidget = stickyWidget,
         _title = title,
-        _compactEnabled = compactEnabled;
+        _compactEnabled = compactEnabled,
+        _section = section;
   final String _title;
   final Widget? _stickyWidget;
 
   final bool _compactEnabled;
 
   final Widget? child;
-  final List<CommonListSection> section;
+  final List<Widget> _section;
 
   @override
   State<CommonTitleAppbar> createState() => _CommonTitleAppbarState();
@@ -100,10 +101,10 @@ class _CommonTitleAppbarState extends State<CommonTitleAppbar> {
                 thickness: 1,
               ),
             ),
-          if (widget.section.isEmpty)
+          if (widget._section.isEmpty)
             SliverToBoxAdapter(child: widget.child)
           else
-            ...widget.section,
+            ...widget._section,
         ],
       ),
     );

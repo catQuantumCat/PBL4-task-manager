@@ -23,6 +23,10 @@ class ThemeSheet {
                 padding: WidgetStatePropertyAll<EdgeInsets>(EdgeInsets.all(4)),
               ),
             ),
+            textButtonTheme: const TextButtonThemeData(
+                style: ButtonStyle(
+              visualDensity: VisualDensity.compact,
+            )),
             popupMenuTheme: PopupMenuThemeData(
               color: palette.scaffoldBackground,
               shape: RoundedRectangleBorder(

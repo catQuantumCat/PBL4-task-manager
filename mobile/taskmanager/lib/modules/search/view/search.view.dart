@@ -71,25 +71,24 @@ class _SearchViewState extends State<SearchView> {
   List<CommonListSection> _buildSections(SearchState state) {
     if (state.status == StateStatus.initial) {
       return [
-        CommonListSection(
-          context: context,
-          title: "Recent searches",
-          trailing: TextButton(
-            onPressed: _onClearRecentTapped,
-            child: const Text("Clear"),
+        if (state.recentlySearched.isEmpty == false)
+          CommonListSection(
+            title: "Recent searches",
+            trailing: TextButton(
+              onPressed: _onClearRecentTapped,
+              child: const Text("Clear"),
+            ),
+            child: RecentlySearchedListTile(
+              recentlySearched: state.recentlySearched,
+              onTap: (tappedQuery) {
+                _onRecentSearchQueryTapped(tappedQuery);
+              },
+            ),
           ),
-          isHidden: state.recentlySearched.isEmpty,
-          child: RecentlySearchedListTile(
-            recentlySearched: state.recentlySearched,
-            onTap: (tappedQuery) {
-              _onRecentSearchQueryTapped(tappedQuery);
-            },
-          ),
-        ),
-        CommonListSection(
-          context: context,
+        const CommonListSection(
           title: "Recently Viewed",
-          child: const SearchInitialWidget(),
+          collapsedEnabled: false,
+          child: SearchInitialWidget(),
         ),
       ];
     }
