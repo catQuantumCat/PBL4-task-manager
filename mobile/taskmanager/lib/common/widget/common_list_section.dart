@@ -71,6 +71,7 @@ class _CommonListSectionState extends State<CommonListSection> {
                     ),
                     Wrap(
                       children: [
+                        if (widget.trailing != null) widget.trailing!,
                         if (widget.collapsedEnabled == true)
                           IconButton(
                             padding: const EdgeInsets.all(0),
@@ -79,7 +80,6 @@ class _CommonListSectionState extends State<CommonListSection> {
                                 ? Icons.keyboard_arrow_right
                                 : Icons.keyboard_arrow_down),
                           ),
-                        if (widget.trailing != null) widget.trailing!
                       ],
                     ),
                   ],
@@ -89,18 +89,17 @@ class _CommonListSectionState extends State<CommonListSection> {
           ),
         ),
         SliverToBoxAdapter(
-          child: AnimatedOpacity(
-            curve: Easing.standard,
-            opacity: _isCollapsed ? 0.0 : 1.0,
-            duration: const Duration(milliseconds: 300),
-            child: AnimatedSlide(
-              curve: Easing.standard,
-              offset: _isCollapsed ? const Offset(0, -1) : const Offset(0, 0),
-              duration: const Duration(milliseconds: 300),
-              child: widget.child,
-            ),
+          child: AnimatedCrossFade(
+            firstChild: widget.child ?? const SizedBox.shrink(),
+            secondChild: Container(),
+            crossFadeState: _isCollapsed
+                ? CrossFadeState.showSecond
+                : CrossFadeState.showFirst,
+            duration: const Duration(milliseconds: 200),
+            firstCurve: Easing.standard,
+            secondCurve: Easing.standard,
           ),
-        )
+        ),
       ],
     );
   }

@@ -74,6 +74,7 @@ class _SearchViewState extends State<SearchView> {
         if (state.recentlySearched.isEmpty == false)
           CommonListSection(
             title: "Recent searches",
+            collapsedEnabled: false,
             trailing: TextButton(
               onPressed: _onClearRecentTapped,
               child: const Text("Clear"),

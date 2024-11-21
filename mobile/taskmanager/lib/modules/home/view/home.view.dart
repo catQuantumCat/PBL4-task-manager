@@ -41,6 +41,7 @@ class HomeView extends StatelessWidget {
           ),
         CommonListSection(
           title: DateTime.now().dateToString(),
+          collapsedEnabled: false,
           child: (state.todayList.isNotEmpty)
               ? TaskListView(taskList: state.todayList)
               : null,

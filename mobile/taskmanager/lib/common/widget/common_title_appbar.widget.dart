@@ -1,10 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:taskmanager/common/context_extension.dart';
 
-import 'package:taskmanager/common/widget/common_list_section.dart';
-
-const APPBARHEIGHT = 96;
-
 class CommonTitleAppbar extends StatefulWidget {
   const CommonTitleAppbar({
     super.key,
@@ -59,6 +55,7 @@ class _CommonTitleAppbarState extends State<CommonTitleAppbar> {
         physics: const AlwaysScrollableScrollPhysics(),
         slivers: [
           SliverAppBar(
+            toolbarHeight: 32,
             title: widget._compactEnabled == true
                 ? Text(
                     widget._title,
