@@ -2,24 +2,28 @@ import 'package:flutter/material.dart';
 import 'package:taskmanager/common/context_extension.dart';
 
 class CommonTitleAppbar extends StatefulWidget {
-  const CommonTitleAppbar({
-    super.key,
-    required String title,
-    Widget? stickyWidget,
-    List<Widget> section = const [],
-    this.child,
-    bool compactEnabled = false,
-  })  : _stickyWidget = stickyWidget,
+  const CommonTitleAppbar(
+      {super.key,
+      required String title,
+      Widget? stickyWidget,
+      List<Widget> section = const [],
+      Widget? child,
+      bool compactEnabled = false,
+      Color? titleBackgroundColor})
+      : _stickyWidget = stickyWidget,
         _title = title,
         _compactEnabled = compactEnabled,
-        _section = section;
+        _section = section,
+        _child = child,
+        _titleBackgroundColor = titleBackgroundColor;
   final String _title;
   final Widget? _stickyWidget;
 
   final bool _compactEnabled;
 
-  final Widget? child;
+  final Widget? _child;
   final List<Widget> _section;
+  final Color? _titleBackgroundColor;
 
   @override
   State<CommonTitleAppbar> createState() => _CommonTitleAppbarState();
@@ -55,7 +59,9 @@ class _CommonTitleAppbarState extends State<CommonTitleAppbar> {
         physics: const AlwaysScrollableScrollPhysics(),
         slivers: [
           SliverAppBar(
-            toolbarHeight: 32,
+            backgroundColor: widget._titleBackgroundColor ??
+                context.palette.scaffoldBackground,
+            toolbarHeight: widget._compactEnabled == true ? 32 : kToolbarHeight,
             title: widget._compactEnabled == true
                 ? Text(
                     widget._title,
@@ -99,7 +105,7 @@ class _CommonTitleAppbarState extends State<CommonTitleAppbar> {
               ),
             ),
           if (widget._section.isEmpty)
-            SliverToBoxAdapter(child: widget.child)
+            SliverToBoxAdapter(child: widget._child)
           else
             ...widget._section,
         ],

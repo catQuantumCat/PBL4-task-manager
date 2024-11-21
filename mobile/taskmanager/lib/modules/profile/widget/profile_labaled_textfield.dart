@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:taskmanager/common/context_extension.dart';
+import 'package:taskmanager/common/widget/common_title_appbar.widget.dart';
 
 class ProfileLabaledTextfield extends StatelessWidget {
   const ProfileLabaledTextfield({
@@ -23,14 +25,18 @@ class ProfileLabaledTextfield extends StatelessWidget {
         if (label != null)
           SizedBox(
             width: 96,
-            child: Text(label!),
+            child: Text(
+              label!,
+              style: context.appTextStyles.metadata1,
+            ),
           ),
         Expanded(
             child: TextFormField(
+          style: context.appTextStyles.textField,
           obscureText: isSecured,
           decoration: InputDecoration.collapsed(
-            hintText: hintText,
-          ),
+              hintText: hintText,
+              hintStyle: context.appTextStyles.hintTextField),
           controller: controller,
           validator: validator,
         )),

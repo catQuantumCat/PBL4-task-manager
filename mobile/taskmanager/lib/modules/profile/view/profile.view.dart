@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:taskmanager/common/constants/state_status.constant.dart';
+import 'package:taskmanager/common/context_extension.dart';
 import 'package:taskmanager/common/widget/common_title_appbar.widget.dart';
 import 'package:taskmanager/data/repositories/user.repository.dart';
 import 'package:taskmanager/main.dart';
@@ -54,6 +55,7 @@ class ProfileView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return CommonTitleAppbar(
+      titleBackgroundColor: context.palette.scaffoldBackgroundDim,
       title: "Account",
       child: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 16),

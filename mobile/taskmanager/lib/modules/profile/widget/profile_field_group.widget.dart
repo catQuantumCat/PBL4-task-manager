@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:taskmanager/common/constants/ui_constant.dart';
+import 'package:taskmanager/common/context_extension.dart';
 
 class ProfileFieldGroup extends StatelessWidget {
   const ProfileFieldGroup(
@@ -16,13 +18,17 @@ class ProfileFieldGroup extends StatelessWidget {
         if (groupLabel != null)
           Padding(
             padding: const EdgeInsets.fromLTRB(16, 0, 16, 4),
-            child: Text(groupLabel?.toUpperCase() ?? ""),
+            child: Text(
+              groupLabel?.toUpperCase() ?? "",
+              style: context.appTextStyles.metadata1,
+            ),
           ),
         Container(
-          padding: const EdgeInsets.all(16),
-          decoration: const BoxDecoration(
-              color: Colors.white,
-              borderRadius: BorderRadius.all(Radius.circular(12))),
+          padding: EdgeInsets.all(UIConstant.padding),
+          decoration: BoxDecoration(
+              color: context.palette.buttonBackground,
+              borderRadius:
+                  BorderRadius.circular(UIConstant.cornerRadiusMedium)),
           child: Column(
             children: [
               for (int i = 0; i < items.length; i++) ...[
@@ -40,7 +46,10 @@ class ProfileFieldGroup extends StatelessWidget {
         ),
         Padding(
           padding: const EdgeInsets.symmetric(horizontal: 16),
-          child: Text(hintText ?? ""),
+          child: Text(
+            hintText ?? "",
+            style: context.appTextStyles.metadata1,
+          ),
         )
       ],
     );

@@ -10,7 +10,6 @@ import 'package:taskmanager/modules/profile/widget/profile_field_group.widget.da
 
 import 'package:taskmanager/modules/profile/widget/edit/profile_password_edit.dart';
 import 'package:taskmanager/modules/profile/widget/edit/profile_username_edit.dart';
-import 'package:taskmanager/modules/search/view/search.view.dart';
 
 class ProfileSuccessWidget extends StatelessWidget {
   const ProfileSuccessWidget({super.key, required this.state});
@@ -70,7 +69,7 @@ class ProfileSuccessWidget extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   Text(state.userInfo?.username ?? "",
-                      style: context.appTextStyles.buttonLabel),
+                      style: context.appTextStyles.body2),
                   const Icon(Icons.chevron_right)
                 ],
               ),
@@ -87,7 +86,7 @@ class ProfileSuccessWidget extends StatelessWidget {
                 children: [
                   Text(
                     state.userInfo?.email ?? "",
-                    style: const TextStyle(color: Colors.black),
+                    style: context.appTextStyles.body2,
                   ),
                   const Icon(Icons.chevron_right)
                 ],
@@ -100,11 +99,12 @@ class ProfileSuccessWidget extends StatelessWidget {
           items: [
             InkWell(
               onTap: () => _onPasswordTapped(context),
-              child: const Row(
+              child: Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   Text(
                     " Change Password",
+                    style: context.appTextStyles.body2,
                   ),
                 ],
               ),
@@ -115,11 +115,12 @@ class ProfileSuccessWidget extends StatelessWidget {
           items: [
             InkWell(
               onTap: () => context.read<AuthBloc>().add(const AuthLogOut()),
-              child: const Row(
+              child: Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   Text(
                     "Log out",
+                    style: context.appTextStyles.errorButtonLabel,
                   ),
                 ],
               ),
