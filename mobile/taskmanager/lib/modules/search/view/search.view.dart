@@ -120,7 +120,7 @@ class _SearchViewState extends State<SearchView> {
                     allowDissiable: false,
                   );
                 default:
-                  return const SizedBox.shrink();
+                  return const SizedBox();
               }
             }),
           ),

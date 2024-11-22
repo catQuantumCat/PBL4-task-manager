@@ -106,17 +106,25 @@ class _CommonTitleAppbarState extends State<CommonTitleAppbar> {
               ),
             ),
           if (widget._section.isEmpty)
-            // SliverFillRemaining(
-            //   hasScrollBody: false,
-            //   fillOverscroll: false,
-            //   child: widget._child,
-            // )
-
-            SliverToBoxAdapter(
-              child: widget._child,
+            SliverFillRemaining(
+              hasScrollBody: false,
+              child: SizedBox(
+                height: 0,
+                child: widget._child,
+              ),
             )
+
+          // SliverToBoxAdapter(
+          //   child: SizedBox(
+          //     height: (MediaQuery.of(context).size.height / 2) + 48,
+          //     child: widget._child,
+          //   ),
+
           else
             ...widget._section,
+
+          // NestedScrollView(
+          //   headerSliverBuilder: headerSliverBuilder, body: body),
         ],
       ),
     );

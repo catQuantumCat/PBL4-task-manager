@@ -19,7 +19,6 @@ class AppbarSearchbarWidget extends StatelessWidget {
     return Padding(
       padding: const EdgeInsets.fromLTRB(16, 0, 16, 8),
       child: TextFormField(
-        cursorColor: context.palette.primaryColor,
         controller: _textController,
         onFieldSubmitted: (value) {
           FocusManager.instance.primaryFocus?.unfocus();
