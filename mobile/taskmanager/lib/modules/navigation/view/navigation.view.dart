@@ -71,6 +71,7 @@ class NavigationView extends StatelessWidget {
     return BlocBuilder<NavigationBloc, NavigationState>(
       builder: (context, state) {
         return Scaffold(
+          key: navigatorKey,
           floatingActionButton: FloatingActionButton(
             elevation: 4,
             shape: const CircleBorder(),

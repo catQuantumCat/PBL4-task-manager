@@ -2,6 +2,7 @@ import 'dart:developer';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:get_it/get_it.dart';
 import 'package:hive/hive.dart';
 import 'package:taskmanager/common/theme/palette.dart';
@@ -14,6 +15,8 @@ import 'package:taskmanager/di/service_locator.dart';
 import 'package:taskmanager/modules/auth/bloc/auth/auth_bloc.dart';
 
 final GetIt getIt = GetIt.instance;
+
+final GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
 
 void main() async {
   await initialize();
@@ -39,6 +42,7 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final TransitionBuilder fToastBuilder = FToastBuilder();
     return BlocProvider(
       create: (context) => AuthBloc(userRepository: getIt<UserRepository>())
         ..add(const AuthCheckToken()),
@@ -51,6 +55,7 @@ class MyApp extends StatelessWidget {
         onGenerateRoute: _router.onGenerateRoute,
         initialRoute: "/",
         builder: (context, child) {
+          child = fToastBuilder(context, child);
           return BlocListener<AuthBloc, AuthState>(
               child: child,
               listener: (context, state) {

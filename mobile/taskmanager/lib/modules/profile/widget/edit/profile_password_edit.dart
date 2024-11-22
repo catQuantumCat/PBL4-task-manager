@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:taskmanager/common/bottomSheet/common_bottom_sheet.dart';
 import 'package:taskmanager/common/bottomSheet/custom_sheet.dart';
 import 'package:taskmanager/common/context_extension.dart';
+import 'package:taskmanager/common/toast/common_toast.dart';
 import 'package:taskmanager/common/utils/ux_writing.util.dart';
 import 'package:taskmanager/common/utils/validation.utils.dart';
 
@@ -95,6 +96,8 @@ class _ProfilePasswordEditState extends State<ProfilePasswordEdit> {
         return;
       }
     }
+    CommonToast.showStatusToast(
+        sheetContext, "Password updated sucessfully");
 
     Navigator.pop<Map<String, String>>(sheetContext, {
       'new_password': _newController.text,

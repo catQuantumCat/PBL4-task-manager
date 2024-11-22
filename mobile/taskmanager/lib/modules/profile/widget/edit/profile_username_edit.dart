@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:taskmanager/common/bottomSheet/common_bottom_sheet.dart';
 import 'package:taskmanager/common/bottomSheet/custom_sheet.dart';
 import 'package:taskmanager/common/context_extension.dart';
+import 'package:taskmanager/common/toast/common_toast.dart';
 
 import 'package:taskmanager/modules/profile/widget/profile_field_group.widget.dart';
 import 'package:taskmanager/modules/profile/widget/profile_labaled_textfield.dart';
@@ -74,6 +75,7 @@ class _ProfileUsernameEditState extends State<ProfileUsernameEdit> {
             );
           });
     } else {
+      CommonToast.showStatusToast(sheetContext, "Username updated sucessfully");
       Navigator.pop<Map<String, String>>(sheetContext, {
         'username': _newController.text,
         'password': _passwordFieldController.text,

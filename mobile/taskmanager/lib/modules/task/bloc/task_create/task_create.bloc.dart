@@ -81,7 +81,7 @@ class TaskCreateBloc extends Bloc<TaskCreateEvent, TaskCreateState> {
 
     try {
       await _taskRepository.createTask(data);
-      emit(state.copyWith(status: NewHomeStatus.success));
+      emit(state.copyWith(status: NewHomeStatus.initial));
     } catch (e) {
       log(e.toString());
       emit(state.copyWith(status: NewHomeStatus.failure));

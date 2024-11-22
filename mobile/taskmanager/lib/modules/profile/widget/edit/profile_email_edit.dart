@@ -5,8 +5,10 @@ import 'package:flutter/material.dart';
 import 'package:taskmanager/common/bottomSheet/common_bottom_sheet.dart';
 import 'package:taskmanager/common/bottomSheet/custom_sheet.dart';
 import 'package:taskmanager/common/context_extension.dart';
+import 'package:taskmanager/common/toast/common_toast.dart';
 import 'package:taskmanager/common/utils/validation.utils.dart';
 import 'package:taskmanager/common/widget/common_title_appbar.widget.dart';
+import 'package:taskmanager/main.dart';
 
 import 'package:taskmanager/modules/profile/widget/profile_field_group.widget.dart';
 import 'package:taskmanager/modules/profile/widget/profile_labaled_textfield.dart';
@@ -97,6 +99,8 @@ class _ProfileEmailEditState extends State<ProfileEmailEdit> {
         return;
       }
     }
+
+    CommonToast.showStatusToast(sheetContext, "Email updated sucessfully");
 
     Navigator.pop<Map<String, String>>(sheetContext, {
       'email': _newController.text,
