@@ -1,12 +1,9 @@
-import 'dart:developer';
-
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:taskmanager/common/constants/ui_constant.dart';
 import 'package:taskmanager/common/context_extension.dart';
 import 'package:taskmanager/common/theme/color_enum.dart';
-import 'package:taskmanager/common/widget/common_pill_outlined_button.widget.dart';
 import 'package:taskmanager/modules/task/bloc/task_create/task_create.bloc.dart';
 import 'package:taskmanager/modules/task/widget/task_priority.sheet.dart';
 
@@ -134,7 +131,7 @@ class _TaskCreateViewState extends State<TaskCreateView> {
                   // physics: const NeverScrollableScrollPhysics(),
                   shrinkWrap: true,
                   primary: false,
-                  controller: scrollController,
+                  // controller: scrollController,
                   padding: const EdgeInsets.fromLTRB(20, 0, 20, 20),
                   children: [
                     const SizedBox(height: 24),
@@ -224,6 +221,9 @@ class _TaskCreateViewState extends State<TaskCreateView> {
                                   missionName: taskFieldController.text,
                                   description:
                                       descriptionFieldController.text));
+
+                          taskFieldController.clear();
+                          descriptionFieldController.clear();
                         },
                         icon: const Icon(Icons.add))
                   ],
