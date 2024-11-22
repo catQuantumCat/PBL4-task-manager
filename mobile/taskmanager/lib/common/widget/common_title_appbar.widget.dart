@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:sliver_tools/sliver_tools.dart';
 import 'package:taskmanager/common/context_extension.dart';
 
 class CommonTitleAppbar extends StatefulWidget {
@@ -105,7 +106,15 @@ class _CommonTitleAppbarState extends State<CommonTitleAppbar> {
               ),
             ),
           if (widget._section.isEmpty)
-            SliverToBoxAdapter(child: widget._child)
+            // SliverFillRemaining(
+            //   hasScrollBody: false,
+            //   fillOverscroll: false,
+            //   child: widget._child,
+            // )
+
+            SliverToBoxAdapter(
+              child: widget._child,
+            )
           else
             ...widget._section,
         ],

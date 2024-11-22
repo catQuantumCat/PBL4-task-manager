@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:intl/intl.dart';
 import 'package:table_calendar/table_calendar.dart';
 import 'package:taskmanager/common/context_extension.dart';
 import 'package:taskmanager/common/datetime_extension.dart';
@@ -9,6 +10,7 @@ import 'package:taskmanager/common/widget/common_list_section.dart';
 import 'package:taskmanager/common/widget/common_title_appbar.widget.dart';
 
 import 'package:taskmanager/modules/calendar/bloc/calendar_bloc.dart';
+import 'package:taskmanager/modules/calendar/widget/calendar_empty.widget.dart';
 import 'package:taskmanager/modules/calendar/widget/calendar_table.widget.dart';
 import 'package:taskmanager/modules/home/bloc/home_bloc.dart';
 
@@ -34,6 +36,30 @@ class CalendarView extends StatelessWidget {
     context.read<CalendarBloc>().add(CalendarDateSelected(selectedDate: date));
   }
 
+  List<CommonListSection> _getSection(BuildContext context) {
+    if (context.read<CalendarBloc>().state.filteredTask.isEmpty &&
+        context.read<HomeBloc>().state.overdueList.isEmpty) {
+      return [];
+    }
+
+    return [
+      if (context.read<HomeBloc>().state.overdueList.isNotEmpty)
+        CommonListSection(
+          title: "Overdue",
+          child: TaskListView(
+            taskList: context.read<HomeBloc>().state.overdueList,
+          ),
+        ),
+      CommonListSection(
+        title: DateFormat('MMM yyyy')
+            .format(context.read<CalendarBloc>().state.selectedDate),
+        collapsedEnabled: false,
+        child: TaskListView(
+            taskList: context.read<CalendarBloc>().state.filteredTask),
+      ),
+    ];
+  }
+
   @override
   Widget build(BuildContext context) {
     return BlocBuilder<CalendarBloc, CalendarState>(
@@ -44,28 +70,15 @@ class CalendarView extends StatelessWidget {
             title: "Upcoming",
             compactEnabled: true,
             stickyWidget: CalendarTableWidget(
-              focusedDay: context.read<CalendarBloc>().state.selectedDate,
-              deadlineSet: context.read<CalendarBloc>().state.fullTask,
+              focusedDay: state.selectedDate,
+              deadlineSet: state.fullTask,
               onDateChanged: (selectedDate) =>
                   _onDateTapped(selectedDate, context),
             ),
-            section: [
-              if (context.read<HomeBloc>().state.overdueList.isNotEmpty)
-                CommonListSection(
-                  title: "Overdue",
-                  child: TaskListView(
-                    taskList: context.read<HomeBloc>().state.overdueList,
-                  ),
-                ),
-              CommonListSection(
-                title: state.selectedDate.dateToString(),
-                collapsedEnabled: false,
-                child: TaskListView(
-                    taskList: context.read<CalendarBloc>().state.filteredTask),
-              ),
-            ],
-
-            // TaskListView(taskList: context.read<HomeBloc>().state.overdueList),
+            section: _getSection(context),
+            child: CalendarEmptyWidget(
+              selectedDate: state.selectedDate,
+            ),
           ),
         );
       },

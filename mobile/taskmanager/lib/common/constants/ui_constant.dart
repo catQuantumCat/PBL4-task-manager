@@ -7,4 +7,6 @@ abstract class UIConstant {
   static double cornerRadiusWeak = 8;
   static double cornerRadiusMedium = 16;
   static double cornerRadiusStrong = 20;
+
+  static double fullPageIconSize = 128;
 }

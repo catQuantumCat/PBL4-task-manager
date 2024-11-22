@@ -37,8 +37,12 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
                 .where((task) => task.deadTime.isPast(of: today))
                 .toList());
       },
-      onError: (error, stackTrace) => state.copyWith(
-          status: StateStatus.failed, errorMessage: error.toString()),
+      onError: (error, stackTrace) {
+        return state.copyWith(
+          status: StateStatus.failed,
+          errorMessage: error.toString(),
+        );
+      },
     );
   }
 

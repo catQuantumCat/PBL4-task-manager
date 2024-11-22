@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:intl/intl.dart';
 import 'package:taskmanager/common/context_extension.dart';
 import 'package:taskmanager/common/datetime_extension.dart';
 import 'package:taskmanager/modules/task/bloc/task_detail/task_detail.bloc.dart';
@@ -50,10 +51,12 @@ class TaskDetailMenuButton extends StatelessWidget {
             PopupMenuItem(
               enabled: false,
               height: 40,
-              child: Text(
-                "Added on ${bloc.state.task?.createTime.dateToString(withTime: true)}",
-                style: context.appTextStyles.metadata1,
-              ),
+              child: bloc.state.task?.createTime != null
+                  ? Text(
+                      "Added on ${DateFormat("MMM d HH:mm").format(bloc.state.task!.createTime)}",
+                      style: context.appTextStyles.metadata1,
+                    )
+                  : null,
             ),
             const PopupMenuDivider(
               height: 0,

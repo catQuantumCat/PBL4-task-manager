@@ -2,11 +2,14 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:taskmanager/common/constants/state_status.constant.dart';
 import 'package:taskmanager/common/context_extension.dart';
-import 'package:taskmanager/common/datetime_extension.dart';
+import 'package:taskmanager/common/widget/common_error.page.dart';
+
 import 'package:taskmanager/common/widget/common_list_section.dart';
+import 'package:intl/intl.dart';
 import 'package:taskmanager/common/widget/common_title_appbar.widget.dart';
 
 import 'package:taskmanager/modules/home/bloc/home_bloc.dart';
+import 'package:taskmanager/modules/home/widget/home_empty.widget.dart';
 
 import 'package:taskmanager/modules/task/bloc/task_list/task_list.bloc.dart';
 
@@ -32,23 +35,24 @@ class HomeView extends StatelessWidget {
   const HomeView({super.key});
 
   List<CommonListSection> _getSections(BuildContext context, HomeState state) {
-    if (state.status == StateStatus.success) {
-      return [
-        if (state.overdueList.isEmpty == false)
-          CommonListSection(
-            title: "Overdue",
-            child: TaskListView(taskList: state.overdueList),
-          ),
-        CommonListSection(
-          title: DateTime.now().dateToString(),
-          collapsedEnabled: false,
-          child: (state.todayList.isNotEmpty)
-              ? TaskListView(taskList: state.todayList)
-              : null,
-        )
-      ];
+    if (state.status != StateStatus.success ||
+        state.todayList.isEmpty && state.overdueList.isEmpty) {
+      return [];
     }
-    return [];
+    return [
+      if (state.overdueList.isEmpty == false)
+        CommonListSection(
+          title: "Overdue",
+          child: TaskListView(taskList: state.overdueList),
+        ),
+      CommonListSection(
+        title: DateFormat("dd MMM - EEEE").format(DateTime.now()),
+        collapsedEnabled: false,
+        child: (state.todayList.isNotEmpty)
+            ? TaskListView(taskList: state.todayList)
+            : null,
+      )
+    ];
   }
 
   @override
@@ -70,14 +74,20 @@ class HomeView extends StatelessWidget {
               child: Builder(builder: (context) {
                 switch (state.status) {
                   case StateStatus.initial:
-                    return const Center(
-                      child: Text("Initial state"),
-                    );
+                    return const SizedBox.shrink();
                   case StateStatus.failed:
-                    return const Center(child: CircularProgressIndicator());
+                    return CommonErrorPage(
+                      onReloadTap: () =>
+                          context.read<HomeBloc>().add(const HomeRefresh()),
+                      errorMessage: state.errorMessage,
+                    );
+
                   case StateStatus.loading:
                     return const Center(child: CircularProgressIndicator());
                   case StateStatus.success:
+                    if (state.todayList.isEmpty && state.overdueList.isEmpty) {
+                      return const HomeEmptyWidget();
+                    }
                     return const SizedBox.shrink();
                 }
               }),

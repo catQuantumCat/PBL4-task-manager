@@ -6,11 +6,11 @@ extension DatetimeExtension on DateTime {
     return copyWith(hour: time.hour, minute: time.minute);
   }
 
-  String dateToString({bool withTime = false}) {
-    return withTime == true
-        ? DateFormat("MMM d HH:mm").format(this)
-        : DateFormat("MMM d - EEEE").format(this);
-  }
+  // String dateToString({bool withTime = false}) {
+  //   return withTime == true
+  //       ? DateFormat("MMM d HH:mm").format(this)
+  //       : DateFormat("MMM d - EEEE").format(this);
+  // }
 
   String relativeToToday() {
     final DateTime today = DateTime.now();
