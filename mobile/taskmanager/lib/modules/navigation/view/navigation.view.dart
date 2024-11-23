@@ -98,24 +98,26 @@ class NavigationView extends StatelessWidget {
     return BlocBuilder<NavigationBloc, NavigationState>(
       builder: (context, state) {
         return Scaffold(
-          floatingActionButton: FloatingActionButton(
-            elevation: 4,
-            shape: const CircleBorder(),
-            backgroundColor: context.palette.primaryColor,
-            foregroundColor: Colors.white,
-            onPressed: () {
-              _showNewTaskSheet(context);
-            },
-            child: const Icon(Icons.add),
-          ),
-          bottomNavigationBar: const NavigationWidget(),
-          body: <Widget>[
-            const HomePage(),
-            const CalendarPage(),
-            const SearchPage(),
-            const ProfilePage(),
-          ][state.index],
-        );
+            floatingActionButton: FloatingActionButton(
+              elevation: 4,
+              shape: const CircleBorder(),
+              backgroundColor: context.palette.primaryColor,
+              foregroundColor: Colors.white,
+              onPressed: () {
+                _showNewTaskSheet(context);
+              },
+              child: const Icon(Icons.add),
+            ),
+            bottomNavigationBar: const NavigationWidget(),
+            body: IndexedStack(
+              index: state.index,
+              children: const [
+                HomePage(),
+                CalendarPage(),
+                SearchPage(),
+                ProfilePage(),
+              ],
+            ));
       },
     );
   }

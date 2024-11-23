@@ -16,11 +16,10 @@ class CalendarBloc extends Bloc<CalendarEvent, CalendarState> {
         super(CalendarInitial()) {
     on<CalendarOpen>(_onOpen);
     on<CalendarDateSelected>(_onDateSelected);
+    add(CalendarDateSelected(selectedDate: state.selectedDate));
   }
 
   Future<void> _onOpen(CalendarOpen event, Emitter<CalendarState> emit) async {
-    _taskRepo.syncFromRemote();
-
     await emit.forEach(_taskRepo.getTaskStream(), onData: (taskList) {
       log("UPDATED", name: "OnCalendarOpens");
 

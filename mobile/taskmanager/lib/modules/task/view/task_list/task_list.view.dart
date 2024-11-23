@@ -59,6 +59,7 @@ class TaskListView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ListView.builder(
+      physics: const NeverScrollableScrollPhysics(),
       primary: false,
       shrinkWrap: true,
       addAutomaticKeepAlives: false,
