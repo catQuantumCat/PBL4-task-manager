@@ -7,14 +7,19 @@ import 'package:taskmanager/common/datetime_extension.dart';
 import 'package:taskmanager/data/dtos/task.dto.dart';
 import 'package:taskmanager/data/repositories/task.repository.dart';
 import 'package:taskmanager/data/model/task_model.dart';
+import 'package:taskmanager/modules/task/bloc/task_list/task_list.bloc.dart';
 part 'task_detail.event.dart';
 part 'task_detail.state.dart';
 
 class TaskDetailBloc extends Bloc<TaskDetailEvent, TaskDetailState> {
   final TaskRepository _taskRepository;
+  final TaskListBloc _taskListBloc;
 
-  TaskDetailBloc({required TaskRepository taskRepository})
+  TaskDetailBloc(
+      {required TaskRepository taskRepository,
+      required TaskListBloc taskListBloc})
       : _taskRepository = taskRepository,
+        _taskListBloc = taskListBloc,
         super(const TaskDetailState.loading()) {
     on<HomeTaskDetailClose>(_onCloseDown);
     on<HomeDetailTaskOpen>(_onOpen);
@@ -40,12 +45,11 @@ class TaskDetailBloc extends Bloc<TaskDetailEvent, TaskDetailState> {
       return;
     }
 
-    final TaskDTO data =
-        state.task!.copyWith(status: event.status).toResponse();
-
     emit(state.copyWith(status: DetailHomeStatus.loading));
     try {
-      await _taskRepository.editTask(data, state.task!.id);
+      _taskListBloc.add(TapCheckboxOneTask(
+          taskId: state.task!.id, taskStatus: event.status!));
+
       emit(state.copyWith(
         status: DetailHomeStatus.finished,
       ));
@@ -84,7 +88,6 @@ class TaskDetailBloc extends Bloc<TaskDetailEvent, TaskDetailState> {
 
     emit(state.copyWith(status: DetailHomeStatus.loading));
 
-    await Future.delayed(const Duration(seconds: 3));
     try {
       final editedTask = await _taskRepository.editTask(data, state.task!.id);
 

@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:taskmanager/common/constants/ui_constant.dart';
 import 'package:taskmanager/common/context_extension.dart';
 import 'package:taskmanager/modules/navigation/bloc/navigation_bloc.dart';
 
@@ -17,7 +18,7 @@ class NavigationWidget extends StatelessWidget {
             highlightColor: Colors.transparent,
           ),
           child: SizedBox(
-            height: 64,
+            height: UIConstant.bottomNavBarHeight,
             child: BottomNavigationBar(
               type: BottomNavigationBarType.fixed,
               backgroundColor: context.palette.navigationBarBackground,

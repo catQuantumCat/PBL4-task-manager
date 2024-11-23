@@ -15,9 +15,10 @@ class TaskListBloc extends Bloc<TaskListEvent, TaskListState> {
     taskRepository.init();
     on<InitTaskList>(_initTaskList);
     on<RemoveOneTask>(_removeTask);
-    on<ListHomeCheckTask>(_editTask);
+    on<TapCheckboxOneTask>(_tapCheckBox);
     on<ForceReloadTask>(_syncFromRemote);
     on<TapOneTask>(_tapOneTask);
+    on<UndoLatestTask>(_undoComplete);
     add(const InitTaskList());
   }
 
@@ -72,18 +73,34 @@ class TaskListBloc extends Bloc<TaskListEvent, TaskListState> {
     }
   }
 
-  void _editTask(ListHomeCheckTask event, Emitter<TaskListState> emit) async {
-    final taskWithIndex = await _taskRepository.getTaskById(event.taskId);
+  void _tapCheckBox(
+      TapCheckboxOneTask event, Emitter<TaskListState> emit) async {
+    _editTask(taskId: event.taskId, status: event.taskStatus, emit: emit);
+  }
+
+  void _undoComplete(UndoLatestTask event, Emitter<TaskListState> emit) async {
+    final recentCompletedTask = state.recentlyCompletedTask;
+    if (recentCompletedTask == null) {
+      return;
+    }
+    _editTask(taskId: recentCompletedTask.id, status: false, emit: emit);
+  }
+
+  Future<void> _editTask(
+      {required int taskId,
+      required bool status,
+      required Emitter<TaskListState> emit}) async {
+    final taskWithIndex = await _taskRepository.getTaskById(taskId);
     if (taskWithIndex == null) {
       emit(state.copyWith(status: StateStatus.failed));
       return;
     }
-
-    final data = taskWithIndex.toResponse(status: event.taskStatus);
-
     try {
-      _taskRepository.editTask(data, event.taskId);
-      emit(state.copyWith(status: StateStatus.success));
+      _taskRepository.editTask(
+          taskWithIndex.toResponse(status: status), taskId);
+      emit(state.copyWith(
+          status: StateStatus.success,
+          recentlyCompletedTask: status == true ? taskWithIndex : null));
     } catch (e) {
       emit(state.copyWith(status: StateStatus.failed));
     }

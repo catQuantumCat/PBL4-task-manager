@@ -3,7 +3,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:taskmanager/common/bottomSheet/custom_sheet.dart';
 import 'package:taskmanager/common/bottomSheet/sheet.constants.dart';
+import 'package:taskmanager/common/toast/common_toast.dart';
+import 'package:taskmanager/main.dart';
 import 'package:taskmanager/modules/task/bloc/task_detail/task_detail.bloc.dart';
+import 'package:taskmanager/modules/task/bloc/task_list/task_list.bloc.dart';
 import 'package:taskmanager/modules/task/widget/task_detail/task_detail_edit.widget.dart';
 import 'package:taskmanager/modules/task/widget/task_detail/task_detail.widget.dart';
 
@@ -45,7 +48,7 @@ class _TaskDetailViewState extends State<TaskDetailView> {
       return BlocConsumer<TaskDetailBloc, TaskDetailState>(
         listener: (context, state) {
           if (state.status == DetailHomeStatus.finished) {
-            Navigator.pop(context);
+            Navigator.pop(context, true);
           }
 
           if (state.status == DetailHomeStatus.initial) {

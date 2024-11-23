@@ -1,8 +1,25 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+
 import 'package:taskmanager/data/model/task_model.dart';
+
 import 'package:taskmanager/modules/task/bloc/task_list/task_list.bloc.dart';
 import 'package:taskmanager/modules/task/widget/task_list/task_list.tile.dart';
+
+class TaskListPage extends StatelessWidget {
+  const TaskListPage(
+      {super.key, required this.taskList, this.allowDissiable = true});
+
+  final List<TaskModel> taskList;
+  final bool allowDissiable;
+
+  @override
+  Widget build(BuildContext context) {
+    return TaskListView(taskList: taskList);
+  }
+}
 
 class TaskListView extends StatelessWidget {
   final List<TaskModel> taskList;

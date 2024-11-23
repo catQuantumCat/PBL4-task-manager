@@ -31,11 +31,11 @@ class RemoveOneTask extends TaskListEvent {
   List<Object?> get props => [taskToRemoveIndex];
 }
 
-class ListHomeCheckTask extends TaskListEvent {
+class TapCheckboxOneTask extends TaskListEvent {
   final bool taskStatus;
   final int taskId;
 
-  const ListHomeCheckTask({required this.taskId, required this.taskStatus});
+  const TapCheckboxOneTask({required this.taskId, required this.taskStatus});
 
   @override
   List<Object?> get props => [taskId];
@@ -58,4 +58,8 @@ class TapOneTask extends TaskListEvent {
 
   @override
   List<Object?> get props => [task];
+}
+
+class UndoLatestTask extends TaskListEvent {
+  const UndoLatestTask();
 }

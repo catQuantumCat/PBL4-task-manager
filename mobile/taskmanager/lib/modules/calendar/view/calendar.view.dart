@@ -46,15 +46,15 @@ class CalendarView extends StatelessWidget {
       if (context.read<HomeBloc>().state.overdueList.isNotEmpty)
         CommonListSection(
           title: "Overdue",
-          child: TaskListView(
+          child: TaskListPage(
             taskList: context.read<HomeBloc>().state.overdueList,
           ),
         ),
       CommonListSection(
-        title: DateFormat('MMM yyyy')
+        title: DateFormat('dd MMM - EEEE')
             .format(context.read<CalendarBloc>().state.selectedDate),
         collapsedEnabled: false,
-        child: TaskListView(
+        child: TaskListPage(
             taskList: context.read<CalendarBloc>().state.filteredTask),
       ),
     ];

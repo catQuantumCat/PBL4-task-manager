@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:taskmanager/common/context_extension.dart';
+import 'package:taskmanager/common/toast/common_toast.dart';
 import 'package:taskmanager/data/repositories/task.repository.dart';
 import 'package:taskmanager/main.dart';
 import 'package:taskmanager/modules/calendar/bloc/calendar_bloc.dart';
@@ -22,6 +24,7 @@ class NavigationPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    CommonToast.initToast(navigatorKey.currentContext!);
     return MultiBlocProvider(
       providers: [
         BlocProvider<NavigationBloc>(
@@ -45,7 +48,31 @@ class NavigationPage extends StatelessWidget {
                 CalendarBloc(taskRepository: getIt<TaskRepository>())
                   ..add(const CalendarOpen())),
       ],
-      child: const NavigationView(),
+      child: MultiBlocListener(
+        listeners: [
+          BlocListener<NavigationBloc, NavigationState>(
+            listenWhen: (previous, current) => previous.index != current.index,
+            listener: (context, state) {
+              // CommonToast.clearToast();
+            },
+          ),
+          BlocListener<TaskListBloc, TaskListState>(
+              listenWhen: (previous, current) =>
+                  previous.recentlyCompletedTask !=
+                      current.recentlyCompletedTask &&
+                  current.recentlyCompletedTask != null,
+              listener: (context, state) {
+                if (navigatorKey.currentContext != null) {
+                  CommonToast.showUndoToast(
+                      navigatorKey.currentContext!,
+                      () => context
+                          .read<TaskListBloc>()
+                          .add(const UndoLatestTask()));
+                }
+              })
+        ],
+        child: const NavigationView(),
+      ),
     );
   }
 }
@@ -71,7 +98,6 @@ class NavigationView extends StatelessWidget {
     return BlocBuilder<NavigationBloc, NavigationState>(
       builder: (context, state) {
         return Scaffold(
-          key: navigatorKey,
           floatingActionButton: FloatingActionButton(
             elevation: 4,
             shape: const CircleBorder(),

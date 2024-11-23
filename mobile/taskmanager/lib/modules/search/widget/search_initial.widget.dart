@@ -12,7 +12,7 @@ class SearchInitialWidget extends StatelessWidget {
       buildWhen: (previous, current) =>
           previous.recentlyViewedTasks != current.recentlyViewedTasks,
       builder: (context, state) {
-        return TaskListView(
+        return TaskListPage(
           taskList: state.recentlyViewedTasks,
           allowDissiable: false,
         );

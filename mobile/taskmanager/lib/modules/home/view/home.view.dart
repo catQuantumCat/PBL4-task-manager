@@ -43,13 +43,13 @@ class HomeView extends StatelessWidget {
       if (state.overdueList.isEmpty == false)
         CommonListSection(
           title: "Overdue",
-          child: TaskListView(taskList: state.overdueList),
+          child: TaskListPage(taskList: state.overdueList),
         ),
       CommonListSection(
         title: DateFormat("dd MMM - EEEE").format(DateTime.now()),
         collapsedEnabled: false,
         child: (state.todayList.isNotEmpty)
-            ? TaskListView(taskList: state.todayList)
+            ? TaskListPage(taskList: state.todayList)
             : null,
       )
     ];

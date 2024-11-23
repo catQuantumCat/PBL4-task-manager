@@ -9,4 +9,6 @@ abstract class UIConstant {
   static double cornerRadiusStrong = 20;
 
   static double fullPageIconSize = 128;
+
+  static double bottomNavBarHeight = 64;
 }

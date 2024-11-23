@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:taskmanager/common/bottomSheet/common_bottom_sheet.dart';
@@ -26,20 +28,23 @@ class TaskListTile extends StatefulWidget {
 
 class _TaskListTileState extends State<TaskListTile> {
   late bool _taskStatus;
+  late final TaskListBloc _bloc;
 
   @override
   void initState() {
     super.initState();
     _taskStatus = widget.task.status;
+    _bloc = context.read<TaskListBloc>();
   }
 
   Future<void> _showDetailTaskSheet(BuildContext context) async {
-    CommonBottomSheet.showBottomSheet(
+    await CommonBottomSheet.showBottomSheet(
       context: context,
       builder: (BuildContext context) {
         return BlocProvider(
           create: (context) {
-            return TaskDetailBloc(taskRepository: getIt<TaskRepository>())
+            return TaskDetailBloc(
+                taskRepository: getIt<TaskRepository>(), taskListBloc: _bloc)
               ..add(HomeDetailTaskOpen(task: widget.task));
           },
           child: const TaskDetailView(),
@@ -49,9 +54,7 @@ class _TaskListTileState extends State<TaskListTile> {
   }
 
   void changeTaskStatus(value) {
-    context
-        .read<TaskListBloc>()
-        .add(ListHomeCheckTask(taskId: widget.task.id, taskStatus: value!));
+    _bloc.add(TapCheckboxOneTask(taskId: widget.task.id, taskStatus: value!));
 
     widget.task.editStatus(value);
     setState(() {
@@ -65,7 +68,7 @@ class _TaskListTileState extends State<TaskListTile> {
       titleAlignment: ListTileTitleAlignment.top,
       tileColor: context.palette.scaffoldBackground,
       onTap: () {
-        context.read<TaskListBloc>().add(TapOneTask(task: widget.task));
+        _bloc.add(TapOneTask(task: widget.task));
         _showDetailTaskSheet(context);
       },
       leading: ReactiveCheckbox(

@@ -115,7 +115,7 @@ class _SearchViewState extends State<SearchView> {
                   return SearchFailedWidget(
                       query: state.errorMessage ?? "Something went wrong!");
                 case (StateStatus.success):
-                  return TaskListView(
+                  return TaskListPage(
                     taskList: state.taskList,
                     allowDissiable: false,
                   );
