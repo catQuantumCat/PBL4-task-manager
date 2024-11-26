@@ -30,7 +30,8 @@ class TaskCreateView extends StatefulWidget {
 class _TaskCreateViewState extends State<TaskCreateView> {
   final taskFieldController = TextEditingController();
   final descriptionFieldController = TextEditingController();
-  final GlobalKey _textFieldKey = GlobalKey();
+  final GlobalKey _taskFieldKey = GlobalKey();
+  final GlobalKey _descriptionFieldKey = GlobalKey();
 
   double _minChildSize = 0;
 
@@ -39,6 +40,7 @@ class _TaskCreateViewState extends State<TaskCreateView> {
     super.initState();
 
     taskFieldController.addListener(_scheduleHeightUpdate);
+    descriptionFieldController.addListener(_scheduleHeightUpdate);
 
     _onHeightChanged();
   }
@@ -50,14 +52,18 @@ class _TaskCreateViewState extends State<TaskCreateView> {
   void _onHeightChanged() {
     if (!mounted) return;
 
-    final RenderBox? textFieldBox =
-        _textFieldKey.currentContext?.findRenderObject() as RenderBox?;
-    if (textFieldBox == null) return;
+    final RenderBox? taskFieldBox =
+        _taskFieldKey.currentContext?.findRenderObject() as RenderBox?;
+    final RenderBox? descriptionFieldBox =
+        _descriptionFieldKey.currentContext?.findRenderObject() as RenderBox?;
+    if (taskFieldBox == null || descriptionFieldBox == null) return;
 
-    final textFieldHeight = textFieldBox.size.height;
+    final taskFieldHeight = taskFieldBox.size.height;
+    final descriptionFieldHeight = descriptionFieldBox.size.height;
 
-    final newSheetSize =
-        ((textFieldHeight / MediaQuery.of(context).size.height) + 0.24);
+    final newSheetSize = ((taskFieldHeight + descriptionFieldHeight) /
+            MediaQuery.of(context).size.height) +
+        0.2;
 
     setState(() {
       _minChildSize = newSheetSize;
@@ -134,15 +140,13 @@ class _TaskCreateViewState extends State<TaskCreateView> {
                           BorderRadius.circular(UIConstant.cornerRadiusMedium),
                     ),
                     child: ListView(
-                      // physics: const NeverScrollableScrollPhysics(),
                       shrinkWrap: true,
                       primary: false,
-                      // controller: scrollController,
                       padding: const EdgeInsets.fromLTRB(20, 0, 20, 20),
                       children: [
                         const SizedBox(height: 24),
                         TextFormField(
-                          key: _textFieldKey,
+                          key: _taskFieldKey,
                           autofocus: true,
                           controller: taskFieldController,
                           style: context.appTextStyles.heading2,
@@ -159,6 +163,7 @@ class _TaskCreateViewState extends State<TaskCreateView> {
                         ),
                         const SizedBox(height: 2),
                         TextFormField(
+                          key: _descriptionFieldKey,
                           controller: descriptionFieldController,
                           style: context.appTextStyles.body1,
                           maxLines: null,
