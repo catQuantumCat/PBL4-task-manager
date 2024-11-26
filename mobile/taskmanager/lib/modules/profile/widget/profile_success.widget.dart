@@ -60,79 +60,77 @@ class ProfileSuccessWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      child: ListView(
-        children: [
-          const SizedBox(height: 16),
-          CommonTextFieldSection(
-            groupLabel: "Username",
-            items: [
-              InkWell(
-                onTap: () => _onUsernameTapped(context),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Text(state.userInfo?.username ?? "",
-                        style: context.appTextStyles.body2),
-                    const Icon(Icons.chevron_right)
-                  ],
-                ),
+    return ListView(
+      children: [
+        const SizedBox(height: 16),
+        CommonTextFieldSection(
+          groupLabel: "Username",
+          items: [
+            InkWell(
+              onTap: () => _onUsernameTapped(context),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text(state.userInfo?.username ?? "",
+                      style: context.appTextStyles.body2),
+                  const Icon(Icons.chevron_right)
+                ],
               ),
-            ],
-          ),
-          CommonTextFieldSection(
-            groupLabel: "Email",
-            items: [
-              InkWell(
-                onTap: () => _onEmailTapped(context),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Text(
-                      state.userInfo?.email ?? "",
-                      style: context.appTextStyles.body2,
-                    ),
-                    const Icon(Icons.chevron_right)
-                  ],
-                ),
+            ),
+          ],
+        ),
+        CommonTextFieldSection(
+          groupLabel: "Email",
+          items: [
+            InkWell(
+              onTap: () => _onEmailTapped(context),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text(
+                    state.userInfo?.email ?? "",
+                    style: context.appTextStyles.body2,
+                  ),
+                  const Icon(Icons.chevron_right)
+                ],
               ),
-            ],
-          ),
-          CommonTextFieldSection(
-            groupLabel: "Password",
-            items: [
-              InkWell(
-                onTap: () => _onPasswordTapped(context),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Text(
-                      " Change Password",
-                      style: context.appTextStyles.body2,
-                    ),
-                  ],
-                ),
+            ),
+          ],
+        ),
+        CommonTextFieldSection(
+          groupLabel: "Password",
+          items: [
+            InkWell(
+              onTap: () => _onPasswordTapped(context),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Text(
+                    " Change Password",
+                    style: context.appTextStyles.body2,
+                  ),
+                ],
               ),
-            ],
-          ),
-          CommonTextFieldSection(
-            items: [
-              InkWell(
-                onTap: () => context.read<AuthBloc>().add(const AuthLogOut()),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Text(
-                      "Log out",
-                      style: context.appTextStyles.errorButtonLabel,
-                    ),
-                  ],
-                ),
+            ),
+          ],
+        ),
+        CommonTextFieldSection(
+          items: [
+            InkWell(
+              onTap: () => context.read<AuthBloc>().add(const AuthLogOut()),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Text(
+                    "Log out",
+                    style: context.appTextStyles.errorButtonLabel,
+                  ),
+                ],
               ),
-            ],
-          )
-        ],
-      ),
+            ),
+          ],
+        )
+      ],
     );
   }
 }

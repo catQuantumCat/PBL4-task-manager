@@ -518,17 +518,15 @@ class _TableCalendarState<T> extends State<TableCalendar<T>> {
               Widget? cell = widget.calendarBuilders.weekNumberBuilder
                   ?.call(context, weekNumber);
 
-              if (cell == null) {
-                cell = Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 4),
-                  child: Center(
-                    child: Text(
-                      weekNumber.toString(),
-                      style: widget.calendarStyle.weekNumberTextStyle,
-                    ),
+              cell ??= Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 4),
+                child: Center(
+                  child: Text(
+                    weekNumber.toString(),
+                    style: widget.calendarStyle.weekNumberTextStyle,
                   ),
-                );
-              }
+                ),
+              );
 
               return cell;
             },

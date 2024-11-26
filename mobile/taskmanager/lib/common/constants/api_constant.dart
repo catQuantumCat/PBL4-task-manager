@@ -1,5 +1,3 @@
-import 'dart:io';
-
 enum ApiConstants {
   authLogin("$baseURL/account/login"),
   authRegister("$baseURL/account/register"),
@@ -9,4 +7,5 @@ enum ApiConstants {
   const ApiConstants(this.value);
 }
 
-const String baseURL = "http://localhost:5245/backend";
+// const String baseURL = "http://localhost:5245/backend";
+const String baseURL = "http://192.168.68.107:5245/backend";
