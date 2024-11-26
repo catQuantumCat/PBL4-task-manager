@@ -9,6 +9,7 @@ namespace backend.Dtos.Mission
     {
         public required string name { get; set; }
         public string? description { get; set; } = string.Empty;
+        public int? priority { get; set; } = 0;
         public DateTime createTime { get; set; } = DateTime.Now;
         public DateTime deadTime { get; set; } = DateTime.Now;
         public bool status { get; set; } = false;
