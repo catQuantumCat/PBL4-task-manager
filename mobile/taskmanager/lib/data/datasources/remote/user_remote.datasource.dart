@@ -24,4 +24,11 @@ class UserRemoteDatasource {
 
     return AuthResponseDTO.fromJson(response.data);
   }
+
+  Future<void> changeCredentials(AuthRegisterDTO credentials) async {
+    await _dio.post(ApiConstants.changeUserInfo.value,
+        data: credentials.toJson());
+
+    return;
+  }
 }
