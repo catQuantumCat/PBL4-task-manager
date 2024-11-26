@@ -82,18 +82,24 @@ class RegisterView extends StatelessWidget {
                   return const Center(child: CircularProgressIndicator());
                 default:
                   return Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      const Text(
-                        "Register",
-                        style: TextStyle(
-                            fontSize: 28, fontWeight: FontWeight.bold),
+                      Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 12),
+                        child: Text(
+                          "Register",
+                          style: context.appTextStyles.heading2,
+                        ),
                       ),
                       const SizedBox(height: 4),
-                      const Text(
-                        "Add your username, email, and password.",
-                        style: TextStyle(fontSize: 16),
+                      Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 12),
+                        child: Text(
+                          "Add your username, email, and password.",
+                          style: context.appTextStyles.body1,
+                        ),
                       ),
-                      const SizedBox(height: 16),
+                      const SizedBox(height: 28),
                       RegisterForm(
                         formkey: _formkey,
                         emailFieldController: _emailFieldController,
