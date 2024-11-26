@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:taskmanager/modules/search/widget/recently_searched.tile.dart';
 
 class RecentlySearchedListTile extends StatelessWidget {
   const RecentlySearchedListTile(
@@ -18,9 +17,10 @@ class RecentlySearchedListTile extends StatelessWidget {
       shrinkWrap: true,
       primary: false,
       itemCount: _recentlySearched.length,
-      itemBuilder: (context, index) => RecentlySearchedTile(
-        recentQuery: _recentlySearched[index],
-        onTap: _onTap,
+      itemBuilder: (context, index) => ListTile(
+        title: Text(_recentlySearched[index]),
+        onTap: () => _onTap?.call(_recentlySearched[index]),
+        leading: const Icon(Icons.history),
       ),
     );
   }

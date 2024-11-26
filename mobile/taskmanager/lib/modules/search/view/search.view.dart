@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:taskmanager/common/constants/state_status.constant.dart';
+import 'package:taskmanager/common/context_extension.dart';
 import 'package:taskmanager/common/widget/common_list_section.dart';
 import 'package:taskmanager/common/widget/common_title_appbar.widget.dart';
 
@@ -70,23 +71,25 @@ class _SearchViewState extends State<SearchView> {
   List<CommonListSection> _buildSections(SearchState state) {
     if (state.status == StateStatus.initial) {
       return [
-        CommonListSection(
-          title: "Recent searches",
-          trailing: TextButton(
-            onPressed: _onClearRecentTapped,
-            child: const Text("Clear"),
+        if (state.recentlySearched.isEmpty == false)
+          CommonListSection(
+            title: "Recent searches",
+            collapsedEnabled: false,
+            trailing: TextButton(
+              onPressed: _onClearRecentTapped,
+              child: const Text("Clear"),
+            ),
+            child: RecentlySearchedListTile(
+              recentlySearched: state.recentlySearched,
+              onTap: (tappedQuery) {
+                _onRecentSearchQueryTapped(tappedQuery);
+              },
+            ),
           ),
-          isHidden: state.recentlySearched.isEmpty,
-          child: RecentlySearchedListTile(
-            recentlySearched: state.recentlySearched,
-            onTap: (tappedQuery) {
-              _onRecentSearchQueryTapped(tappedQuery);
-            },
-          ),
-        ),
-        CommonListSection(
+        const CommonListSection(
           title: "Recently Viewed",
-          child: const SearchInitialWidget(),
+          collapsedEnabled: false,
+          child: SearchInitialWidget(),
         ),
       ];
     }
@@ -98,29 +101,26 @@ class _SearchViewState extends State<SearchView> {
     return BlocBuilder<SearchBloc, SearchState>(
       builder: (context, state) {
         return Scaffold(
+          backgroundColor: context.palette.scaffoldBackground,
           body: CommonTitleAppbar(
             section: _buildSections(state),
-            searchBar: AppbarSearchbarWidget(
+            stickyWidget: AppbarSearchbarWidget(
               textController: _textController,
               onReturn: (query) => _onReturnTapped(),
             ),
-            searchBarHeight: 60,
-            title: const Text(
-              "Search",
-              style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
-            ),
+            title: "Search",
             child: Builder(builder: (context) {
               switch (state.status) {
                 case (StateStatus.failed):
                   return SearchFailedWidget(
                       query: state.errorMessage ?? "Something went wrong!");
                 case (StateStatus.success):
-                  return TaskListView(
+                  return TaskListPage(
                     taskList: state.taskList,
                     allowDissiable: false,
                   );
                 default:
-                  return const SizedBox.shrink();
+                  return const SizedBox();
               }
             }),
           ),

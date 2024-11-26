@@ -7,12 +7,13 @@ sealed class AuthEvent extends Equatable {
   List<Object?> get props => [];
 }
 
-class AuthSetToken extends AuthEvent {
-  final String? tokenString;
+class AuthSetInfo extends AuthEvent {
+  // final String? tokenString;
+  final AuthResponseDTO userCredentials;
 
-  const AuthSetToken({required this.tokenString});
+  const AuthSetInfo({required this.userCredentials});
   @override
-  List<Object?> get props => [tokenString];
+  List<Object?> get props => [userCredentials];
 }
 
 class AuthCheckToken extends AuthEvent {

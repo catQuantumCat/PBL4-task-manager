@@ -28,7 +28,7 @@ class TaskRepository {
     }
   }
 
-  Stream<List<TaskModel>> getTaskList() => _localDatasource.getTaskList;
+  Stream<List<TaskModel>> getTaskStream() => _localDatasource.getTaskStream;
 
   Future<TaskModel> editTask(TaskDTO task, int taskId) async {
     final editedTask = await _remoteDataSource.editTask(task, taskId);
@@ -49,6 +49,10 @@ class TaskRepository {
 
   List<TaskModel> searchTask(String query) {
     return _localDatasource.searchTask(query);
+  }
+
+  List<TaskModel> getTaskList() {
+    return _localDatasource.getTaskList();
   }
 
   Future<TaskModel?> getTaskById(int taskId) async {

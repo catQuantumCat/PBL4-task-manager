@@ -26,7 +26,7 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
     emit(state.copyWith(status: StateStatus.loading));
     final DateTime today = DateTime.now();
     await emit.forEach<List<TaskModel>>(
-      _taskRepository.getTaskList(),
+      _taskRepository.getTaskStream(),
       onData: (newList) {
         return state.copyWith(
             status: StateStatus.success,
@@ -37,8 +37,12 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
                 .where((task) => task.deadTime.isPast(of: today))
                 .toList());
       },
-      onError: (error, stackTrace) => state.copyWith(
-          status: StateStatus.failed, errorMessage: error.toString()),
+      onError: (error, stackTrace) {
+        return state.copyWith(
+          status: StateStatus.failed,
+          errorMessage: error.toString(),
+        );
+      },
     );
   }
 

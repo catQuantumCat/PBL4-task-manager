@@ -1,12 +1,44 @@
-import 'dart:developer';
-
 import 'package:flutter/material.dart';
 
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:taskmanager/common/sheet.constants.dart';
+import 'package:taskmanager/common/bottomSheet/custom_sheet.dart';
+import 'package:taskmanager/common/bottomSheet/sheet.constants.dart';
+import 'package:taskmanager/data/model/task_model.dart';
+import 'package:taskmanager/data/repositories/task.repository.dart';
+import 'package:taskmanager/main.dart';
+
 import 'package:taskmanager/modules/task/bloc/task_detail/task_detail.bloc.dart';
+import 'package:taskmanager/modules/task/bloc/task_list/task_list.bloc.dart';
+
 import 'package:taskmanager/modules/task/widget/task_detail/task_detail_edit.widget.dart';
-import 'package:taskmanager/modules/task/widget/task_detail/task_detail_success.widget.dart';
+import 'package:taskmanager/modules/task/widget/task_detail/task_detail.widget.dart';
+
+class TaskDetailPage extends StatelessWidget {
+  const TaskDetailPage(
+      {super.key, required TaskModel task, required TaskListBloc taskListBloc})
+      : _task = task,
+        _taskListBloc = taskListBloc;
+
+  final TaskModel _task;
+  final TaskListBloc _taskListBloc;
+
+  @override
+  Widget build(BuildContext context) {
+    return MultiBlocProvider(
+      providers: [
+        BlocProvider(
+          create: (providerContext) {
+            return TaskDetailBloc(
+                taskRepository: getIt<TaskRepository>(),
+                taskListBloc: _taskListBloc)
+              ..add(HomeDetailTaskOpen(task: _task));
+          },
+        ),
+      ],
+      child: const TaskDetailView(),
+    );
+  }
+}
 
 class TaskDetailView extends StatefulWidget {
   const TaskDetailView({super.key});
@@ -37,11 +69,15 @@ class _TaskDetailViewState extends State<TaskDetailView> {
       return BlocConsumer<TaskDetailBloc, TaskDetailState>(
         listener: (context, state) {
           if (state.status == DetailHomeStatus.finished) {
-            Navigator.pop(context);
+            Navigator.pop(context, true);
           }
 
           if (state.status == DetailHomeStatus.initial) {
             _closeOnMinHeight = true;
+          }
+
+          if (state.status == DetailHomeStatus.loading) {
+            _closeOnMinHeight = false;
           }
 
           if (state.status == DetailHomeStatus.editing) {
@@ -51,32 +87,36 @@ class _TaskDetailViewState extends State<TaskDetailView> {
         },
         builder: (context, state) {
           return GestureDetector(
-            onVerticalDragEnd: (details) {
-              log(details.primaryVelocity.toString());
+            onVerticalDragEnd: (_) {
               setState(() {
-                if (details.primaryVelocity != null &&
-                    details.primaryVelocity! > 0) {
-                  if (_initialSheetHeight < SheetConstants.minHeight &&
-                      _closeOnMinHeight) {
-                    //swipe to exit
-                    context.read<TaskDetailBloc>().add(HomeTaskDetailClose());
-                  } else {
+                switch (_initialSheetHeight) {
+                  case < SheetConstants.closingMark:
+                    if (_closeOnMinHeight == true) {
+                      Navigator.pop(context);
+                    } else {
+                      _initialSheetHeight = SheetConstants.minHeight;
+                    }
+
+                  case >= SheetConstants.closingMark &&
+                        < SheetConstants.expandingMark:
                     _initialSheetHeight = SheetConstants.minHeight;
-                  }
-                } else if (details.primaryVelocity != null &&
-                    details.primaryVelocity! <= 0) {
-                  _initialSheetHeight =
-                      _initialSheetHeight > SheetConstants.minHeight
-                          ? SheetConstants.maxHeight
-                          : SheetConstants.minHeight;
+
+                  case >= SheetConstants.expandingMark:
+                    _initialSheetHeight = SheetConstants.maxHeight;
                 }
               });
             },
             onVerticalDragUpdate: (details) {
-              setState(() {
-                _initialSheetHeight -=
-                    (details.delta.dy / MediaQuery.sizeOf(context).height);
-              });
+              final currentHeight = _initialSheetHeight -
+                  (details.delta.dy / MediaQuery.sizeOf(context).height);
+
+              if (currentHeight <= 0) {
+                _initialSheetHeight = 0;
+              } else {
+                setState(() {
+                  _initialSheetHeight = currentHeight;
+                });
+              }
             },
             child: AnimatedSize(
               duration: const Duration(milliseconds: 300),
@@ -89,14 +129,17 @@ class _TaskDetailViewState extends State<TaskDetailView> {
                   switch (state.status) {
                     case DetailHomeStatus.finished:
                     case DetailHomeStatus.initial:
-                      return const TaskDetailSuccess();
+                      return const TaskDetailWidget();
                     case DetailHomeStatus.loading:
-                      return const Center(child: CircularProgressIndicator());
+                      return const CustomSheet(
+                          body: SingleChildScrollView(child: CircularProgressIndicator()));
                     case DetailHomeStatus.editing:
-                      return const TaskDetailEdit();
+                      return TaskDetailEdit(
+                          focusOnTitle:
+                              (state as TaskDetailStateEditing).focusOnTitle);
                     case DetailHomeStatus.failed:
                     default:
-                      return Container();
+                      return const SizedBox.shrink();
                   }
                 }),
               ),

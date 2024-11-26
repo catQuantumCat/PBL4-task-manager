@@ -22,6 +22,13 @@ class NewHomeTimeTapped extends TaskCreateEvent {
   List<Object?> get props => [time];
 }
 
+class NewHomePriorityTapped extends TaskCreateEvent {
+  final int? priority;
+  const NewHomePriorityTapped({this.priority});
+  @override
+  List<Object?> get props => [priority];
+}
+
 class NewHomeSubmitTapped extends TaskCreateEvent {
   final String? missionName;
   final String? description;

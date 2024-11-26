@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:taskmanager/common/utils/validation.utils.dart';
-import 'package:taskmanager/modules/auth/widget/round_text_form_field.widget.dart';
+import 'package:taskmanager/common/widget/common_textfield_section.dart';
+import 'package:taskmanager/common/widget/common_collapsed_textfield.dart';
 
 class LoginForm extends StatelessWidget {
   const LoginForm({
@@ -22,17 +23,26 @@ class LoginForm extends StatelessWidget {
       key: _formkey,
       child: Column(
         children: [
-          RoundTextFormField(
-              validator: (p0) => ValidationUtils.validateField(p0),
-              hintText: "Username",
-              controller: _usernameFieldController),
-          const SizedBox(height: 16),
-          RoundTextFormField(
-              validator: (p0) => ValidationUtils.validateField(p0),
-              hintText: "Password",
-              obscureText: true,
-              controller: _passwordFieldController),
-          const SizedBox(height: 24),
+          CommonTextFieldSection(
+            groupLabel: "Your email",
+            items: [
+              CommonCollapsedTextField(
+                  validator: (p0) => ValidationUtils.validateField(p0),
+                  hintText: "Username",
+                  controller: _usernameFieldController)
+            ],
+          ),
+          CommonTextFieldSection(
+            groupLabel: "Your password",
+            items: [
+              CommonCollapsedTextField(
+                  validator: (p0) => ValidationUtils.validateField(p0),
+                  hintText: "Password",
+                  isSecured: true,
+                  controller: _passwordFieldController)
+            ],
+          ),
+          // const SizedBox(height: 24),
         ],
       ),
     );

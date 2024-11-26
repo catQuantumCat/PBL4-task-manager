@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:taskmanager/common/constants/ui_constant.dart';
+import 'package:taskmanager/common/context_extension.dart';
 
 class SearchFailedWidget extends StatelessWidget {
   const SearchFailedWidget({super.key, required String query}) : _query = query;
@@ -8,21 +10,19 @@ class SearchFailedWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 16),
+      padding: EdgeInsets.symmetric(horizontal: UIConstant.padding),
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
-          const Icon(
-            color: Colors.black54,
-            Icons.search_off_outlined,
-            size: 140.0,
+          const Image(image: AssetImage("assets/search.png")),
+          const SizedBox(
+            height: 20,
           ),
-          Center(
-            child: Text(
-              _query,
-              textAlign: TextAlign.center,
-            ),
+          Text(
+            _query,
+            textAlign: TextAlign.center,
+            style: context.appTextStyles.subHeading2,
           ),
         ],
       ),

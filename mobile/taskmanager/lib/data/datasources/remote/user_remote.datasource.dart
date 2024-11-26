@@ -1,5 +1,3 @@
-import 'dart:developer';
-
 import 'package:dio/dio.dart';
 import 'package:taskmanager/common/constants/api_constant.dart';
 import 'package:taskmanager/data/dtos/auth_login.dto.dart';
@@ -15,16 +13,13 @@ class UserRemoteDatasource {
     final response = await _dio.post(ApiConstants.authLogin.value,
         data: credentials.toJson());
 
-    log(AuthResponseDTO.fromMap(response.data).toString());
-
-    return AuthResponseDTO.fromMap(response.data);
+    return AuthResponseDTO.fromJson(response.data);
   }
 
   Future<AuthResponseDTO> submitRegister(AuthRegisterDTO credentials) async {
     final response = await _dio.post(ApiConstants.authRegister.value,
         data: credentials.toJson());
 
-    log(AuthResponseDTO.fromMap(response.data).toString());
-    return AuthResponseDTO.fromMap(response.data);
+    return AuthResponseDTO.fromJson(response.data);
   }
 }

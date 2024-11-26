@@ -1,60 +1,133 @@
 import 'package:flutter/material.dart';
 
-import 'package:taskmanager/common/widget/common_list_section.dart';
+import 'package:taskmanager/common/context_extension.dart';
 
-const APPBARHEIGHT = 96;
-
-class CommonTitleAppbar extends StatelessWidget {
+class CommonTitleAppbar extends StatefulWidget {
   const CommonTitleAppbar(
       {super.key,
-      // required this.child,
-      required Widget title,
-      Widget? searchBar,
-      this.searchBarHeight = 0,
-      this.section = const [],
-      this.child})
-      : _searchBar = searchBar,
-        _title = title;
-  final Widget _title;
-  final Widget? _searchBar;
-  final double searchBarHeight;
-  final Widget? child;
-  final List<CommonListSection> section;
+      required String title,
+      Widget? stickyWidget,
+      List<Widget> section = const [],
+      Widget? child,
+      bool compactEnabled = false,
+      Color? titleBackgroundColor})
+      : _stickyWidget = stickyWidget,
+        _title = title,
+        _compactEnabled = compactEnabled,
+        _section = section,
+        _child = child,
+        _titleBackgroundColor = titleBackgroundColor;
+  final String _title;
+  final Widget? _stickyWidget;
+
+  final bool _compactEnabled;
+
+  final Widget? _child;
+  final List<Widget> _section;
+  final Color? _titleBackgroundColor;
+
+  @override
+  State<CommonTitleAppbar> createState() => _CommonTitleAppbarState();
+}
+
+class _CommonTitleAppbarState extends State<CommonTitleAppbar> {
+  final _scrollController = ScrollController();
+  bool _isAppBarCollapsed = false;
+
+  void _onListener() {
+    if (_scrollController.hasClients) {
+      double offset = _scrollController.offset;
+      bool isCollapsed = offset > 80 - kToolbarHeight;
+      if (isCollapsed != _isAppBarCollapsed) {
+        setState(() {
+          _isAppBarCollapsed = isCollapsed;
+        });
+      }
+    }
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    _scrollController.addListener(_onListener);
+  }
 
   @override
   Widget build(BuildContext context) {
-    return CustomScrollView(
-      physics: const AlwaysScrollableScrollPhysics(),
-      slivers: [
-        SliverAppBar(
-          bottom: _searchBar == null
-              ? null
-              : PreferredSize(
-                  preferredSize: Size.fromHeight(searchBarHeight.toDouble()),
-                  child: _searchBar,
-                ),
-          scrolledUnderElevation: 0,
-          actions: [
-            IconButton(
-                onPressed: () {},
-                icon: const Icon(
-                  Icons.more_horiz,
-                  size: 32,
-                ))
-          ],
-          primary: true,
-          expandedHeight: APPBARHEIGHT + searchBarHeight,
-          pinned: true,
-          floating: false,
-          flexibleSpace: FlexibleSpaceBar(
-            titlePadding: EdgeInsets.only(
-                left: 16, right: 16, top: 0, bottom: searchBarHeight + 10),
-            title: _title,
+    return SafeArea(
+      child: CustomScrollView(
+        controller: _scrollController,
+        physics: const AlwaysScrollableScrollPhysics(),
+        slivers: [
+          SliverAppBar(
+            backgroundColor: widget._titleBackgroundColor ??
+                context.palette.scaffoldBackground,
+            toolbarHeight: widget._compactEnabled == true ? 32 : kToolbarHeight,
+            title: widget._compactEnabled == true
+                ? Text(
+                    widget._title,
+                    style: context.appTextStyles.subHeading1,
+                  )
+                : null,
+            centerTitle: true,
+            scrolledUnderElevation: 0,
+            actions: [
+              IconButton(
+                  onPressed: () {},
+                  icon: const Icon(
+                    Icons.more_horiz,
+                    size: 32,
+                  ))
+            ],
+            primary: true,
+            expandedHeight: widget._compactEnabled ? null : 96,
+            pinned: true,
+            floating: false,
+            flexibleSpace: widget._compactEnabled == true
+                ? null
+                : FlexibleSpaceBar(
+                    centerTitle: false,
+                    titlePadding: const EdgeInsets.only(
+                        left: 16, right: 16, top: 0, bottom: 16),
+                    title: Text(widget._title,
+                        style: context.appTextStyles.subHeading1),
+                  ),
+            stretch: true,
           ),
-          stretch: true,
-        ),
-        if (section.isEmpty) SliverFillRemaining(child: child) else ...section,
-      ],
+          if (widget._stickyWidget != null)
+            PinnedHeaderSliver(
+              child:
+                  Container(color: Colors.white, child: widget._stickyWidget),
+            ),
+          if (_isAppBarCollapsed)
+            const PinnedHeaderSliver(
+              child: Divider(
+                height: 1,
+                thickness: 1,
+              ),
+            ),
+          if (widget._section.isEmpty)
+            SliverFillRemaining(
+              hasScrollBody: false,
+              child: SizedBox(
+                height: 0,
+                child: widget._child,
+              ),
+            )
+
+          // SliverToBoxAdapter(
+          //   child: SizedBox(
+          //     height: (MediaQuery.of(context).size.height / 2) + 48,
+          //     child: widget._child,
+          //   ),
+
+          else
+            ...widget._section,
+
+          // NestedScrollView(
+          //   headerSliverBuilder: headerSliverBuilder, body: body),
+        ],
+      ),
     );
   }
 }

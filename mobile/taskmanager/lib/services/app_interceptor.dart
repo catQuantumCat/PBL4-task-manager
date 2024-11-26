@@ -14,12 +14,14 @@ class AppInterceptor extends QueuedInterceptor {
   void onRequest(RequestOptions options, RequestInterceptorHandler handler) {
     final token = _tokenBox.get(HiveConstant.token);
 
+    log(token.toString(), name: "TOKEN");
+
     if (token != null) {
       options.headers
           .addAll({HttpHeaders.authorizationHeader: "Bearer $token"});
     }
 
-    log('Request [${options.method}] => BODY: ${options.data}'); 
+    log('Request [${options.method}] => BODY: ${options.data}');
     super.onRequest(options, handler);
   }
 
@@ -35,6 +37,7 @@ class AppInterceptor extends QueuedInterceptor {
 
     if (err.response?.statusCode == 401) {
       _tokenBox.delete(HiveConstant.token);
+      _tokenBox.delete(HiveConstant.userInfo);
     }
 
     super.onError(err, handler);

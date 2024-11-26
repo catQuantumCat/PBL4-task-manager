@@ -10,17 +10,18 @@ import 'package:taskmanager/data/repositories/task.repository.dart';
 part 'task_create.event.dart';
 part 'task_create.state.dart';
 
-class TaskCreateBloc extends Bloc<TaskCreateEvent, TaskCreateStatus> {
+class TaskCreateBloc extends Bloc<TaskCreateEvent, TaskCreateState> {
   final TaskRepository _taskRepository;
   TaskCreateBloc({required TaskRepository taskRepository})
       : _taskRepository = taskRepository,
-        super(TaskCreateStatus.initial()) {
+        super(TaskCreateState.initial()) {
     on<NewHomeDateTapped>(_onDateTapped);
     on<NewHomeTimeTapped>(_onTimeTapped);
     on<NewHomeSubmitTapped>(_onSubmitTapped);
+    on<NewHomePriorityTapped>(_onPriorityTapped);
   }
 
-  void _onDateTapped(NewHomeDateTapped event, Emitter<TaskCreateStatus> emit) {
+  void _onDateTapped(NewHomeDateTapped event, Emitter<TaskCreateState> emit) {
     if (event.date == null) {
       return;
     }
@@ -35,7 +36,21 @@ class TaskCreateBloc extends Bloc<TaskCreateEvent, TaskCreateStatus> {
     emit(newState);
   }
 
-  void _onTimeTapped(NewHomeTimeTapped event, Emitter<TaskCreateStatus> emit) {
+  void _onPriorityTapped(
+      NewHomePriorityTapped event, Emitter<TaskCreateState> emit) {
+    if (event.priority == null) {
+      return;
+    }
+    final int newPriority = event.priority!;
+    if (state.priority == newPriority) return;
+
+    final newState = state.copyWith(
+      priority: newPriority,
+    );
+    emit(newState);
+  }
+
+  void _onTimeTapped(NewHomeTimeTapped event, Emitter<TaskCreateState> emit) {
     if (event.time == null) {
       return;
     }
@@ -52,7 +67,7 @@ class TaskCreateBloc extends Bloc<TaskCreateEvent, TaskCreateStatus> {
   }
 
   void _onSubmitTapped(
-      NewHomeSubmitTapped event, Emitter<TaskCreateStatus> emit) async {
+      NewHomeSubmitTapped event, Emitter<TaskCreateState> emit) async {
     if (event.missionName == null || event.missionName!.isEmpty) {
       return;
     }
@@ -66,7 +81,7 @@ class TaskCreateBloc extends Bloc<TaskCreateEvent, TaskCreateStatus> {
 
     try {
       await _taskRepository.createTask(data);
-      emit(state.copyWith(status: NewHomeStatus.success));
+      emit(state.copyWith(status: NewHomeStatus.initial));
     } catch (e) {
       log(e.toString());
       emit(state.copyWith(status: NewHomeStatus.failure));

@@ -16,14 +16,15 @@ class HomeDetailTaskOpen extends TaskDetailEvent {
   List<Object?> get props => [task];
 }
 
-class HomeDetailTaskChangeDateTime extends TaskDetailEvent {
+class DetailPropertiesChange extends TaskDetailEvent {
   final DateTime? date;
   final TimeOfDay? time;
+  final int? priority;
 
-  HomeDetailTaskChangeDateTime({this.date, this.time});
+  DetailPropertiesChange({this.date, this.time, this.priority});
 
   @override
-  List<Object?> get props => [date, time];
+  List<Object?> get props => [date, time, priority];
 }
 
 class HomeDetailTaskCompleteTask extends TaskDetailEvent {
@@ -36,8 +37,11 @@ class HomeDetailTaskCompleteTask extends TaskDetailEvent {
 }
 
 class HomeDetailTaskEdit extends TaskDetailEvent {
+  final bool focusOnTitle;
+
+  HomeDetailTaskEdit({required this.focusOnTitle});
   @override
-  List<Object?> get props => [];
+  List<Object?> get props => [focusOnTitle];
 }
 
 class HomeDetailTaskCancelEdit extends TaskDetailEvent {

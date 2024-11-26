@@ -26,7 +26,7 @@ class SearchBloc extends Bloc<SearchEvent, SearchState> {
   Future<void> _onOpenSearch(
       SearchOpen event, Emitter<SearchState> emit) async {
     await emit.forEach<List<TaskModel>>(
-      _taskRepository.getTaskList(),
+      _taskRepository.getTaskStream(),
       onData: (newList) {
         final filteredList =
             newList.where((task) => task.name.contains(state.query)).toList();

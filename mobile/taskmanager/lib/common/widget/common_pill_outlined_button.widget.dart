@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:taskmanager/common/context_extension.dart';
 
 class CommonPillOutlinedButton extends StatelessWidget {
   const CommonPillOutlinedButton({
@@ -18,13 +19,7 @@ class CommonPillOutlinedButton extends StatelessWidget {
   Widget build(BuildContext context) {
     return OutlinedButton.icon(
       style: ButtonStyle(
-        side: WidgetStateProperty.all(BorderSide(color: color, width: 1)),
-        foregroundColor: WidgetStatePropertyAll(color),
-        shape: WidgetStateProperty.all<RoundedRectangleBorder>(
-          RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(12),
-          ),
-        ),
+        foregroundColor: WidgetStatePropertyAll(context.palette.primaryColor),
       ),
       onPressed: handle,
       label: Text(label),

@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:taskmanager/common/constants/ui_constant.dart';
+import 'package:taskmanager/common/context_extension.dart';
 
 class AppbarSearchbarWidget extends StatelessWidget {
   const AppbarSearchbarWidget({
@@ -15,25 +17,25 @@ class AppbarSearchbarWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 16),
+      padding: const EdgeInsets.fromLTRB(16, 0, 16, 8),
       child: TextFormField(
         controller: _textController,
         onFieldSubmitted: (value) {
           FocusManager.instance.primaryFocus?.unfocus();
           _onReturn?.call(value);
         },
-        style: const TextStyle(fontSize: 16, color: Colors.black),
         decoration: InputDecoration(
           hintText: "Search",
-          hintStyle: const TextStyle(color: Colors.grey),
+          hintStyle: TextStyle(color: context.palette.disabledText),
           filled: true,
-          fillColor: Colors.white,
+          fillColor: context.palette.textFieldBackground,
           border: OutlineInputBorder(
             borderRadius: BorderRadius.circular(8),
             borderSide: BorderSide.none,
           ),
-          contentPadding: const EdgeInsets.symmetric(horizontal: 16),
-          prefixIcon: const Icon(Icons.search, color: Colors.grey),
+          contentPadding: EdgeInsets.symmetric(
+              horizontal: UIConstant.textBoxContentPadding),
+          prefixIcon: Icon(Icons.search, color: context.palette.disabledText),
         ),
       ),
     );

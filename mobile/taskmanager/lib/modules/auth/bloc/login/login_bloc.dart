@@ -27,10 +27,10 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
     emit(const LoginLoading());
 
     try {
-      final token = await _userRepository.submitLogin(
+      final userCredentials = await _userRepository.submitLogin(
           userName: event.username, password: event.password);
 
-      _authBloc.add(AuthSetToken(tokenString: token));
+      _authBloc.add(AuthSetInfo(userCredentials: userCredentials));
       emit(state.copyWith(status: LoginStatus.success));
     } catch (e) {
       log(e.toString());

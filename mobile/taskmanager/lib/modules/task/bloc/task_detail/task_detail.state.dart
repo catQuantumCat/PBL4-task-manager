@@ -32,3 +32,12 @@ class TaskDetailState extends Equatable {
     );
   }
 }
+
+class TaskDetailStateEditing extends TaskDetailState {
+  final bool focusOnTitle;
+
+  const TaskDetailStateEditing(
+      {required super.task,
+      super.status = DetailHomeStatus.editing,
+      required this.focusOnTitle});
+}
