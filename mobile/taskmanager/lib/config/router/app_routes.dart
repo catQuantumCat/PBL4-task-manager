@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:taskmanager/modules/auth/view/login.view.dart';
 import 'package:taskmanager/modules/auth/view/register.view.dart';
+import 'package:taskmanager/modules/auth/view/welcome.view.dart';
 import 'package:taskmanager/modules/navigation/view/navigation.view.dart';
 import 'package:taskmanager/modules/search/view/search.view.dart';
 
@@ -14,6 +15,11 @@ class AppRoutes {
               child: Text("Dummy Page"),
             ),
           );
+        });
+
+      case '/authWelcome':
+        return MaterialPageRoute(builder: (_) {
+          return const WelcomePage();
         });
 
       case '/authLogin':

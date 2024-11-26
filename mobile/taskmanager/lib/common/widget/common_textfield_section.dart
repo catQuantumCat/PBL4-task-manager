@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:taskmanager/common/constants/ui_constant.dart';
 import 'package:taskmanager/common/context_extension.dart';
 
-class ProfileFieldGroup extends StatelessWidget {
-  const ProfileFieldGroup(
+class CommonTextFieldSection extends StatelessWidget {
+  const CommonTextFieldSection(
       {super.key, required this.items, this.hintText, this.groupLabel});
 
   final List<Widget> items;
@@ -44,12 +44,16 @@ class ProfileFieldGroup extends StatelessWidget {
         const SizedBox(
           height: 8,
         ),
-        Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 16),
-          child: Text(
-            hintText ?? "",
-            style: context.appTextStyles.metadata1,
+        if (hintText != null)
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 16),
+            child: Text(
+              hintText!,
+              style: context.appTextStyles.metadata1,
+            ),
           ),
+        const SizedBox(
+          height: 16,
         )
       ],
     );

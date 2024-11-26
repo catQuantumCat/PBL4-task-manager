@@ -3,18 +3,40 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:taskmanager/common/bottomSheet/custom_sheet.dart';
 import 'package:taskmanager/common/bottomSheet/sheet.constants.dart';
+import 'package:taskmanager/data/model/task_model.dart';
+import 'package:taskmanager/data/repositories/task.repository.dart';
+import 'package:taskmanager/main.dart';
 
 import 'package:taskmanager/modules/task/bloc/task_detail/task_detail.bloc.dart';
+import 'package:taskmanager/modules/task/bloc/task_list/task_list.bloc.dart';
 
 import 'package:taskmanager/modules/task/widget/task_detail/task_detail_edit.widget.dart';
 import 'package:taskmanager/modules/task/widget/task_detail/task_detail.widget.dart';
 
 class TaskDetailPage extends StatelessWidget {
-  const TaskDetailPage({super.key});
+  const TaskDetailPage(
+      {super.key, required TaskModel task, required TaskListBloc taskListBloc})
+      : _task = task,
+        _taskListBloc = taskListBloc;
+
+  final TaskModel _task;
+  final TaskListBloc _taskListBloc;
 
   @override
   Widget build(BuildContext context) {
-    return const Placeholder();
+    return MultiBlocProvider(
+      providers: [
+        BlocProvider(
+          create: (providerContext) {
+            return TaskDetailBloc(
+                taskRepository: getIt<TaskRepository>(),
+                taskListBloc: _taskListBloc)
+              ..add(HomeDetailTaskOpen(task: _task));
+          },
+        ),
+      ],
+      child: const TaskDetailView(),
+    );
   }
 }
 
@@ -110,7 +132,7 @@ class _TaskDetailViewState extends State<TaskDetailView> {
                       return const TaskDetailWidget();
                     case DetailHomeStatus.loading:
                       return const CustomSheet(
-                          body: Center(child: CircularProgressIndicator()));
+                          body: SingleChildScrollView(child: CircularProgressIndicator()));
                     case DetailHomeStatus.editing:
                       return TaskDetailEdit(
                           focusOnTitle:

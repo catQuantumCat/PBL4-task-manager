@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:taskmanager/common/constants/ui_constant.dart';
 
 class CommonTextFormField extends StatelessWidget {
   const CommonTextFormField(
@@ -22,14 +23,15 @@ class CommonTextFormField extends StatelessWidget {
       validator: validator,
       decoration: InputDecoration(
         errorMaxLines: 3,
-        focusedBorder: const OutlineInputBorder(
-            borderRadius: BorderRadius.all(Radius.circular(8))),
+        focusedBorder: OutlineInputBorder(
+            borderRadius:
+                BorderRadius.all(Radius.circular(UIConstant.cornerRadiusWeak))),
         filled: true,
         fillColor: Colors.grey[300],
         hintText: hintText,
-        border: const OutlineInputBorder(
+        border: OutlineInputBorder(
           borderRadius: BorderRadius.all(
-            Radius.circular(8),
+            Radius.circular(UIConstant.cornerRadiusWeak),
           ),
         ),
       ),

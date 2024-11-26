@@ -41,8 +41,8 @@ class TaskDTO {
       'name': name,
       'description': description,
       'priority': priority,
-      'createTime': createTime.toIso8601String(),
-      'deadTime': deadTime.toIso8601String(),
+      'createTime': createTime.toIso8601String().split('.').first,
+      'deadTime': deadTime.toIso8601String().split('.').first,
       'status': status,
     };
   }

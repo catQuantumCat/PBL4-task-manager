@@ -8,14 +8,17 @@ class CustomSheet extends StatelessWidget {
       required Widget body,
       String? header,
       bool showHandle = true,
-      bool enableControl = false,
+      bool showCancelButton = true,
+      bool showSaveButton = false,
       void Function()? onCancel,
       void Function()? onSave,
       Color backgroundColor = Colors.white})
-      : _body = body,
+      : assert(body is ScrollView || body is SingleChildScrollView, 'The body must be a ScrollView or SingleChildScrollView to ensure proper scrolling behavior.'),
+        _body = body,
         _header = header,
         _showHandle = showHandle,
-        _enableControl = enableControl,
+        _showSaveButton = showSaveButton,
+        _showCancelButton = showCancelButton,
         _onCancel = onCancel,
         _onSave = onSave,
         _backgroundColor = backgroundColor;
@@ -26,21 +29,13 @@ class CustomSheet extends StatelessWidget {
   final String? _header;
   final Color _backgroundColor;
   final bool _showHandle;
-  final bool _enableControl;
+  final bool _showCancelButton;
+  final bool _showSaveButton;
 
-  @override
-  Widget build(BuildContext context) {
-    if (_enableControl == false && (_onCancel != null || _onSave != null)) {
-      throw Exception('Control is disabled but onCancel or onSave is provided');
-    }
-
+  Widget _getHeader(BuildContext context) {
     return Container(
-      decoration: BoxDecoration(
-          color: _backgroundColor,
-          borderRadius: BorderRadius.circular(UIConstant.cornerRadiusMedium)),
-      child: ListView(
-        primary: false,
-        padding: const EdgeInsets.fromLTRB(20, 0, 20, 20),
+      color: _backgroundColor,
+      child: Column(
         children: [
           Row(
             mainAxisAlignment: MainAxisAlignment.center,
@@ -58,21 +53,25 @@ class CustomSheet extends StatelessWidget {
               ),
             ],
           ),
-          if (_enableControl)
+          if (_showCancelButton || _showSaveButton)
             Row(
               crossAxisAlignment: CrossAxisAlignment.center,
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 SizedBox(
                   width: 60,
-                  child: TextButton(
-                    style: TextButton.styleFrom(
-                        minimumSize: Size.zero,
-                        tapTargetSize: MaterialTapTargetSize.shrinkWrap,
-                        padding: const EdgeInsets.symmetric(horizontal: 4)),
-                    onPressed: _onCancel,
-                    child: const Text("Cancel"),
-                  ),
+                  child: _showCancelButton
+                      ? TextButton(
+                          style: TextButton.styleFrom(
+                              minimumSize: Size.zero,
+                              tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                              padding:
+                                  const EdgeInsets.symmetric(horizontal: 4)),
+                          onPressed:
+                              _onCancel ?? () => Navigator.of(context).pop(),
+                          child: const Text("Cancel"),
+                        )
+                      : null,
                 ),
                 Text(
                   _header ?? "",
@@ -80,19 +79,43 @@ class CustomSheet extends StatelessWidget {
                 ),
                 SizedBox(
                   width: 60,
-                  child: TextButton(
-                    style: TextButton.styleFrom(
-                        minimumSize: Size.zero,
-                        tapTargetSize: MaterialTapTargetSize.shrinkWrap,
-                        padding: EdgeInsets.zero),
-                    onPressed: _onSave,
-                    child: const Text("Save"),
-                  ),
+                  child: _showSaveButton
+                      ? TextButton(
+                          style: TextButton.styleFrom(
+                              minimumSize: Size.zero,
+                              tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                              padding: EdgeInsets.zero),
+                          onPressed: _onSave,
+                          child: const Text("Save"),
+                        )
+                      : null,
                 )
               ],
             ),
-          if (_enableControl) const SizedBox(height: 28),
-          _body
+        ],
+      ),
+    );
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      padding: EdgeInsets.fromLTRB(UIConstant.padding, 0, UIConstant.padding,
+          MediaQuery.of(context).viewInsets.bottom),
+      decoration: BoxDecoration(
+          color: _backgroundColor,
+          borderRadius: BorderRadius.circular(UIConstant.cornerRadiusMedium)),
+      child: CustomScrollView(
+        physics: const NeverScrollableScrollPhysics(),
+        slivers: [
+          PinnedHeaderSliver(
+            child: _getHeader(context),
+          ),
+          if (_showCancelButton || _showSaveButton)
+            const SliverToBoxAdapter(child: SizedBox(height: 28)),
+          SliverFillRemaining(
+            child: _body,
+          )
         ],
       ),
     );

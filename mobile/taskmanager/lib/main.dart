@@ -69,7 +69,7 @@ class MyApp extends StatelessWidget {
                     break;
                   case AuthStatus.unauthenticated:
                     navigator.pushNamedAndRemoveUntil(
-                        "/authLogin", (_) => false);
+                        "/authWelcome", (_) => false);
                     break;
                   case AuthStatus.initial:
                     break;

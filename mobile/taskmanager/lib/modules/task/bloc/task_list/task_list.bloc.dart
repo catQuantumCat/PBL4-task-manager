@@ -51,7 +51,7 @@ class TaskListBloc extends Bloc<TaskListEvent, TaskListState> {
                 state.recentlyViewedTasks.any((recent) => recent.id == task.id))
             .toList();
 
-        log(recentlyViewedTasksList.toString(), name: "UPDATED RECENT");
+        log(newList.toString(), name: "Full list");
 
         return state.copyWith(
             status: StateStatus.success,

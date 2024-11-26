@@ -46,7 +46,7 @@ class _TaskDetailEditState extends State<TaskDetailEdit> {
 
   @override
   Widget build(BuildContext context) {
-    final body = Column(
+    final body = ListView(
       children: [
         Row(
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -103,7 +103,7 @@ class _TaskDetailEditState extends State<TaskDetailEdit> {
 
     return CustomSheet(
       header: "Edit Task",
-      enableControl: true,
+      showCancelButton: true,
       onSave: _saveTapped,
       onCancel: _cancelTapped,
       body: body,

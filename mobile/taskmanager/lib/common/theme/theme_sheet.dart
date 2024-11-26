@@ -34,7 +34,7 @@ class ThemeSheet {
                     BorderRadius.circular(UIConstant.cornerRadiusWeak),
               ),
             ),
-            scaffoldBackgroundColor: palette.scaffoldBackgroundDim,
+            scaffoldBackgroundColor: palette.scaffoldBackground,
             appBarTheme: AppBarTheme(color: palette.scaffoldBackground),
             brightness: palette.brightness,
             fontFamily: Fonts.fontFamily,
@@ -49,10 +49,14 @@ class ThemeSheet {
                 ),
               ),
             )),
-            buttonTheme: ButtonThemeData(
-                buttonColor: palette.primaryColor,
-                disabledColor: palette.disabledButtonLabel,
-                splashColor: Colors.transparent),
+            filledButtonTheme: FilledButtonThemeData(
+                style: ButtonStyle(
+                    shape: WidgetStateProperty.all<RoundedRectangleBorder>(
+              RoundedRectangleBorder(
+                borderRadius:
+                    BorderRadius.circular(UIConstant.cornerRadiusMedium),
+              ),
+            ))),
             checkboxTheme: const CheckboxThemeData(
               shape: CircleBorder(),
               visualDensity: VisualDensity.compact,

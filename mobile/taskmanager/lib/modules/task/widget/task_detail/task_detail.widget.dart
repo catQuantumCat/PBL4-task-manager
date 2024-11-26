@@ -67,148 +67,151 @@ class TaskDetailWidget extends StatelessWidget {
       final state = context.read<TaskDetailBloc>().state;
 
       return CustomSheet(
-          enableControl: false,
-          body: Column(children: [
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: [
-                Text(
-                  "Task ID: ${state.task!.id}",
-                  style: context.appTextStyles.metadata1,
-                ),
-                Wrap(
-                  crossAxisAlignment: WrapCrossAlignment.center,
-                  children: [
-                    const TaskDetailMenuButton(),
-                    const SizedBox(
-                      width: 8,
-                    ),
-                    IconButton.filled(
-                      style: IconButton.styleFrom(
-                          backgroundColor: context.palette.buttonBackground,
-                          foregroundColor: context.palette.buttonForeground),
-                      onPressed: () {
-                        Navigator.pop(context);
-                      },
-                      icon: const Icon(
-                        Icons.clear,
+          showCancelButton: false,
+          body: SingleChildScrollView(
+            child: Column(children: [
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  Text(
+                    "Task ID: ${state.task!.id}",
+                    style: context.appTextStyles.metadata1,
+                  ),
+                  Wrap(
+                    crossAxisAlignment: WrapCrossAlignment.center,
+                    children: [
+                      const TaskDetailMenuButton(),
+                      const SizedBox(
+                        width: 8,
                       ),
-                    )
-                  ],
-                ),
-              ],
-            ),
-            const SizedBox(
-              height: 12,
-            ),
-            Row(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                SizedBox(
-                  height: 28,
-                  width: 24,
-                  child: ReactiveCheckbox(
-                      size: 1.2,
-                      taskPriority: state.task!.priority,
-                      taskStatus: state.task!.status,
-                      onChanged: (bool? value) =>
-                          _checkBoxHandle(state, context, value)),
-                ),
-                const SizedBox(
-                  width: 8,
-                ),
-                Expanded(
-                  child: InkWell(
-                    onTap: () => _openEditHandle(context, focusOnTitle: true),
-                    child: Text(
-                      softWrap: true,
-                      overflow: TextOverflow.fade,
-                      state.task!.name,
-                      style: state.task!.status == false
-                          ? context.appTextStyles.subHeading1
-                          : context.appTextStyles.strikedSubHeading1,
+                      IconButton.filled(
+                        style: IconButton.styleFrom(
+                            backgroundColor: context.palette.buttonBackground,
+                            foregroundColor: context.palette.buttonForeground),
+                        onPressed: () {
+                          Navigator.pop(context);
+                        },
+                        icon: const Icon(
+                          Icons.clear,
+                        ),
+                      )
+                    ],
+                  ),
+                ],
+              ),
+              const SizedBox(
+                height: 12,
+              ),
+              Row(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  SizedBox(
+                    height: 28,
+                    width: 24,
+                    child: ReactiveCheckbox(
+                        size: 1.2,
+                        taskPriority: state.task!.priority,
+                        taskStatus: state.task!.status,
+                        onChanged: (bool? value) =>
+                            _checkBoxHandle(state, context, value)),
+                  ),
+                  const SizedBox(
+                    width: 8,
+                  ),
+                  Expanded(
+                    child: InkWell(
+                      onTap: () => _openEditHandle(context, focusOnTitle: true),
+                      child: Text(
+                        softWrap: true,
+                        overflow: TextOverflow.fade,
+                        state.task!.name,
+                        style: state.task!.status == false
+                            ? context.appTextStyles.subHeading1
+                            : context.appTextStyles.strikedSubHeading1,
+                      ),
                     ),
                   ),
-                ),
-              ],
-            ),
-            const SizedBox(height: 16),
-            if (state.task!.description != null &&
-                state.task!.description!.isEmpty == false)
-              InkWell(
-                onTap: () => _openEditHandle(context, focusOnTitle: false),
-                child: Column(
-                  children: [
-                    Row(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        const Icon(Icons.notes),
-                        const SizedBox(width: 8),
-                        Expanded(
-                          child: Text(
-                            state.task!.description ?? "",
-                            style: context.appTextStyles.body1,
+                ],
+              ),
+              const SizedBox(height: 16),
+              if (state.task!.description != null &&
+                  state.task!.description!.isEmpty == false)
+                InkWell(
+                  onTap: () => _openEditHandle(context, focusOnTitle: false),
+                  child: Column(
+                    children: [
+                      Row(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          const Icon(Icons.notes),
+                          const SizedBox(width: 8),
+                          Expanded(
+                            child: Text(
+                              state.task!.description ?? "",
+                              style: context.appTextStyles.body1,
+                            ),
                           ),
-                        ),
-                      ],
-                    ),
-                    const Divider(
-                      height: 20,
-                    ),
-                  ],
+                        ],
+                      ),
+                      const Divider(
+                        height: 20,
+                      ),
+                    ],
+                  ),
+                ),
+              ListTile(
+                visualDensity: const VisualDensity(horizontal: 0, vertical: -4),
+                dense: true,
+                onTap: () => _showDateHandle(state, context),
+                horizontalTitleGap: 8,
+                minVerticalPadding: 0,
+                contentPadding: const EdgeInsets.all(0),
+                leading: const Icon(Icons.calendar_month_sharp, size: 24),
+                title: Text(
+                  state.task!.deadTime.relativeToToday(),
+                  style: context.appTextStyles.body1,
                 ),
               ),
-            ListTile(
-              visualDensity: const VisualDensity(horizontal: 0, vertical: -4),
-              dense: true,
-              onTap: () => _showDateHandle(state, context),
-              horizontalTitleGap: 8,
-              minVerticalPadding: 0,
-              contentPadding: const EdgeInsets.all(0),
-              leading: const Icon(Icons.calendar_month_sharp, size: 24),
-              title: Text(
-                state.task!.deadTime.relativeToToday(),
-                style: context.appTextStyles.body1,
+              const Divider(
+                height: 20,
               ),
-            ),
-            const Divider(
-              height: 20,
-            ),
-            ListTile(
-              visualDensity: const VisualDensity(horizontal: 0, vertical: -4),
-              dense: true,
-              onTap: () => _showTimeHandle(state, context),
-              horizontalTitleGap: 8,
-              minVerticalPadding: 0,
-              contentPadding: const EdgeInsets.all(0),
-              leading: const Icon(Icons.access_time_filled, size: 24),
-              title: Text(
-                TimeOfDay.fromDateTime(state.task!.deadTime).toLabel(),
-                style: context.appTextStyles.body1,
+              ListTile(
+                visualDensity: const VisualDensity(horizontal: 0, vertical: -4),
+                dense: true,
+                onTap: () => _showTimeHandle(state, context),
+                horizontalTitleGap: 8,
+                minVerticalPadding: 0,
+                contentPadding: const EdgeInsets.all(0),
+                leading: const Icon(Icons.access_time_filled, size: 24),
+                title: Text(
+                  TimeOfDay.fromDateTime(state.task!.deadTime).toLabel(),
+                  style: context.appTextStyles.body1,
+                ),
               ),
-            ),
-            const Divider(
-              height: 20,
-            ),
-            ListTile(
-              visualDensity: const VisualDensity(horizontal: 0, vertical: -4),
-              dense: true,
-              onTap: () =>
-                  _showPrioritySelection(context, state.task!.priority),
-              horizontalTitleGap: 8,
-              minVerticalPadding: 0,
-              contentPadding: const EdgeInsets.all(0),
-              leading: Icon(
-                Icons.flag,
-                color: context.palette.getPriorityPrimary(state.task!.priority),
+              const Divider(
+                height: 20,
               ),
-              title: Text(
-                PriorityEnum.getLabel(state.task!.priority),
-                style: context.appTextStyles.body1,
+              ListTile(
+                visualDensity: const VisualDensity(horizontal: 0, vertical: -4),
+                dense: true,
+                onTap: () =>
+                    _showPrioritySelection(context, state.task!.priority),
+                horizontalTitleGap: 8,
+                minVerticalPadding: 0,
+                contentPadding: const EdgeInsets.all(0),
+                leading: Icon(
+                  Icons.flag,
+                  color:
+                      context.palette.getPriorityPrimary(state.task!.priority),
+                ),
+                title: Text(
+                  PriorityEnum.getLabel(state.task!.priority),
+                  style: context.appTextStyles.body1,
+                ),
               ),
-            ),
-          ]));
+            ]),
+          ));
     }
   }
 }

@@ -7,8 +7,8 @@ import 'package:taskmanager/common/bottomSheet/custom_sheet.dart';
 import 'package:taskmanager/common/context_extension.dart';
 import 'package:taskmanager/common/toast/common_toast.dart';
 
-import 'package:taskmanager/modules/profile/widget/profile_field_group.widget.dart';
-import 'package:taskmanager/modules/profile/widget/profile_labaled_textfield.dart';
+import 'package:taskmanager/common/widget/common_textfield_section.dart';
+import 'package:taskmanager/common/widget/common_collapsed_textfield.dart';
 
 class ProfileUsernameEdit extends StatefulWidget {
   const ProfileUsernameEdit({super.key});
@@ -86,27 +86,25 @@ class _ProfileUsernameEditState extends State<ProfileUsernameEdit> {
   @override
   Widget build(BuildContext context) {
     return CustomSheet(
-      enableControl: true,
+      showCancelButton: true,
       backgroundColor: context.palette.scaffoldBackgroundDim,
       showHandle: false,
       onCancel: () => _onCancel(context),
       onSave: _isSaveEnabled == false ? null : () => _onSave(context),
       header: "Edit username",
-      body: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        crossAxisAlignment: CrossAxisAlignment.stretch,
+      body: ListView(
         children: [
           const SizedBox(
             height: 16,
           ),
-          ProfileFieldGroup(
+          CommonTextFieldSection(
             items: [
-              ProfileLabaledTextfield(
+              CommonCollapsedTextField(
                 label: "New",
                 hintText: "enter username",
                 controller: _newController,
               ),
-              ProfileLabaledTextfield(
+              CommonCollapsedTextField(
                 label: "Confirm",
                 hintText: "re-enter username",
                 controller: _confirmController,
@@ -117,9 +115,9 @@ class _ProfileUsernameEditState extends State<ProfileUsernameEdit> {
           const SizedBox(
             height: 32,
           ),
-          ProfileFieldGroup(
+          CommonTextFieldSection(
             items: [
-              ProfileLabaledTextfield(
+              CommonCollapsedTextField(
                 label: "Password",
                 hintText: "enter password",
                 controller: _passwordFieldController,

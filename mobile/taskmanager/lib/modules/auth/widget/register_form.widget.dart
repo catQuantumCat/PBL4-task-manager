@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:taskmanager/common/utils/validation.utils.dart';
-import 'package:taskmanager/common/widget/common.text_form_field.dart';
+import 'package:taskmanager/common/widget/common_textfield_section.dart';
+import 'package:taskmanager/common/widget/common_collapsed_textfield.dart';
 
 class RegisterForm extends StatelessWidget {
   const RegisterForm({
@@ -25,22 +26,34 @@ class RegisterForm extends StatelessWidget {
       key: _formkey,
       child: Column(
         children: [
-          CommonTextFormField(
-              validator: (p0) => ValidationUtils.validateEmail(p0),
-              hintText: "Email",
-              controller: _emailFieldController),
-          const SizedBox(height: 16),
-          CommonTextFormField(
-              validator: (p0) => ValidationUtils.validateField(p0),
-              hintText: "Username",
-              controller: _usernameFieldController),
-          const SizedBox(height: 16),
-          CommonTextFormField(
-              validator: (p0) => ValidationUtils.validatePassword(p0),
-              hintText: "Password",
-              obscureText: true,
-              controller: _passwordFieldController),
-          const SizedBox(height: 24),
+          CommonTextFieldSection(
+            groupLabel: "your email",
+            items: [
+              CommonCollapsedTextField(
+                  validator: (p0) => ValidationUtils.validateEmail(p0),
+                  hintText: "Email",
+                  controller: _emailFieldController)
+            ],
+          ),
+          CommonTextFieldSection(
+            groupLabel: "Your username",
+            items: [
+              CommonCollapsedTextField(
+                  validator: (p0) => ValidationUtils.validateField(p0),
+                  hintText: "Username",
+                  controller: _usernameFieldController)
+            ],
+          ),
+          CommonTextFieldSection(
+            groupLabel: "Your password",
+            items: [
+              CommonCollapsedTextField(
+                  validator: (p0) => ValidationUtils.validatePassword(p0),
+                  hintText: "Password",
+                  isSecured: true,
+                  controller: _passwordFieldController)
+            ],
+          ),
         ],
       ),
     );

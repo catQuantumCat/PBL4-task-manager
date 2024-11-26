@@ -1,5 +1,3 @@
-import 'package:flutter/material.dart';
-
 enum PriorityEnum {
   high(3, 'Priority 3'),
   medium(2, 'Priority 2'),
@@ -17,19 +15,3 @@ enum PriorityEnum {
         .label;
   }
 }
-
-// enum ScheduleEnum {
-//   today("Today", Icons.today),
-//   tomorrow("Tomorrow", Icons.wb_sunny_outlined),
-//   // laterWeek("Later this week", Icons.calendar_month_rounded),
-//   // weekend("This weekend", Icons.weekend_outlined),
-//   // nextWeek("Next week")
-  
-  
-//   ;
-
-//   final String label;
-//   // final IconData icon;
-
-//   const ScheduleEnum(this.label);
-// }

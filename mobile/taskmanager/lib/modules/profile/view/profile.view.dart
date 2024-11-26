@@ -58,7 +58,8 @@ class ProfileView extends StatelessWidget {
     return CommonTitleAppbar(
       titleBackgroundColor: context.palette.scaffoldBackgroundDim,
       title: "Account",
-      child: Padding(
+      child: Container(
+        color: context.palette.scaffoldBackgroundDim,
         padding: const EdgeInsets.symmetric(horizontal: 16),
         child: BlocBuilder<ProfileBloc, ProfileState>(
           builder: (context, state) {

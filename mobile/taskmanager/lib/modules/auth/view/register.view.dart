@@ -1,15 +1,35 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:taskmanager/common/bottomSheet/custom_sheet.dart';
 import 'package:taskmanager/common/constants/state_status.constant.dart';
+import 'package:taskmanager/common/context_extension.dart';
+
 import 'package:taskmanager/data/repositories/user.repository.dart';
 import 'package:taskmanager/main.dart';
 import 'package:taskmanager/modules/auth/bloc/auth/auth_bloc.dart';
 import 'package:taskmanager/modules/auth/bloc/register/register_bloc.dart';
-import 'package:taskmanager/modules/auth/widget/auth_elevated_button.widget.dart';
+import 'package:taskmanager/common/helpers/dialog_helper.dart';
+import 'package:taskmanager/modules/auth/widget/common_filled_button.dart';
 import 'package:taskmanager/modules/auth/widget/register_form.widget.dart';
 
 class RegisterPage extends StatelessWidget {
   const RegisterPage({super.key});
+
+  void _listenToStateChanges(BuildContext context, RegisterState state) {
+    if (state.status == StateStatus.success) {
+      Navigator.pushNamedAndRemoveUntil(
+        context,
+        "/home",
+        (route) => false,
+      );
+    }
+
+    if (state.status == StateStatus.failed) {
+      DialogHelper.showError(context,
+          title: "Cannot register",
+          content: state.errorString ?? "Unknown error");
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -17,7 +37,12 @@ class RegisterPage extends StatelessWidget {
       create: (context) => RegisterBloc(
           authBloc: context.read<AuthBloc>(),
           userRepository: getIt<UserRepository>()),
-      child: RegisterView(),
+      child: BlocListener<RegisterBloc, RegisterState>(
+        listener: (context, state) {
+          _listenToStateChanges(context, state);
+        },
+        child: RegisterView(),
+      ),
     );
   }
 }
@@ -44,86 +69,54 @@ class RegisterView extends StatelessWidget {
         );
   }
 
-  void _listenToStateChanges(BuildContext context, RegisterState state) {
-    if (state.status == StateStatus.success) {
-      Navigator.pushNamedAndRemoveUntil(
-        context,
-        "/home",
-        (route) => false,
-      );
-    }
-
-    if (state.status == StateStatus.failed) {
-      showDialog(
-        context: context,
-        builder: (dialogContext) => AlertDialog(
-          actions: [
-            TextButton(
-                onPressed: () => Navigator.pop(dialogContext),
-                child: const Text("Try again"))
-          ],
-          title: const Text("Cannot register"),
-          content: Text(state.errorString ?? "Unknown error"),
-        ),
-      );
-    }
-  }
-
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(),
-      body: Builder(builder: (context) {
-        return BlocConsumer<RegisterBloc, RegisterState>(
-          listener: (context, state) {
-            _listenToStateChanges(context, state);
-          },
-          builder: (context, state) {
-            switch (state.status) {
-              case (StateStatus.loading):
-                return const Center(child: CircularProgressIndicator());
-              default:
-                return SingleChildScrollView(
-                  child: Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 20),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        const Text(
-                          "Register",
-                          style: TextStyle(
-                              fontSize: 28, fontWeight: FontWeight.bold),
-                        ),
-                        const SizedBox(height: 4),
-                        const Text(
-                          "Add your username, email, and password.",
-                          style: TextStyle(fontSize: 16),
-                        ),
-                        const SizedBox(height: 16),
-                        RegisterForm(
-                          formkey: _formkey,
-                          emailFieldController: _emailFieldController,
-                          usernameFieldController: _usernameFieldController,
-                          passwordFieldController: _passwordFieldController,
-                        ),
-                        Row(
-                          children: [
-                            Expanded(
-                              child: AuthElevatedButton(
-                                label: "Register",
-                                onPressed: () => _onRegisterTapped(context),
-                              ),
+    return CustomSheet(
+      backgroundColor: context.palette.scaffoldBackgroundDim,
+      body: SingleChildScrollView(
+        child: Builder(builder: (context) {
+          return BlocBuilder<RegisterBloc, RegisterState>(
+            builder: (context, state) {
+              switch (state.status) {
+                case (StateStatus.loading):
+                  return const Center(child: CircularProgressIndicator());
+                default:
+                  return Column(
+                    children: [
+                      const Text(
+                        "Register",
+                        style: TextStyle(
+                            fontSize: 28, fontWeight: FontWeight.bold),
+                      ),
+                      const SizedBox(height: 4),
+                      const Text(
+                        "Add your username, email, and password.",
+                        style: TextStyle(fontSize: 16),
+                      ),
+                      const SizedBox(height: 16),
+                      RegisterForm(
+                        formkey: _formkey,
+                        emailFieldController: _emailFieldController,
+                        usernameFieldController: _usernameFieldController,
+                        passwordFieldController: _passwordFieldController,
+                      ),
+                      Row(
+                        children: [
+                          Expanded(
+                            child: CommonFilledButton(
+                              label: "Register",
+                              onPressed: () => _onRegisterTapped(context),
                             ),
-                          ],
-                        ),
-                      ],
-                    ),
-                  ),
-                );
-            }
-          },
-        );
-      }),
+                          ),
+                        ],
+                      ),
+                    ],
+                  );
+              }
+            },
+          );
+        }),
+      ),
     );
   }
 }

@@ -7,8 +7,8 @@ import 'package:taskmanager/common/toast/common_toast.dart';
 import 'package:taskmanager/common/utils/ux_writing.util.dart';
 import 'package:taskmanager/common/utils/validation.utils.dart';
 
-import 'package:taskmanager/modules/profile/widget/profile_field_group.widget.dart';
-import 'package:taskmanager/modules/profile/widget/profile_labaled_textfield.dart';
+import 'package:taskmanager/common/widget/common_textfield_section.dart';
+import 'package:taskmanager/common/widget/common_collapsed_textfield.dart';
 
 class ProfilePasswordEdit extends StatefulWidget {
   const ProfilePasswordEdit({super.key});
@@ -96,8 +96,7 @@ class _ProfilePasswordEditState extends State<ProfilePasswordEdit> {
         return;
       }
     }
-    CommonToast.showStatusToast(
-        sheetContext, "Password updated sucessfully");
+    CommonToast.showStatusToast(sheetContext, "Password updated sucessfully");
 
     Navigator.pop<Map<String, String>>(sheetContext, {
       'new_password': _newController.text,
@@ -108,22 +107,20 @@ class _ProfilePasswordEditState extends State<ProfilePasswordEdit> {
   @override
   Widget build(BuildContext context) {
     return CustomSheet(
-      enableControl: true,
+      showCancelButton: true,
       backgroundColor: context.palette.scaffoldBackgroundDim,
       showHandle: false,
       onCancel: () => _onCancel(context),
       onSave: _isSaveEnabled == false ? null : () => _onSave(context),
       header: "Edit email",
-      body: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        crossAxisAlignment: CrossAxisAlignment.stretch,
+      body: ListView(
         children: [
           const SizedBox(
             height: 16,
           ),
-          ProfileFieldGroup(
+          CommonTextFieldSection(
             items: [
-              ProfileLabaledTextfield(
+              CommonCollapsedTextField(
                 label: "Current",
                 hintText: "current password",
                 controller: _passwordFieldController,
@@ -134,15 +131,15 @@ class _ProfilePasswordEditState extends State<ProfilePasswordEdit> {
           const SizedBox(
             height: 16,
           ),
-          ProfileFieldGroup(
+          CommonTextFieldSection(
             items: [
-              ProfileLabaledTextfield(
+              CommonCollapsedTextField(
                 label: "New",
                 hintText: "enter password",
                 controller: _newController,
                 isSecured: true,
               ),
-              ProfileLabaledTextfield(
+              CommonCollapsedTextField(
                 label: "Confirm",
                 hintText: "re-enter password",
                 controller: _confirmController,
