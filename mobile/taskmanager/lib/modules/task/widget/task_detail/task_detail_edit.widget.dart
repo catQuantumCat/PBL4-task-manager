@@ -102,6 +102,7 @@ class _TaskDetailEditState extends State<TaskDetailEdit> {
     );
 
     return CustomSheet(
+      showSaveButton: true,
       header: "Edit Task",
       showCancelButton: true,
       onSave: _saveTapped,

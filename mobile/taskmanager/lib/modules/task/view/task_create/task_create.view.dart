@@ -114,7 +114,7 @@ class _TaskCreateViewState extends State<TaskCreateView> {
         .clamp(0.3, 0.9);
     return BlocConsumer<TaskCreateBloc, TaskCreateState>(
       listener: (context, state) {
-        if (state.status == NewHomeStatus.initial) {
+        if (state.status == NewHomeStatus.success) {
           taskFieldController.clear();
           descriptionFieldController.clear();
           CommonToast.showStatusToast(context, "New task added");
