@@ -11,6 +11,7 @@ import 'package:taskmanager/modules/home/bloc/home_bloc.dart';
 
 import 'package:taskmanager/modules/home/view/home.view.dart';
 import 'package:taskmanager/modules/navigation/bloc/navigation_bloc.dart';
+import 'package:taskmanager/modules/navigation/widget/lazy_indexed_stack.dart';
 import 'package:taskmanager/modules/navigation/widget/navigation.widget.dart';
 import 'package:taskmanager/modules/profile/view/profile.view.dart';
 import 'package:taskmanager/modules/search/bloc/search_bloc.dart';
@@ -35,18 +36,6 @@ class NavigationPage extends StatelessWidget {
             return TaskListBloc(taskRepository: getIt<TaskRepository>());
           },
         ),
-        BlocProvider<HomeBloc>(
-          create: (context) =>
-              HomeBloc(taskRepository: getIt<TaskRepository>()),
-        ),
-        BlocProvider<SearchBloc>(
-            create: (context) =>
-                SearchBloc(taskRepository: getIt<TaskRepository>())
-                  ..add(const SearchOpen())),
-        BlocProvider<CalendarBloc>(
-            create: (context) =>
-                CalendarBloc(taskRepository: getIt<TaskRepository>())
-                  ..add(const CalendarOpen())),
       ],
       child: MultiBlocListener(
         listeners: [
@@ -109,13 +98,13 @@ class NavigationView extends StatelessWidget {
               child: const Icon(Icons.add),
             ),
             bottomNavigationBar: const NavigationWidget(),
-            body: IndexedStack(
+            body: LazyIndexedStack(
               index: state.index,
               children: const [
                 HomePage(),
                 CalendarPage(),
                 SearchPage(),
-                ProfilePage(),
+                ProfilePage()
               ],
             ));
       },

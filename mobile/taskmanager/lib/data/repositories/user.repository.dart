@@ -49,7 +49,7 @@ class UserRepository {
     return _localSource.getToken();
   }
 
-  UserModel? getUserInfo() {
+  Future<UserModel?> getUserInfo() {
     return _localSource.getUserInfo();
   }
 

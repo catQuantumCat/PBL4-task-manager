@@ -46,7 +46,7 @@ class UserLocalDatasource {
     await _tokenBox.put(HiveConstant.userInfo, newUserInfo.toJsonString());
   }
 
-  UserModel? getUserInfo() {
+  Future<UserModel?> getUserInfo() async{
     final String? rawData = _tokenBox.get(HiveConstant.userInfo) as String?;
 
     if (rawData == null) {

@@ -8,11 +8,12 @@ import 'package:taskmanager/common/context_extension.dart';
 import 'package:taskmanager/common/widget/common_list_section.dart';
 
 import 'package:taskmanager/common/widget/common_title_appbar.widget.dart';
+import 'package:taskmanager/data/repositories/task.repository.dart';
+import 'package:taskmanager/main.dart';
 
 import 'package:taskmanager/modules/calendar/bloc/calendar_bloc.dart';
 import 'package:taskmanager/modules/calendar/widget/calendar_empty.widget.dart';
 import 'package:taskmanager/modules/calendar/widget/calendar_table.widget.dart';
-import 'package:taskmanager/modules/home/bloc/home_bloc.dart';
 
 import 'package:taskmanager/modules/task/view/task_list/task_list.view.dart';
 
@@ -21,7 +22,11 @@ class CalendarPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const CalendarView();
+    return BlocProvider<CalendarBloc>(
+      create: (context) => CalendarBloc(taskRepository: getIt<TaskRepository>())
+        ..add(const CalendarOpen()),
+      child: const CalendarView(),
+    );
   }
 }
 
@@ -37,19 +42,11 @@ class CalendarView extends StatelessWidget {
   }
 
   List<CommonListSection> _getSection(BuildContext context) {
-    if (context.read<CalendarBloc>().state.filteredTask.isEmpty &&
-        context.read<HomeBloc>().state.overdueList.isEmpty) {
+    if (context.read<CalendarBloc>().state.filteredTask.isEmpty) {
       return [];
     }
 
     return [
-      if (context.read<HomeBloc>().state.overdueList.isNotEmpty)
-        CommonListSection(
-          title: "Overdue",
-          child: TaskListPage(
-            taskList: context.read<HomeBloc>().state.overdueList,
-          ),
-        ),
       CommonListSection(
         title: DateFormat('dd MMM - EEEE')
             .format(context.read<CalendarBloc>().state.selectedDate),
