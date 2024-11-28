@@ -16,14 +16,6 @@ class RegisterPage extends StatelessWidget {
   const RegisterPage({super.key});
 
   void _listenToStateChanges(BuildContext context, RegisterState state) {
-    if (state.status == StateStatus.success) {
-      Navigator.pushNamedAndRemoveUntil(
-        context,
-        "/home",
-        (route) => false,
-      );
-    }
-
     if (state.status == StateStatus.failed) {
       DialogHelper.showError(context,
           title: "Cannot register",

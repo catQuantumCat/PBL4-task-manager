@@ -42,7 +42,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
     _changeAuthState(tokenString, emit);
   }
 
-  void _setCredentials(AuthSetInfo event, Emitter<AuthState> emit) {
+  void _setCredentials(AuthSetInfo event, Emitter<AuthState>  emit) {
     _userRepository.setCredentials(event.userCredentials);
     _changeAuthState(event.userCredentials.token, emit);
   }

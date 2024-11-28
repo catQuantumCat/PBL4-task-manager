@@ -22,7 +22,6 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
   final TaskRepository _taskRepository;
 
   Future<void> _onOpen(HomeOpen event, Emitter<HomeState> emit) async {
-    log("_onOpenRan!");
     emit(state.copyWith(status: StateStatus.loading));
     final DateTime today = DateTime.now();
     await emit.forEach<List<TaskModel>>(

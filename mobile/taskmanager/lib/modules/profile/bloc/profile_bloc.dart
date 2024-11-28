@@ -17,11 +17,12 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
     add(const ProfileOpen());
   }
 
-  void _onProfileOpen(ProfileOpen event, Emitter<ProfileState> emit) {
+  Future<void> _onProfileOpen(
+      ProfileOpen event, Emitter<ProfileState> emit) async {
     emit(state.copyWith(status: StateStatus.loading));
 
     try {
-      final UserModel? userInfo = _userRepository.getUserInfo();
+      final UserModel? userInfo = await _userRepository.getUserInfo();
       if (userInfo == null) {
         emit(const ProfileState.failed(errorMessage: "Cannot get user info!"));
         return;

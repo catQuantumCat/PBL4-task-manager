@@ -1,6 +1,5 @@
 import 'dart:developer';
 
-
 import 'package:equatable/equatable.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:table_calendar/table_calendar.dart';
@@ -22,8 +21,6 @@ class CalendarBloc extends Bloc<CalendarEvent, CalendarState> {
 
   Future<void> _onOpen(CalendarOpen event, Emitter<CalendarState> emit) async {
     await emit.forEach(_taskRepo.getTaskStream(), onData: (taskList) {
-      log("UPDATED", name: "OnCalendarOpens");
-
       final filteredTask = taskList
           .where((task) => isSameDay(task.deadTime, state.selectedDate))
           .toList();
