@@ -138,4 +138,3 @@ D:\PBL4\Code\PBL4-task-manager\backend\bin\Debug\net8.0\runtimes\win\lib\net6.0\
 D:\PBL4\Code\PBL4-task-manager\backend\bin\Debug\net8.0\runtimes\win\lib\net6.0\System.Windows.Extensions.dll
 D:\PBL4\Code\PBL4-task-manager\backend\bin\Debug\net8.0\Microsoft.AspNetCore.Authentication.JwtBearer.dll
 D:\PBL4\Code\PBL4-task-manager\backend\bin\Debug\net8.0\Microsoft.AspNetCore.Identity.EntityFrameworkCore.dll
-
