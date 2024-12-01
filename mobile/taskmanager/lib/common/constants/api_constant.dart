@@ -7,4 +7,4 @@ enum ApiConstants {
   const ApiConstants(this.value);
 }
 
-const String baseURL = "http://localhost:5245/backend";
+const String baseURL = String.fromEnvironment("BASE_API_URL");

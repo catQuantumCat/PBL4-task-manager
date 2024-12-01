@@ -7,6 +7,7 @@ export "FLUTTER_TARGET=/Users/quantumcat/Documents/Semester 5/PBL4/mobile/taskma
 export "FLUTTER_BUILD_DIR=build"
 export "FLUTTER_BUILD_NAME=1.0.0"
 export "FLUTTER_BUILD_NUMBER=1"
+export "DART_DEFINES=QkFTRV9BUElfVVJMPWh0dHBzOi8vZDZuaHNrMjMtNTI0NS5hc3NlLmRldnR1bm5lbHMubXMvYmFja2VuZA=="
 export "DART_OBFUSCATION=false"
 export "TRACK_WIDGET_CREATION=true"
 export "TREE_SHAKE_ICONS=false"

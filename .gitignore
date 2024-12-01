@@ -26,6 +26,38 @@ mobile/taskmanager/.flutter-plugins-dependencies
 mobile/taskmanager.pub-cache/
 mobile/taskmanager/pub/
 mobile/taskmanager/build/
+mobile/taskmanager/config.json
+
+# iOS/XCode related
+mobile/taskmanager/**/ios/**/*.mode1v3
+mobile/taskmanager/**/ios/**/*.mode2v3
+mobile/taskmanager/**/ios/**/*.moved-aside
+mobile/taskmanager/**/ios/**/*.pbxuser
+mobile/taskmanager/**/ios/**/*.perspectivev3
+mobile/taskmanager/**/ios/**/*sync/
+mobile/taskmanager/**/ios/**/.sconsign.dblite
+mobile/taskmanager/**/ios/**/.tags*
+mobile/taskmanager/**/ios/**/.vagrant/
+mobile/taskmanager/**/ios/**/DerivedData/
+mobile/taskmanager/**/ios/**/Icon?
+mobile/taskmanager/**/ios/**/Pods/
+mobile/taskmanager/**/ios/**/.symlinks/
+mobile/taskmanager/**/ios/**/profile
+mobile/taskmanager/**/ios/**/xcuserdata
+mobile/taskmanager/**/ios/.generated/
+mobile/taskmanager/**/ios/Flutter/.last_build_id
+mobile/taskmanager/**/ios/Flutter/App.framework
+mobile/taskmanager/**/ios/Flutter/Flutter.framework
+mobile/taskmanager/**/ios/Flutter/Flutter.podspec
+mobile/taskmanager/**/ios/Flutter/Generated.xcconfig
+mobile/taskmanager/**/ios/Flutter/ephemeral
+mobile/taskmanager/**/ios/Flutter/app.flx
+mobile/taskmanager/**/ios/Flutter/app.zip
+mobile/taskmanager/**/ios/Flutter/flutter_assets/
+mobile/taskmanager/**/ios/Flutter/flutter_export_environment.sh
+mobile/taskmanager/**/ios/ServiceDefinitions.json
+mobile/taskmanager/**/ios/Runner/GeneratedPluginRegistrant.*
+
 
 # Symbolication related
 mobile/taskmanager/app.*.symbols
