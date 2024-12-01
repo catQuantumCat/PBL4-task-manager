@@ -8,12 +8,14 @@ using backend.Interfaces;
 using backend.Models;
 using backend.Repository;
 using backend.Services;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.Data;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Internal;
 using Microsoft.Extensions.ObjectPool;
+using backend.Mappers;
 
 namespace backend.Controllers
 {
@@ -25,12 +27,15 @@ namespace backend.Controllers
         private readonly IAccountRepository _accountRepo;
         private readonly ITokenService _tokenService;
         private readonly SignInManager<AppUser> _signInManager;
-        public AccountController(UserManager<AppUser> userManager, ITokenService tokenService, SignInManager<AppUser> signInManager, IAccountRepository accountRepo)
+        
+        private readonly IPasswordService _passwordService;
+        public AccountController(UserManager<AppUser> userManager, ITokenService tokenService, SignInManager<AppUser> signInManager, IAccountRepository accountRepo, IPasswordService passwordService)
         {
             _userManager = userManager;
             _tokenService = tokenService;
             _signInManager = signInManager;
             _accountRepo = accountRepo;
+            _passwordService = passwordService;
         }        
         [HttpPost("register")]
         public async Task<IActionResult> Register([FromBody] RegisterDto registerDto)  
@@ -225,6 +230,63 @@ namespace backend.Controllers
                 Password = editUser.Password,
                 Email = user.user.Email
             });
+        }
+
+        [HttpPut("editUserClient")]
+        [Authorize]
+        public async Task<IActionResult> EditAccountClient([FromBody] EditUserClientDto editUserClientDto)
+        {
+            var token = Request.Headers["Authorization"].ToString().Replace("Bearer ", "");
+            if (_tokenService.isTokenExpired(token))
+            {
+                return Unauthorized("Token is expired") ;
+            }
+
+            var userId = await _tokenService.getAppUserIdFromToken(token);
+            
+            if(string.IsNullOrEmpty(userId))
+            {
+                return BadRequest("Invalid access token");
+            }
+
+            if(userId.Equals("UA"))
+            {
+                return Unauthorized();
+            }
+
+            var _user = await _userManager.FindByIdAsync(userId);
+
+            if(!(_user.UserName == editUserClientDto.Username))
+            {
+                return BadRequest("Username not found");
+            }
+
+            if(!_passwordService.VerifyPassword(_user.PasswordHash, editUserClientDto.OldPassword))
+            {
+                return BadRequest("Wrong password");
+            }
+
+            var user = await _accountRepo.UpdateAsync(editUserClientDto.toEditUserDto(), _userManager);
+
+            if(user == null)
+            {
+                return NotFound("User not found");
+            }
+
+            if(!user.Success)
+            {
+                return StatusCode(503, user.Error);
+            }
+
+            return Ok(new EditUserDto
+            {
+                Username = user.user.UserName,
+                Password = editUserClientDto.NewPassword,
+                Email = user.user.Email
+            });
+
+
+
         }
 
         [HttpDelete("delete")]

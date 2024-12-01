@@ -78,10 +78,10 @@ builder.Services.AddAuthentication(options => {
 });
 
 
-
 builder.Services.AddScoped<IMissionRepository, MissionRepository>();
 builder.Services.AddScoped<IAccountRepository, AccountRepository>();
 builder.Services.AddScoped<ITokenService, TokenService>();
+builder.Services.AddScoped<IPasswordService, PasswordService>();
 
 builder.Services.AddCors(options =>
 {
