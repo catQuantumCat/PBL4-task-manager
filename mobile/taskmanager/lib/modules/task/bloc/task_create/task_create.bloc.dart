@@ -73,7 +73,7 @@ class TaskCreateBloc extends Bloc<TaskCreateEvent, TaskCreateState> {
     }
 
     emit(state.copyWith(
-        status: NewHomeStatus.success,
+        status: NewHomeStatus.loading,
         missionName: event.missionName,
         description: event.description!.isEmpty ? "" : event.description!));
 

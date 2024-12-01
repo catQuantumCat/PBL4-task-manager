@@ -132,7 +132,9 @@ class _TaskDetailViewState extends State<TaskDetailView> {
                       return const TaskDetailWidget();
                     case DetailHomeStatus.loading:
                       return const CustomSheet(
-                          body: SingleChildScrollView(child: CircularProgressIndicator()));
+                          body: SingleChildScrollView(
+                              child:
+                                  Center(child: CircularProgressIndicator())));
                     case DetailHomeStatus.editing:
                       return TaskDetailEdit(
                           focusOnTitle:

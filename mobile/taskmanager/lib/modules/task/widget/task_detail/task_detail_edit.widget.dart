@@ -22,6 +22,8 @@ class _TaskDetailEditState extends State<TaskDetailEdit> {
   final FocusNode nameFieldFocusNode = FocusNode();
   final FocusNode descriptionFieldFocusNode = FocusNode();
 
+  bool hasChanged = false;
+
   @override
   void initState() {
     super.initState();
@@ -32,6 +34,18 @@ class _TaskDetailEditState extends State<TaskDetailEdit> {
     widget.focusOnTitle == true
         ? nameFieldFocusNode.requestFocus()
         : descriptionFieldFocusNode.requestFocus();
+
+    nameFieldController.addListener(_textFieldsListener);
+    descriptionFieldController.addListener(_textFieldsListener);
+  }
+
+  void _textFieldsListener() {
+    setState(() {
+      hasChanged = nameFieldController.text !=
+              context.read<TaskDetailBloc>().state.task!.name ||
+          descriptionFieldController.text !=
+              context.read<TaskDetailBloc>().state.task!.description;
+    });
   }
 
   void _cancelTapped() {
@@ -105,7 +119,7 @@ class _TaskDetailEditState extends State<TaskDetailEdit> {
       showSaveButton: true,
       header: "Edit Task",
       showCancelButton: true,
-      onSave: _saveTapped,
+      onSave: hasChanged == true ? _saveTapped : null,
       onCancel: _cancelTapped,
       body: body,
     );

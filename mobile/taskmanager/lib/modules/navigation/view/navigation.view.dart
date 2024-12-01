@@ -73,7 +73,8 @@ class NavigationView extends StatelessWidget {
     showModalBottomSheet(
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
         isScrollControlled: true,
-        enableDrag: false,
+
+        // enableDrag: false,
         context: context,
         builder: (BuildContext context) => BlocProvider(
               create: (context) =>
