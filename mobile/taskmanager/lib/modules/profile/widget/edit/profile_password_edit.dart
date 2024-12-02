@@ -1,13 +1,18 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
 import 'package:taskmanager/common/bottomSheet/custom_sheet.dart';
+import 'package:taskmanager/common/constants/state_status.constant.dart';
 import 'package:taskmanager/common/context_extension.dart';
+import 'package:taskmanager/common/helpers/dialog_helper.dart';
 import 'package:taskmanager/common/toast/common_toast.dart';
 import 'package:taskmanager/common/utils/ux_writing.util.dart';
 import 'package:taskmanager/common/utils/validation.utils.dart';
 
 import 'package:taskmanager/common/widget/common_textfield_section.dart';
 import 'package:taskmanager/common/widget/common_collapsed_textfield.dart';
+
+import 'package:taskmanager/modules/profile/bloc/profile_bloc.dart';
 
 class ProfilePasswordEdit extends StatefulWidget {
   const ProfilePasswordEdit({super.key});
@@ -57,97 +62,86 @@ class _ProfilePasswordEditState extends State<ProfilePasswordEdit> {
   }
 
   void _onSave(BuildContext sheetContext) {
-    if (_newController.text != _confirmController.text) {
-      showDialog(
-          context: sheetContext,
-          builder: (dialogContext) {
-            return AlertDialog(
-              actions: [
-                TextButton(
-                    onPressed: () => Navigator.pop(dialogContext),
-                    child: const Text("Try again"))
-              ],
-              title: const Text("Cannot proceed"),
-              content: const Text(
-                  "Your confirmation password does not match your new password"),
-            );
-          });
-      return;
-    }
     final passwordValidation =
         ValidationUtils.validatePassword(_newController.text);
-
-    if (passwordValidation != null) {
+    if (_newController.text != _confirmController.text) {
+      DialogHelper.showError(
+        context,
+        title: "Cannot proceed",
+        content: "Your confirmation password does not match your new password",
+      );
+    } else if (passwordValidation != null) {
       {
-        showDialog(
-            context: sheetContext,
-            builder: (dialogContext) {
-              return AlertDialog(
-                actions: [
-                  TextButton(
-                      onPressed: () => Navigator.pop(dialogContext),
-                      child: const Text("Try again"))
-                ],
-                title: const Text("Cannot proceed"),
-                content: Text(passwordValidation),
-              );
-            });
-        return;
+        DialogHelper.showError(
+          context,
+          title: "Cannot proceed",
+          content: passwordValidation,
+        );
       }
+    } else {
+      context.read<ProfileBloc>().add(ProfileSetInfo(
+          password: _passwordFieldController.text,
+          newPassword: _newController.text));
     }
-    CommonToast.showStatusToast(sheetContext, "Password updated sucessfully");
 
-    Navigator.pop<Map<String, String>>(sheetContext, {
-      'new_password': _newController.text,
-      'password': _passwordFieldController.text,
-    });
+    _passwordFieldController.clear();
   }
 
   @override
   Widget build(BuildContext context) {
-    return CustomSheet(
-      showCancelButton: true,
-      backgroundColor: context.palette.scaffoldBackgroundDim,
-      showHandle: false,
-      onCancel: () => _onCancel(context),
-      onSave: _isSaveEnabled == false ? null : () => _onSave(context),
-      header: "Edit email",
-      body: ListView(
-        children: [
-          const SizedBox(
-            height: 16,
-          ),
-          CommonTextFieldSection(
-            items: [
-              CommonCollapsedTextField(
-                label: "Current",
-                hintText: "current password",
-                controller: _passwordFieldController,
-                isSecured: true,
-              )
-            ],
-          ),
-          const SizedBox(
-            height: 16,
-          ),
-          CommonTextFieldSection(
-            items: [
-              CommonCollapsedTextField(
-                label: "New",
-                hintText: "enter password",
-                controller: _newController,
-                isSecured: true,
-              ),
-              CommonCollapsedTextField(
-                label: "Confirm",
-                hintText: "re-enter password",
-                controller: _confirmController,
-                isSecured: true,
-              ),
-            ],
-            hintText: UXWritingEnum.authInvalidPassword.value,
-          ),
-        ],
+    return BlocListener<ProfileBloc, ProfileState>(
+      listener: (context, state) {
+        if (state.status == StateStatus.success) {
+          CommonToast.showStatusToast(context, "Password updated sucessfully");
+
+          Navigator.pop(context);
+        }
+      },
+      child: CustomSheet(
+        showSaveButton: true,
+        showCancelButton: true,
+        backgroundColor: context.palette.scaffoldBackgroundDim,
+        showHandle: false,
+        onCancel: () => _onCancel(context),
+        onSave: _isSaveEnabled == false ? null : () => _onSave(context),
+        header: "Edit email",
+        body: ListView(
+          children: [
+            const SizedBox(
+              height: 16,
+            ),
+            CommonTextFieldSection(
+              items: [
+                CommonCollapsedTextField(
+                  label: "Current",
+                  hintText: "current password",
+                  controller: _passwordFieldController,
+                  isSecured: true,
+                )
+              ],
+            ),
+            const SizedBox(
+              height: 16,
+            ),
+            CommonTextFieldSection(
+              items: [
+                CommonCollapsedTextField(
+                  label: "New",
+                  hintText: "enter password",
+                  controller: _newController,
+                  isSecured: true,
+                ),
+                CommonCollapsedTextField(
+                  label: "Confirm",
+                  hintText: "re-enter password",
+                  controller: _confirmController,
+                  isSecured: true,
+                ),
+              ],
+              hintText: UXWritingEnum.authInvalidPassword.value,
+            ),
+          ],
+        ),
       ),
     );
   }

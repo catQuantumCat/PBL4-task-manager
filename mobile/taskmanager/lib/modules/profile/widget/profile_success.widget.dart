@@ -9,53 +9,30 @@ import 'package:taskmanager/modules/profile/widget/edit/profile_email_edit.dart'
 import 'package:taskmanager/common/widget/common_textfield_section.dart';
 
 import 'package:taskmanager/modules/profile/widget/edit/profile_password_edit.dart';
-import 'package:taskmanager/modules/profile/widget/edit/profile_username_edit.dart';
 
 class ProfileSuccessWidget extends StatelessWidget {
-  const ProfileSuccessWidget({super.key, required this.state});
-
-  final ProfileState state;
-
-  Future<void> _onUsernameTapped(BuildContext context) async {
-    dynamic v = await CommonBottomSheet.show(
-      context: context,
-      isDismissible: false,
-      heightRatio: SheetConstants.maxHeight,
-      child: const ProfileUsernameEdit(),
-    );
-
-    if (v is Map<String, String> && context.mounted) {
-      context.read<ProfileBloc>().add(ProfileSetInfo(
-          username: v["username"], password: v["password"] ?? ""));
-    }
-  }
+  const ProfileSuccessWidget({super.key});
 
   Future<void> _onEmailTapped(BuildContext context) async {
-    dynamic v = await CommonBottomSheet.show(
+    await CommonBottomSheet.show(
         context: context,
         isDismissible: false,
         heightRatio: SheetConstants.maxHeight,
-        // builder: (sheetContext) => const ProfileEmailEdit(),
-        child: const ProfileEmailEdit());
-
-    if (v is Map<String, String> && context.mounted) {
-      context.read<ProfileBloc>().add(
-          ProfileSetInfo(email: v["email"], password: v["password"] ?? ""));
-    }
+        child: BlocProvider.value(
+          value: context.read<ProfileBloc>(),
+          child: const ProfileEmailEdit(),
+        ));
   }
 
   Future<void> _onPasswordTapped(BuildContext context) async {
-    dynamic v = await CommonBottomSheet.show(
+    await CommonBottomSheet.show(
         context: context,
         isDismissible: false,
         heightRatio: SheetConstants.maxHeight,
-        // builder: (sheetContext) => const ProfilePasswordEdit(),
-        child: const ProfilePasswordEdit());
-
-    if (v is Map<String, String> && context.mounted) {
-      context.read<ProfileBloc>().add(ProfileSetInfo(
-          newPassword: v["new_password"], password: v["password"] ?? ""));
-    }
+        child: BlocProvider.value(
+          value: context.read<ProfileBloc>(),
+          child: const ProfilePasswordEdit(),
+        ));
   }
 
   @override
@@ -63,22 +40,6 @@ class ProfileSuccessWidget extends StatelessWidget {
     return ListView(
       children: [
         const SizedBox(height: 16),
-        CommonTextFieldSection(
-          groupLabel: "Username",
-          items: [
-            InkWell(
-              onTap: () => _onUsernameTapped(context),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Text(state.userInfo?.username ?? "",
-                      style: context.appTextStyles.body2),
-                  const Icon(Icons.chevron_right)
-                ],
-              ),
-            ),
-          ],
-        ),
         CommonTextFieldSection(
           groupLabel: "Email",
           items: [
@@ -88,7 +49,7 @@ class ProfileSuccessWidget extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   Text(
-                    state.userInfo?.email ?? "",
+                    context.read<ProfileBloc>().state.userInfo?.email ?? "",
                     style: context.appTextStyles.body2,
                   ),
                   const Icon(Icons.chevron_right)
@@ -106,7 +67,7 @@ class ProfileSuccessWidget extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   Text(
-                    " Change Password",
+                    "Change Password",
                     style: context.appTextStyles.body2,
                   ),
                 ],
