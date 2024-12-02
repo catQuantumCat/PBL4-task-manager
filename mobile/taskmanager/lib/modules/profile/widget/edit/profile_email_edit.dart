@@ -2,13 +2,10 @@ import 'dart:developer';
 
 import 'package:flutter/material.dart';
 
-import 'package:taskmanager/common/bottomSheet/common_bottom_sheet.dart';
 import 'package:taskmanager/common/bottomSheet/custom_sheet.dart';
 import 'package:taskmanager/common/context_extension.dart';
 import 'package:taskmanager/common/toast/common_toast.dart';
 import 'package:taskmanager/common/utils/validation.utils.dart';
-import 'package:taskmanager/common/widget/common_title_appbar.widget.dart';
-import 'package:taskmanager/main.dart';
 
 import 'package:taskmanager/common/widget/common_textfield_section.dart';
 import 'package:taskmanager/common/widget/common_collapsed_textfield.dart';

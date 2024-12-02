@@ -8,7 +8,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace backend.Migrations
 {
     /// <inheritdoc />
-    public partial class Init : Migration
+    public partial class init : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -166,6 +166,7 @@ namespace backend.Migrations
                         .Annotation("SqlServer:Identity", "1, 1"),
                     MissionName = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Description = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Priority = table.Column<int>(type: "int", nullable: true),
                     CreateDate = table.Column<DateTime>(type: "datetime2", nullable: false),
                     DeadDate = table.Column<DateTime>(type: "datetime2", nullable: false),
                     Status = table.Column<bool>(type: "bit", nullable: false),
@@ -187,8 +188,8 @@ namespace backend.Migrations
                 columns: new[] { "Id", "ConcurrencyStamp", "Name", "NormalizedName" },
                 values: new object[,]
                 {
-                    { "55a4b5fa-110b-4967-b1d3-a4b7ffc39c82", null, "Admin", "ADMIN" },
-                    { "69f60206-b34d-457b-801c-178297fa68d3", null, "User", "USER" }
+                    { "9ff70946-485b-416f-a36c-1d22c92a5380", null, "Admin", "ADMIN" },
+                    { "f36d59b1-7ea4-48f9-b1a0-4f6711753649", null, "User", "USER" }
                 });
 
             migrationBuilder.CreateIndex(

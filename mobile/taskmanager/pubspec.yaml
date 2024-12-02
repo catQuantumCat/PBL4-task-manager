@@ -48,6 +48,7 @@ dependencies:
   table_calendar:
     path: ./table_calendar-3.1.2-fork/
   fluttertoast: ^8.2.8
+  simple_gesture_detector: ^0.2.1
   # flutter_abc: path: ./flutter_abcd-0.4.1-hijacking/
 
 dev_dependencies:

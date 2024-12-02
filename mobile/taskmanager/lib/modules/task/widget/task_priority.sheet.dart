@@ -1,5 +1,4 @@
 import 'package:flutter/cupertino.dart';
-import 'package:flutter/material.dart';
 import 'package:taskmanager/common/context_extension.dart';
 import 'package:taskmanager/common/theme/color_enum.dart';
 

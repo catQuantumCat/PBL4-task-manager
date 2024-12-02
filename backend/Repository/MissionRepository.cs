@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using backend.Data;
 using backend.Dtos;
 using backend.Dtos.Mission;
+using backend.Helper;
 using backend.Interfaces;
 using backend.Models;
 using Microsoft.EntityFrameworkCore;
@@ -48,13 +49,38 @@ namespace backend.Repository
 
         public async Task<List<Mission>> GetByAppUserIdAsync(string appUserId)
         {
+            
             return await _context.Missions.Where(x => x.AppUserId == appUserId).ToListAsync();
+        }
+
+
+        public async Task<List<Mission>> GetByAppUserIdWithQueryAsync(string appUserId, QueryObject query)
+        {
+            var missions =  _context.Missions.AsQueryable();
+            if(!string.IsNullOrWhiteSpace(query.Name))
+            {
+                missions = missions.Where(x => x.MissionName.Contains(query.Name));
+            }  
+
+            if(!string.IsNullOrWhiteSpace(query.SortBy))
+            {
+                if(query.SortBy.Equals("DeadDate", StringComparison.OrdinalIgnoreCase))
+                {
+                    missions = query.isDescending ? missions.OrderByDescending(s => s.DeadDate) : missions.OrderBy(s => s.DeadDate);
+                }
+                if(query.SortBy.Equals("CreateDate", StringComparison.OrdinalIgnoreCase))
+                {
+                    missions = query.isDescending ? missions.OrderByDescending(s => s.CreateDate) : missions.OrderBy(s => s.CreateDate);
+                }
+            }
+
+            return await missions.Where(x => x.AppUserId == appUserId).ToListAsync();
         }
 
         public async Task<Mission?> GetByIdAsync(int id)
         {
             return await _context.Missions.FindAsync(id);
-        }
+        }   
 
         public async Task<Mission?> UpdateAsync(int id, UpdateRequestMissionDto updateRequestMissionDto)
         {
@@ -66,6 +92,7 @@ namespace backend.Repository
 
             missionModel.MissionName = updateRequestMissionDto.name;
             missionModel.Description = updateRequestMissionDto.description;
+            missionModel.Priority = updateRequestMissionDto.priority;
             missionModel.DeadDate = updateRequestMissionDto.deadTime;
             missionModel.Status = updateRequestMissionDto.status;
 

@@ -85,18 +85,24 @@ class LoginView extends StatelessWidget {
                     );
                   default:
                     return Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        const Text(
-                          "Login",
-                          style: TextStyle(
-                              fontSize: 28, fontWeight: FontWeight.bold),
+                        Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 12),
+                          child: Text(
+                            "Login",
+                            style: context.appTextStyles.heading2,
+                          ),
                         ),
                         const SizedBox(height: 4),
-                        const Text(
-                          "Add your username and password.",
-                          style: TextStyle(fontSize: 16),
+                        Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 12),
+                          child: Text(
+                            "Add your username and password.",
+                            style: context.appTextStyles.body1,
+                          ),
                         ),
-                        const SizedBox(height: 32),
+                        const SizedBox(height: 28),
                         LoginForm(
                           formkey: _formkey,
                           usernameFieldController: _usernameFieldController,

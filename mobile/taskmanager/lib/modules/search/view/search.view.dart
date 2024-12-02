@@ -4,6 +4,8 @@ import 'package:taskmanager/common/constants/state_status.constant.dart';
 import 'package:taskmanager/common/context_extension.dart';
 import 'package:taskmanager/common/widget/common_list_section.dart';
 import 'package:taskmanager/common/widget/common_title_appbar.widget.dart';
+import 'package:taskmanager/data/repositories/task.repository.dart';
+import 'package:taskmanager/main.dart';
 
 import 'package:taskmanager/modules/search/bloc/search_bloc.dart';
 import 'package:taskmanager/modules/search/widget/appbar_searchbar.widget.dart';
@@ -17,7 +19,11 @@ class SearchPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const SearchView();
+    return BlocProvider(
+      create: (context) => SearchBloc(taskRepository: getIt<TaskRepository>())
+        ..add(const SearchOpen()),
+      child: const SearchView(),
+    );
   }
 }
 

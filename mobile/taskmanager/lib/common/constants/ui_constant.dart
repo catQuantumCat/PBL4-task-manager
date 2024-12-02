@@ -1,3 +1,5 @@
+import 'package:flutter/material.dart';
+
 abstract class UIConstant {
   static double padding = 16;
   static double dividerThick = 1;
@@ -10,5 +12,5 @@ abstract class UIConstant {
 
   static double fullPageIconSize = 128;
 
-  static double bottomNavBarHeight = 64;
+  static double bottomNavBarHeight = kBottomNavigationBarHeight + 35;
 }

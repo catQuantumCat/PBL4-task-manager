@@ -26,7 +26,7 @@ class CommonBottomSheet {
             ),
             child: child),
         sheetAnimationStyle: AnimationStyle(
-            curve: Curves.easeIn, duration: const Duration(milliseconds: 400)));
+            curve: Curves.easeIn, duration: const Duration(milliseconds: 300)));
     return v;
   }
 }

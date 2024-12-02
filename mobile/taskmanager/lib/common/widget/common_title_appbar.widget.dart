@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:sliver_tools/sliver_tools.dart';
+
 import 'package:taskmanager/common/context_extension.dart';
 
 class CommonTitleAppbar extends StatefulWidget {
@@ -86,6 +86,7 @@ class _CommonTitleAppbarState extends State<CommonTitleAppbar> {
             flexibleSpace: widget._compactEnabled == true
                 ? null
                 : FlexibleSpaceBar(
+                    centerTitle: false,
                     titlePadding: const EdgeInsets.only(
                         left: 16, right: 16, top: 0, bottom: 16),
                     title: Text(widget._title,

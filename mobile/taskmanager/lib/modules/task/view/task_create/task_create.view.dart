@@ -1,7 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:fluttertoast/fluttertoast.dart';
 import 'package:taskmanager/common/constants/ui_constant.dart';
 import 'package:taskmanager/common/context_extension.dart';
 
@@ -115,7 +114,7 @@ class _TaskCreateViewState extends State<TaskCreateView> {
         .clamp(0.3, 0.9);
     return BlocConsumer<TaskCreateBloc, TaskCreateState>(
       listener: (context, state) {
-        if (state.status == NewHomeStatus.initial) {
+        if (state.status == NewHomeStatus.success) {
           taskFieldController.clear();
           descriptionFieldController.clear();
           CommonToast.showStatusToast(context, "New task added");

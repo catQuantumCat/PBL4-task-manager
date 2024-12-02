@@ -5,10 +5,11 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:get_it/get_it.dart';
 import 'package:hive/hive.dart';
+import 'package:taskmanager/app_bloc_observer.dart';
 import 'package:taskmanager/common/theme/palette.dart';
 import 'package:taskmanager/common/theme/text_style.dart';
 import 'package:taskmanager/common/theme/theme_sheet.dart';
-import 'package:taskmanager/common/toast/common_toast.dart';
+
 import 'package:taskmanager/config/router/app_routes.dart';
 import 'package:path_provider/path_provider.dart' as path_provider;
 import 'package:taskmanager/data/repositories/user.repository.dart';
@@ -28,6 +29,8 @@ void main() async {
 
 Future<void> initialize() async {
   WidgetsFlutterBinding.ensureInitialized();
+
+  Bloc.observer = AppBlocObserver();
 
   final appDir = await path_provider.getApplicationDocumentsDirectory();
   Hive.init(appDir.path);

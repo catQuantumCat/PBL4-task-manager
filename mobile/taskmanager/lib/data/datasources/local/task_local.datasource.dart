@@ -20,8 +20,7 @@ class TaskLocalDatasource {
 
   void syncTaskList(List<TaskModel> remoteTaskList) async {
     if (_taskStreamController.isClosed) return;
-    developer.log('Syncing task list with remote tasks',
-        name: 'TaskLocalDatasource');
+
     _tasks = remoteTaskList;
     _taskStreamController.add(_tasks);
   }
@@ -36,14 +35,11 @@ class TaskLocalDatasource {
       return;
     }
 
-    developer.log('Task ID not found: ${remoteTask.id}',
-        name: 'TaskLocalDatasource', level: 900);
     throw (Exception("ID not found - EditTask localTaskList"));
   }
 
   Future<void> deleteTask(int taskID) async {
     if (_taskStreamController.isClosed) return;
-    developer.log('Deleting task: $taskID', name: 'TaskLocalDatasource');
 
     final index = _tasks.indexWhere((task) => task.id == taskID);
 
@@ -53,26 +49,19 @@ class TaskLocalDatasource {
 
       return;
     }
-    developer.log('Task ID not found: $taskID',
-        name: 'TaskLocalDatasource', level: 900);
+
     throw (Exception("ID not found - RemoveTask localTaskList"));
   }
 
   Future<void> createTask(TaskModel taskFromRemote) async {
     if (_taskStreamController.isClosed) return;
-    developer.log('Creating task: ${taskFromRemote.id}',
-        name: 'TaskLocalDatasource');
 
     final index = _tasks.indexWhere((task) => task.id == taskFromRemote.id);
 
     if (index == -1) {
       _tasks.add(taskFromRemote);
-      developer.log('Task created: ${taskFromRemote.id}',
-          name: 'TaskLocalDatasource');
     } else {
       _tasks[index] = taskFromRemote;
-      developer.log('Task updated: ${taskFromRemote.id}',
-          name: 'TaskLocalDatasource');
     }
     _taskStreamController.add(_tasks);
   }
