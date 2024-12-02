@@ -5,16 +5,15 @@ import 'package:taskmanager/common/context_extension.dart';
 import 'package:taskmanager/common/toast/common_toast.dart';
 import 'package:taskmanager/data/repositories/task.repository.dart';
 import 'package:taskmanager/main.dart';
-import 'package:taskmanager/modules/calendar/bloc/calendar_bloc.dart';
+
 import 'package:taskmanager/modules/calendar/view/calendar.view.dart';
-import 'package:taskmanager/modules/home/bloc/home_bloc.dart';
 
 import 'package:taskmanager/modules/home/view/home.view.dart';
 import 'package:taskmanager/modules/navigation/bloc/navigation_bloc.dart';
 import 'package:taskmanager/modules/navigation/widget/lazy_indexed_stack.dart';
 import 'package:taskmanager/modules/navigation/widget/navigation.widget.dart';
 import 'package:taskmanager/modules/profile/view/profile.view.dart';
-import 'package:taskmanager/modules/search/bloc/search_bloc.dart';
+
 import 'package:taskmanager/modules/search/view/search.view.dart';
 import 'package:taskmanager/modules/task/bloc/task_create/task_create.bloc.dart';
 import 'package:taskmanager/modules/task/bloc/task_list/task_list.bloc.dart';

@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:taskmanager/data/datasources/local/user_local.datasource.dart';
 import 'package:taskmanager/data/datasources/remote/user_remote.datasource.dart';
+import 'package:taskmanager/data/dtos/auth_edit.dto.dart';
 import 'package:taskmanager/data/dtos/auth_login.dto.dart';
 import 'package:taskmanager/data/dtos/auth_register.dto.dart';
 import 'package:taskmanager/data/dtos/auth_response.dto.dart';
@@ -45,16 +46,26 @@ class UserRepository {
     _localSource.setCredentials(userCredentials);
   }
 
+  Future<void> editCredential(
+      {required UserModel userData,
+      required String oldPassword,
+      required String? newPassword}) async {
+    final UserModel newData = await _remoteSource.changeCredentials(AuthEditDTO(
+        username: userData.username,
+        email: userData.email,
+        oldPassword: oldPassword,
+        newPassword: newPassword ?? oldPassword));
+
+    if (newPassword == null) _localSource.setUserInfo(newData);
+    return;
+  }
+
   String? getToken() {
     return _localSource.getToken();
   }
 
   Future<UserModel?> getUserInfo() {
     return _localSource.getUserInfo();
-  }
-
-  Future<void> setUserInfo(UserModel newUserInfo) async {
-    return _localSource.setUserInfo(newUserInfo);
   }
 
   Future<void> dispose() async {

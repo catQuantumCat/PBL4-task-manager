@@ -9,6 +9,7 @@ abstract class DialogHelper {
     BuildContext context, {
     String title = "Error",
     String content = "Something went wrong",
+    void Function()? onPressed
   }) async {
     return await _showDialog(
       context,
@@ -19,7 +20,7 @@ abstract class DialogHelper {
         contentTextStyle: navigatorContext.appTextStyles.body1,
         actions: [
           TextButton(
-            onPressed: () => Navigator.of(context).pop(),
+            onPressed: onPressed ?? () => Navigator.of(context).pop(),
             child: const Text('Try again'),
           )
         ],

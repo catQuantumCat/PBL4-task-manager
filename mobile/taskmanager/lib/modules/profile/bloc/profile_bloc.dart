@@ -35,17 +35,16 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
     }
   }
 
-  void _onSetInfo(ProfileSetInfo event, Emitter<ProfileState> emit) {
+  void _onSetInfo(ProfileSetInfo event, Emitter<ProfileState> emit) async {
     if (state.userInfo == null) {
       emit(const ProfileState.failed(errorMessage: "Cannot get user info!"));
       return;
     }
     emit(state.copyWith(status: StateStatus.loading));
 
-    final newUserInfo =
-        state.userInfo!.copyWith(username: event.username, email: event.email);
+    final newUserInfo = state.userInfo!.copyWith(email: event.email);
 
-    if (newUserInfo == state.userInfo) {
+    if (newUserInfo == state.userInfo && event.newPassword == null) {
       emit(const ProfileState.failed(errorMessage: "Duplicated data"));
       return;
     }
@@ -56,10 +55,14 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
     }
 
     try {
-      _userRepository.setUserInfo(newUserInfo);
+      await _userRepository.editCredential(
+          userData: newUserInfo,
+          oldPassword: event.password,
+          newPassword: event.newPassword);
       emit(state.copyWith(status: StateStatus.success, userInfo: newUserInfo));
     } catch (e) {
-      emit(ProfileState.failed(errorMessage: e.toString()));
+      emit(state.copyWith(
+          status: StateStatus.failed, errorMessage: e.toString()));
     }
   }
 }

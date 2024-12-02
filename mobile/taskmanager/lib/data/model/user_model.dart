@@ -26,15 +26,14 @@ class UserModel {
 
   String toJsonString() => json.encode(toJson());
 
-  factory UserModel.fromJsonString(String source) => UserModel.fromJson(json.decode(source) as Map<String, dynamic>);
+  factory UserModel.fromJsonString(String source) =>
+      UserModel.fromJson(json.decode(source) as Map<String, dynamic>);
 
   @override
   bool operator ==(covariant UserModel other) {
     if (identical(this, other)) return true;
-  
-    return 
-      other.email == email &&
-      other.username == username;
+
+    return other.email == email && other.username == username;
   }
 
   @override
