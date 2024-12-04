@@ -17,9 +17,13 @@ window.editTask = async(taskId) => {
 
 window.deleteTask = async(taskId) => {
     try {
-        taskRepo.deleteTask(taskId);
+        await taskRepo.deleteTask(taskId);
         window.location.reload();
     } catch (err) {
         console.log("Something went wrong" + err);
     }
+}
+
+window.addTask = async() => {
+    parent.frames['content'].location.href = `../../html/task/add-task.html?username='${encodeURIComponent(username)}'`;
 }
