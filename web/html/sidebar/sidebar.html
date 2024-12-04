@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="../../css/sidebar/sidebar.css">
+</head>
+<body>
+    <div class="sidebar">
+        <h3>Admin</h3>
+        <ul>
+            <li class="active">Manage Users</li>
+            <li id="logout">Log out</li>
+        </ul>
+    </div>
+</body>
+<script>
+    document.getElementById("logout").onclick = function() {
+        window.top.location.href = "../login/login.html";
+        window.top.history.replaceState(null, null, "../html/login/login.html");
+    }
+</script>
+</html>

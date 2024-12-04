@@ -29,8 +29,6 @@ export default class TaskRepository {
     }
 
     async updateTask(id, taskModel) {
-        console.log(id);
-        console.log(JSON.stringify(taskModel));
         return fetch(`http://localhost:5245/backend/mission/updateAdmin/${id}`, {
             method: 'PUT',
             headers: {
@@ -59,5 +57,22 @@ export default class TaskRepository {
             }
             alert("Xoa task thanh cong");
         })
+    }
+
+    async addTask(taskModel, username) {
+        console.log(JSON.stringify(taskModel));
+        return fetch(`http://localhost:5245/backend/mission/createAdmin?username=${username}`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(taskModel)
+        })
+        .then(response => {
+            if (!response.ok) {
+                throw new Error('Network response was not ok');
+            }
+            return response.json();
+        });
     }
 }

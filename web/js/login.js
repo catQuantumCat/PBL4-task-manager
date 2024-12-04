@@ -24,7 +24,7 @@ document.getElementById("login").onclick = function() {
     loginRepo.Login(loginDto)
     .then(data => {
         console.log('Success:', data);
-        window.location.href = "../admin.html"
+        window.location.href = "../index.html"
     })
     .catch((error) => {
         console.error('Error:', error);

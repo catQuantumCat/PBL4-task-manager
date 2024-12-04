@@ -25,10 +25,12 @@ document.getElementById("submit-btn").onclick = function () {
     .then(data => {
         console.log('Success:', data);
         alert("Sua Task thanh cong");
+        parent.frames['content'].location.href = "javascript:history.back()";
     })
     .catch((error) => {
         console.error('Error:', error);
     }); 
+    
 }
 
 

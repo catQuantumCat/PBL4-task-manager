@@ -14,6 +14,7 @@ document.getElementById("add_user").onclick = function() {
     .then(data => {
         console.log('Success:', data);
         alert("Them nguoi dung thanh cong");
+        parent.frames['content'].location.href = "../../html/user/user-manager.html";
     })
     .catch((error) => {
         console.error('Error:', error);
