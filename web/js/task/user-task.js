@@ -3,6 +3,7 @@ import TaskViewModel from "../../viewmodel/TaskViewModel/TaskViewModel.js";
 
 const urlParams = new URLSearchParams(window.location.search);
 const username = urlParams.get('username').replace(/'/g, '');
+document.getElementById("username").innerHTML = "List tasks of " + username;
 const taskRepo = new TaskRepository();
 const taskViewModel = new TaskViewModel();
 
