@@ -17,6 +17,7 @@ document.getElementById("add_user").onclick = function() {
         parent.frames['content'].location.href = "../../html/user/user-manager.html";
     })
     .catch((error) => {
+        alert("Them nguoi dung that bai");
         console.error('Error:', error);
     }); 
 }
