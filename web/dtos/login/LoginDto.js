@@ -1,7 +1,7 @@
 export default class LoginDto {
-    constructor({ userName, email }) {
-        this.userName = userName;
-        this.email = email;
+    constructor({ username, password }) {
+        this.username = username;
+        this.password = password;
     }
 };
 

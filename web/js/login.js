@@ -21,13 +21,6 @@ document.getElementById("login").onclick = function() {
 
     const loginRepo = new LoginRepository();
     
-    loginRepo.Login(loginDto)
-    .then(data => {
-        console.log('Success:', data);
-        window.location.href = "../admin.html"
-    })
-    .catch((error) => {
-        console.error('Error:', error);
-    });    
+    loginRepo.Login(loginDto);
 }
 

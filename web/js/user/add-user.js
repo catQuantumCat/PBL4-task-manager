@@ -14,8 +14,10 @@ document.getElementById("add_user").onclick = function() {
     .then(data => {
         console.log('Success:', data);
         alert("Them nguoi dung thanh cong");
+        parent.frames['content'].location.href = "../../html/user/user-manager.html";
     })
     .catch((error) => {
+        alert("Them nguoi dung that bai");
         console.error('Error:', error);
     }); 
 }

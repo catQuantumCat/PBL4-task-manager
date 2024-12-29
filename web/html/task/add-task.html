@@ -7,16 +7,12 @@
     <link rel="stylesheet" href="../../css/task/add-task.css">
 </head>
 <body>
+    <a href="javascript:history.back()" class="back-arrow" title="Go Back">&#8592;</a>
 
     <div class="container">
         <h1>Add New Task</h1>
         
-        <form action="/submit-task" method="POST">
-            <div class="form-group">
-                <label for="id">Task ID</label>
-                <input type="text" id="id" name="id" placeholder="Enter Task ID" required>
-            </div>
-
+        <div>
             <div class="form-group">
                 <label for="name">Task Name</label>
                 <input type="text" id="name" name="name" placeholder="Enter Task Name" required>
@@ -24,15 +20,16 @@
 
             <div class="form-group">
                 <label for="description">Description</label>
-                <textarea id="description" name="description" placeholder="Enter Task Description" rows="4" required></textarea>
+                <textarea id="description" name="description" placeholder="Enter Task Description" rows="4"></textarea>
             </div>
 
             <div class="form-group">
                 <label for="priority">Priority</label>
                 <select id="priority" name="priority" required>
-                    <option value="Low">Low</option>
-                    <option value="Medium">Medium</option>
-                    <option value="High">High</option>
+                    <option value="0">Priority 0</option>
+                    <option value="1">Priority 1</option>
+                    <option value="2">Priority 2</option>
+                    <option value="3">Priority 3</option>
                 </select>
             </div>
 
@@ -49,17 +46,17 @@
             <div class="form-group">
                 <label for="status">Status</label>
                 <select id="status" name="status" required>
-                    <option value="Pending">Pending</option>
-                    <option value="In Progress">In Progress</option>
-                    <option value="Completed">Completed</option>
+                    <option value="true">True</option>
+                    <option value="false">False</option>
                 </select>
             </div>
 
             <div class="button-container">
-                <button type="submit" class="submit-btn">Add Task</button>
+                <button id="submit-btn" onclick="addTask()" class="submit-btn">Add Task</button>
             </div>
-        </form>
+        </div>
     </div>
 
 </body>
+<script type="module" src="../../js/task/add-task.js"></script>
 </html>
