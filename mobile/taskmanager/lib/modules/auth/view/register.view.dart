@@ -68,6 +68,15 @@ class _RegisterViewState extends State<RegisterView> {
     _passwordFieldController.addListener(_validate);
   }
 
+  @override
+  void dispose() {
+    _emailFieldController.dispose();
+    _usernameFieldController.dispose();
+    _passwordFieldController.dispose();
+
+    super.dispose();
+  }
+
   void _validate() {
     setState(() {
       _isValidated =

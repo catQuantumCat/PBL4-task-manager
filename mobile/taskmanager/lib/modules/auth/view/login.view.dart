@@ -90,6 +90,13 @@ class _LoginViewState extends State<LoginView> {
   }
 
   @override
+  void dispose() {
+    _usernameFieldController.dispose();
+    _passwordFieldController.dispose();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return BlocConsumer<LoginBloc, LoginState>(
       listener: (context, state) {
