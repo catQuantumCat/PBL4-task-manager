@@ -13,13 +13,12 @@ class ProfileOpen extends ProfileEvent {
 }
 
 class ProfileSetInfo extends ProfileEvent {
-  final String? username;
   final String? email;
   final String? newPassword;
   final String password;
 
-  const ProfileSetInfo({this.username, this.email, required this.password, this.newPassword});
+  const ProfileSetInfo({this.email, required this.password, this.newPassword});
 
   @override
-  List<Object?> get props => [username, email, password, newPassword];
+  List<Object?> get props => [email, password, newPassword];
 }

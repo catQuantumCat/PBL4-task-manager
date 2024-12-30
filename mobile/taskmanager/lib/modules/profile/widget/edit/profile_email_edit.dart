@@ -1,14 +1,18 @@
 import 'dart:developer';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
 import 'package:taskmanager/common/bottomSheet/custom_sheet.dart';
+import 'package:taskmanager/common/constants/state_status.constant.dart';
 import 'package:taskmanager/common/context_extension.dart';
+import 'package:taskmanager/common/helpers/dialog_helper.dart';
 import 'package:taskmanager/common/toast/common_toast.dart';
 import 'package:taskmanager/common/utils/validation.utils.dart';
 
 import 'package:taskmanager/common/widget/common_textfield_section.dart';
 import 'package:taskmanager/common/widget/common_collapsed_textfield.dart';
+import 'package:taskmanager/modules/profile/bloc/profile_bloc.dart';
 
 class ProfileEmailEdit extends StatefulWidget {
   const ProfileEmailEdit({super.key});
@@ -59,98 +63,77 @@ class _ProfileEmailEditState extends State<ProfileEmailEdit> {
   }
 
   void _onSave(BuildContext sheetContext) {
-    if (_newController.text != _confirmController.text) {
-      showDialog(
-          context: sheetContext,
-          builder: (dialogContext) {
-            return AlertDialog(
-              actions: [
-                TextButton(
-                    onPressed: () => Navigator.pop(dialogContext),
-                    child: const Text("Try again"))
-              ],
-              title: const Text("Cannot proceed"),
-              content: const Text(
-                  "Your confirmation email does not match your new email"),
-            );
-          });
-      return;
-    }
     final emailValidation = ValidationUtils.validateEmail(_newController.text);
 
-    if (emailValidation != null) {
-      {
-        showDialog(
-            context: sheetContext,
-            builder: (dialogContext) {
-              return AlertDialog(
-                actions: [
-                  TextButton(
-                      onPressed: () => Navigator.pop(dialogContext),
-                      child: const Text("Try again"))
-                ],
-                title: const Text("Cannot proceed"),
-                content: Text(emailValidation),
-              );
-            });
-        return;
-      }
+    if (_newController.text != _confirmController.text) {
+      DialogHelper.showError(context,
+          title: "Cannot proceed", content: "Emails do not match");
+    } else if (emailValidation != null) {
+      DialogHelper.showError(context,
+          title: "Cannot proceed", content: emailValidation);
+    } else {
+      context.read<ProfileBloc>().add(ProfileSetInfo(
+          email: _newController.text, password: _passwordFieldController.text));
     }
-
-    CommonToast.showStatusToast(sheetContext, "Email updated sucessfully");
-
-    Navigator.pop<Map<String, String>>(sheetContext, {
-      'email': _newController.text,
-      'password': _passwordFieldController.text,
-    });
+    _passwordFieldController.clear();
   }
 
   @override
   Widget build(BuildContext context) {
-    return CustomSheet(
-      showCancelButton: true,
-      showSaveButton: true,
-      
-      backgroundColor: context.palette.scaffoldBackgroundDim,
-      showHandle: false,
-      onCancel: () => _onCancel(context),
-      onSave: _isSaveEnabled == false ? null : () => _onSave(context),
-      header: "Edit email",
-      body: ListView(
-        children: [
-          const SizedBox(
-            height: 16,
-          ),
-          CommonTextFieldSection(
-            items: [
-              CommonCollapsedTextField(
-                label: "New",
-                hintText: "enter email",
-                controller: _newController,
-              ),
-              CommonCollapsedTextField(
-                label: "Confirm",
-                hintText: "re-enter email",
-                controller: _confirmController,
-              ),
-            ],
-            hintText: "Enter a new email for your account.",
-          ),
-          const SizedBox(
-            height: 32,
-          ),
-          CommonTextFieldSection(
-            items: [
-              CommonCollapsedTextField(
-                label: "Password",
-                hintText: "enter password",
-                controller: _passwordFieldController,
-                isSecured: true,
-              )
-            ],
-            hintText: "Use your current password to confirm.",
-          ),
-        ],
+    return BlocListener<ProfileBloc, ProfileState>(
+      listenWhen: (previous, current) => previous.status != current.status,
+      listener: (context, state) {
+        if (state.status == StateStatus.success) {
+          CommonToast.showStatusToast(context, "Email updated sucessfully");
+
+          Navigator.pop(context);
+        }
+      },
+      child: CustomSheet(
+        showCancelButton: true,
+        showSaveButton: true,
+        backgroundColor: context.palette.scaffoldBackgroundDim,
+        showHandle: false,
+        onCancel: () => _onCancel(context),
+        onSave: _isSaveEnabled == false ? null : () => _onSave(context),
+        header: "Edit email",
+        body: ListView(
+          children: [
+            const SizedBox(
+              height: 16,
+            ),
+            CommonTextFieldSection(
+              items: [
+                CommonCollapsedTextField(
+                  label: "New",
+                  hintText: "enter email",
+                  controller: _newController,
+                ),
+                CommonCollapsedTextField(
+                  label: "Confirm",
+                  hintText: "re-enter email",
+                  controller: _confirmController,
+                ),
+              ],
+              hintText:
+                  "Your current email is ${context.read<ProfileBloc>().state.userInfo?.email} \nEnter a new email for your account.",
+            ),
+            const SizedBox(
+              height: 32,
+            ),
+            CommonTextFieldSection(
+              items: [
+                CommonCollapsedTextField(
+                  label: "Password",
+                  hintText: "enter password",
+                  controller: _passwordFieldController,
+                  isSecured: true,
+                )
+              ],
+              hintText: "Use your current password to confirm.",
+            ),
+          ],
+        ),
       ),
     );
   }

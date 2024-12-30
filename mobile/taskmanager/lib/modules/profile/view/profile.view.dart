@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:taskmanager/common/constants/state_status.constant.dart';
 import 'package:taskmanager/common/context_extension.dart';
+import 'package:taskmanager/common/helpers/dialog_helper.dart';
 
 import 'package:taskmanager/common/widget/common_title_appbar.widget.dart';
 import 'package:taskmanager/data/repositories/user.repository.dart';
@@ -20,28 +21,9 @@ class ProfilePage extends StatelessWidget {
       child: BlocListener<ProfileBloc, ProfileState>(
         listener: (context, state) {
           if (state.status == StateStatus.failed) {
-            {
-              showDialog(
-                  context: context,
-                  builder: (dialogContext) {
-                    return AlertDialog(
-                      actions: [
-                        TextButton(
-                            onPressed: () {
-                              Navigator.pop(dialogContext);
-                              context
-                                  .read<ProfileBloc>()
-                                  .add(const ProfileOpen());
-                            },
-                            child: const Text("Try again"))
-                      ],
-                      title: const Text("Cannot proceed"),
-                      content:
-                          Text(state.errorMessage ?? "Something went wrong!"),
-                    );
-                  });
-              return;
-            }
+            DialogHelper.showError(context,
+                title: "Cannot proceed",
+                content: state.errorMessage ?? "Something went wrong");
           }
         },
         child: const ProfileView(),
@@ -64,13 +46,13 @@ class ProfileView extends StatelessWidget {
         child: BlocBuilder<ProfileBloc, ProfileState>(
           builder: (context, state) {
             switch (state.status) {
+              case StateStatus.failed:
               case StateStatus.success:
-                return ProfileSuccessWidget(state: state);
+                return const ProfileSuccessWidget();
               case StateStatus.loading:
                 return const Center(
                   child: CircularProgressIndicator(),
                 );
-              case StateStatus.failed:
               case StateStatus.initial:
               default:
                 return const SizedBox.shrink();
