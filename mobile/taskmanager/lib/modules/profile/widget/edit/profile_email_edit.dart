@@ -109,6 +109,8 @@ class _ProfileEmailEditState extends State<ProfileEmailEdit> {
   Widget build(BuildContext context) {
     return CustomSheet(
       showCancelButton: true,
+      showSaveButton: true,
+      
       backgroundColor: context.palette.scaffoldBackgroundDim,
       showHandle: false,
       onCancel: () => _onCancel(context),

@@ -34,33 +34,48 @@ class LoginPage extends StatelessWidget {
           userRepository: getIt<UserRepository>()),
       child: BlocListener<LoginBloc, LoginState>(
         listener: (context, state) => listenToStateChanges(context, state),
-        child: LoginView(),
+        child: const LoginView(),
       ),
     );
   }
 }
 
-class LoginView extends StatelessWidget {
-  LoginView({super.key});
+class LoginView extends StatefulWidget {
+  const LoginView({super.key});
+
+  @override
+  State<LoginView> createState() => _LoginViewState();
+}
+
+class _LoginViewState extends State<LoginView> {
+  bool _isValidated = false;
 
   final TextEditingController _usernameFieldController =
       TextEditingController();
+
   final TextEditingController _passwordFieldController =
       TextEditingController();
 
-  final GlobalKey<FormState> _formkey = GlobalKey<FormState>();
+  // final GlobalKey<FormState> _formkey = GlobalKey<FormState>();
 
-  void _onLoginTapped(BuildContext context) {
+  void _validate() {
     final usernameValidate =
         ValidationUtils.validateField(_usernameFieldController.text);
     final passwordValidate =
         ValidationUtils.validateField(_passwordFieldController.text);
 
-    if (usernameValidate != null || passwordValidate != null) {
+    setState(() {
+      _isValidated = (usernameValidate == null && passwordValidate == null);
+    });
+  }
+
+  void _onLoginTapped(BuildContext context) {
+    if (_isValidated == false) {
       DialogHelper.showError(context,
           title: "Cannot log in", content: "Fields must not be empty");
       return;
     }
+
     context.read<LoginBloc>().add(LoginSubmitTapped(
           username: _usernameFieldController.text,
           password: _passwordFieldController.text,
@@ -68,62 +83,83 @@ class LoginView extends StatelessWidget {
   }
 
   @override
+  void initState() {
+    _usernameFieldController.addListener(_validate);
+    _passwordFieldController.addListener(_validate);
+    super.initState();
+  }
+
+  @override
   Widget build(BuildContext context) {
-    return BlocBuilder<LoginBloc, LoginState>(
+    return BlocConsumer<LoginBloc, LoginState>(
+      listener: (context, state) {
+        if (state.status == LoginStatus.failed) {
+          _usernameFieldController.clear();
+          _passwordFieldController.clear();
+        }
+      },
       builder: (context, state) {
-        return CustomSheet(
-          showCancelButton: true,
-          onCancel: () => Navigator.pop(context),
-          backgroundColor: context.palette.scaffoldBackgroundDim,
-          body: SingleChildScrollView(
-            child: Builder(
-              builder: (_) {
-                switch (state.status) {
-                  case (LoginStatus.loading):
-                    return const Center(
-                      child: CircularProgressIndicator(),
-                    );
-                  default:
-                    return Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Padding(
-                          padding: const EdgeInsets.symmetric(horizontal: 12),
-                          child: Text(
-                            "Login",
-                            style: context.appTextStyles.heading2,
-                          ),
-                        ),
-                        const SizedBox(height: 4),
-                        Padding(
-                          padding: const EdgeInsets.symmetric(horizontal: 12),
-                          child: Text(
-                            "Add your username and password.",
-                            style: context.appTextStyles.body1,
-                          ),
-                        ),
-                        const SizedBox(height: 28),
-                        LoginForm(
-                          formkey: _formkey,
-                          usernameFieldController: _usernameFieldController,
-                          passwordFieldController: _passwordFieldController,
-                        ),
-                        Row(
+        return BlocBuilder<LoginBloc, LoginState>(
+          builder: (context, state) {
+            return CustomSheet(
+              showCancelButton: true,
+              onCancel: () => Navigator.pop(context),
+              backgroundColor: context.palette.scaffoldBackgroundDim,
+              body: SingleChildScrollView(
+                child: Builder(
+                  builder: (_) {
+                    switch (state.status) {
+                      case (LoginStatus.loading):
+                        return const Center(
+                          child: CircularProgressIndicator(),
+                        );
+                      default:
+                        return Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            Expanded(
-                              child: CommonFilledButton(
-                                label: "Log in",
-                                onPressed: () => _onLoginTapped(context),
+                            Padding(
+                              padding:
+                                  const EdgeInsets.symmetric(horizontal: 12),
+                              child: Text(
+                                "Login",
+                                style: context.appTextStyles.heading2,
                               ),
                             ),
+                            const SizedBox(height: 4),
+                            Padding(
+                              padding:
+                                  const EdgeInsets.symmetric(horizontal: 12),
+                              child: Text(
+                                "Add your username and password.",
+                                style: context.appTextStyles.body1,
+                              ),
+                            ),
+                            const SizedBox(height: 28),
+                            LoginForm(
+                              // formkey: _formkey,
+                              usernameFieldController: _usernameFieldController,
+                              passwordFieldController: _passwordFieldController,
+                            ),
+                            Row(
+                              children: [
+                                Expanded(
+                                  child: CommonFilledButton(
+                                    label: "Log in",
+                                    onPressed: _isValidated
+                                        ? () => _onLoginTapped(context)
+                                        : null,
+                                  ),
+                                ),
+                              ],
+                            ),
                           ],
-                        ),
-                      ],
-                    );
-                }
-              },
-            ),
-          ),
+                        );
+                    }
+                  },
+                ),
+              ),
+            );
+          },
         );
       },
     );

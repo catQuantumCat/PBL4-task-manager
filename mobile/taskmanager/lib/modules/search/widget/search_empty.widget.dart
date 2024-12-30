@@ -13,8 +13,10 @@ class SearchFailedWidget extends StatelessWidget {
       padding: EdgeInsets.symmetric(horizontal: UIConstant.padding),
       child: ListView(
         children: [
-          const Image(
-            image: AssetImage("assets/search.png"),
+          Image.asset(
+            "assets/search.png",
+            height: 240,
+            fit: BoxFit.fitHeight,
           ),
           const SizedBox(
             height: 20,
