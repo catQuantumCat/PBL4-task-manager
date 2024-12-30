@@ -10,7 +10,6 @@ class CommonCollapsedTextField extends StatefulWidget {
     this.isSecured = false,
     this.validator,
   });
-
   final TextEditingController controller;
   final String? label;
   final String? hintText;
@@ -24,6 +23,13 @@ class CommonCollapsedTextField extends StatefulWidget {
 
 class _CommonCollapsedTextFieldState extends State<CommonCollapsedTextField> {
   String? Function(String?)? _validator;
+  bool _isSecureVisible = true;
+
+  void _changeSecureVisibility() {
+    setState(() {
+      _isSecureVisible = !_isSecureVisible;
+    });
+  }
 
   void _changeValidator(String? Function(String?)? newValidator) {
     setState(() {
@@ -58,9 +64,10 @@ class _CommonCollapsedTextFieldState extends State<CommonCollapsedTextField> {
             },
             child: TextFormField(
               onChanged: (_) => _changeValidator(null),
+              textInputAction: TextInputAction.next,
               autovalidateMode: AutovalidateMode.onUserInteraction,
               style: context.appTextStyles.textField,
-              obscureText: widget.isSecured,
+              obscureText: widget.isSecured && _isSecureVisible,
               decoration: InputDecoration(
                 isDense: true,
                 contentPadding: EdgeInsets.zero,
@@ -74,6 +81,30 @@ class _CommonCollapsedTextFieldState extends State<CommonCollapsedTextField> {
             ),
           ),
         ),
+        if (!widget.isSecured && widget.controller.text.isNotEmpty)
+          SizedBox(
+            height: 16,
+            child: IconButton(
+              iconSize: 16,
+              onPressed: () => widget.controller.clear(),
+              icon: const Icon(
+                Icons.clear,
+              ),
+            ),
+          ),
+        if (widget.isSecured)
+          SizedBox(
+            height: 16,
+            child: IconButton(
+              onPressed: widget.controller.text != ""
+                  ? () => _changeSecureVisibility()
+                  : null,
+              icon: _isSecureVisible
+                  ? const Icon(Icons.visibility)
+                  : const Icon(Icons.visibility_off),
+              iconSize: 16,
+            ),
+          )
       ],
     );
   }

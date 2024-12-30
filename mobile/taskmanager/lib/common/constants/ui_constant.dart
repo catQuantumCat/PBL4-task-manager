@@ -13,4 +13,7 @@ abstract class UIConstant {
   static double fullPageIconSize = 128;
 
   static double bottomNavBarHeight = kBottomNavigationBarHeight + 35;
+
+  static double textFieldHorizontalPadding = 16;
+  static double textFieldVerticalPadding = 8;
 }
