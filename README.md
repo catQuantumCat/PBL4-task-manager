@@ -11,8 +11,8 @@ Nền tảng giúp người dùng:
 - Nhanh chóng tạo đầu việc
 - Thay đổi trạng thái hoàn thành công việc
 - (Đối với admin) Quản lý công việc của người dùng
-  > [!NOTE]
-  > Sản phẩm thuộc đồ án **_PBL 4 - Dự án Mạng và Hệ điều hành_** (Trường Đại học Bách Khoa - Đại học Đà Nẵng)
+> [!NOTE]
+> Sản phẩm thuộc đồ án **_PBL 4 - Dự án Mạng và Hệ điều hành_** (Trường Đại học Bách Khoa - Đại học Đà Nẵng)~
 
 ## Demo
 
