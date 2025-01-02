@@ -7,6 +7,8 @@
     <link rel="stylesheet" href="../../css/task/edit-task.css">
 </head>
 <body onload="fillTask()">
+    <a href="javascript:history.back()" class="back-arrow" title="Go Back">&#8592;</a>
+    
     <div class="container">
         <h1>Edit Task</h1>
         
@@ -37,12 +39,12 @@
 
             <div class="form-group">
                 <label for="createTime">Create Time</label>
-                <input type="datetime-local" id="createTime" name="createTime" value="2024-10-01T09:00" required>
+                <input type="datetime-local" id="createTime" name="createTime" value="2024-10-01T09:00:00" required>
             </div>
 
             <div class="form-group">
                 <label for="deadTime">Dead Time</label>
-                <input type="datetime-local" id="deadTime" name="deadTime" value="2024-10-10T17:00" required>
+                <input type="datetime-local" id="deadTime" name="deadTime" value="2024-10-10T17:00:00" required>
             </div>
 
             <div class="form-group">

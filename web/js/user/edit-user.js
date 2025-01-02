@@ -26,8 +26,10 @@ document.getElementById("edit_user").onclick = function() {
     .then(data => {
         console.log('Success:', data);
         alert("Sua nguoi dung thanh cong");
+        parent.frames['content'].location.href = "../../html/user/user-manager.html";
     })
     .catch((error) => {
+        alert("Sua nguoi dung that bai");
         console.error('Error:', error);
     }); 
 }
