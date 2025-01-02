@@ -65,9 +65,11 @@ class _CommonCollapsedTextFieldState extends State<CommonCollapsedTextField> {
             child: TextFormField(
               onChanged: (_) => _changeValidator(null),
               textInputAction: TextInputAction.next,
+              
               autovalidateMode: AutovalidateMode.onUserInteraction,
               style: context.appTextStyles.textField,
               obscureText: widget.isSecured && _isSecureVisible,
+              
               decoration: InputDecoration(
                 isDense: true,
                 contentPadding: EdgeInsets.zero,
