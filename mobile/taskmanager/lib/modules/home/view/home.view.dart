@@ -12,7 +12,7 @@ import 'package:taskmanager/main.dart';
 
 import 'package:taskmanager/modules/home/bloc/home_bloc.dart';
 import 'package:taskmanager/modules/home/widget/home_empty.widget.dart';
-
+import 'package:taskmanager/modules/home/widget/home_menu.button.dart';
 
 import 'package:taskmanager/modules/task/view/task_list/task_list.view.dart';
 
@@ -68,6 +68,7 @@ class HomeView extends StatelessWidget {
             return CommonTitleAppbar(
               title: "Today",
               section: _getSections(context, state),
+              menuButton: const HomeMenuButton(),
               child: Builder(builder: (context) {
                 switch (state.status) {
                   case StateStatus.initial:

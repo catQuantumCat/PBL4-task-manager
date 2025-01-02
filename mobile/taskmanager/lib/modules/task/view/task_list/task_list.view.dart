@@ -8,24 +8,72 @@ import 'package:taskmanager/modules/task/widget/task_list/task_list.tile.dart';
 
 class TaskListPage extends StatelessWidget {
   const TaskListPage(
-      {super.key, required this.taskList, this.allowDissiable = true});
+      {super.key,
+      required this.taskList,
+      this.allowDissiable = true,
+      this.showTilePadding = true,
+      this.animatedOnCompletion = true});
 
   final List<TaskModel> taskList;
   final bool allowDissiable;
+  final bool showTilePadding;
+  final bool animatedOnCompletion;
 
   @override
   Widget build(BuildContext context) {
-    return TaskListView(taskList: taskList);
+    return TaskListView(
+      taskList: taskList,
+      allowDissiable: allowDissiable,
+      showTilePadding: showTilePadding,
+      animatedOnCompletion: animatedOnCompletion,
+    );
   }
 }
 
 class TaskListView extends StatelessWidget {
   final List<TaskModel> taskList;
-
   final bool allowDissiable;
+  final bool showTilePadding;
+  final bool animatedOnCompletion;
 
-  const TaskListView(
-      {super.key, required this.taskList, this.allowDissiable = true});
+  final _taskListKey = GlobalKey<AnimatedListState>();
+
+  TaskListView(
+      {super.key,
+      required this.taskList,
+      required this.allowDissiable,
+      required this.showTilePadding,
+      required this.animatedOnCompletion});
+
+  //Animation when task is completed
+  Future<void> _taskCompleteHanlder(TaskModel task) async {
+    if (task.status == false || animatedOnCompletion == false) return;
+    final index = taskList.indexWhere((rawTask) => task.id == rawTask.id);
+
+    if (index == -1) return;
+
+    taskList.removeAt(index);
+
+    await Future.delayed(const Duration(milliseconds: 500));
+
+    _taskListKey.currentState?.removeItem(
+      index,
+      (context, animation) => SlideTransition(
+        position: Tween<Offset>(
+          begin: const Offset(-1, 0),
+          end: Offset.zero,
+        ).animate(
+          CurvedAnimation(
+            parent: animation,
+            curve: Curves.easeInOut,
+          ),
+        ),
+        child: TaskListTile(
+          task: task,
+        ),
+      ),
+    );
+  }
 
   Future<bool?> _deleteConfirm(BuildContext context, int taskId) async {
     return await showDialog<bool>(
@@ -54,65 +102,72 @@ class TaskListView extends StatelessWidget {
         });
   }
 
+  Widget _taskTileProvider(BuildContext context, int index) {
+    if (allowDissiable == false) {
+      return Column(
+        children: [
+          TaskListTile(
+            key: UniqueKey(),
+            task: taskList[index],
+            taskCompleteHandler: _taskCompleteHanlder,
+          ),
+          if (index != taskList.length - 1)
+            const Divider(
+              height: 0.2,
+              thickness: 0.2,
+              indent: 20,
+            )
+        ],
+      );
+    }
+    return Dismissible(
+      key: UniqueKey(),
+      direction: DismissDirection.endToStart,
+      background: Container(
+        color: Colors.redAccent,
+        child: const Row(
+          mainAxisAlignment: MainAxisAlignment.end,
+          children: [
+            Icon(
+              Icons.delete,
+              color: Colors.white,
+            ),
+          ],
+        ),
+      ),
+      confirmDismiss: (direction) async {
+        return _deleteConfirm(context, taskList[index].id);
+      },
+      onDismissed: (_) => (),
+      child: Column(
+        children: [
+          TaskListTile(
+            taskCompleteHandler: _taskCompleteHanlder,
+            task: taskList[index],
+          ),
+          if (index != taskList.length - 1)
+            const Divider(
+              height: 0.2,
+              thickness: 0.2,
+              indent: 20,
+            )
+        ],
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
-    return ListView.builder(
+    return AnimatedList(
+      key: _taskListKey,
       physics: const NeverScrollableScrollPhysics(),
       primary: false,
       shrinkWrap: true,
-      addAutomaticKeepAlives: false,
-      itemCount: taskList.length,
-      itemBuilder: (_, index) {
-        if (allowDissiable == false) {
-          return Column(
-            children: [
-              TaskListTile(
-                key: UniqueKey(),
-                task: taskList[index],
-              ),
-              if (index != taskList.length - 1)
-                const Divider(
-                  height: 0.2,
-                  thickness: 0.2,
-                  indent: 20,
-                )
-            ],
-          );
-        }
-        return Dismissible(
-          key: UniqueKey(),
-          direction: DismissDirection.endToStart,
-          background: Container(
-            color: Colors.redAccent,
-            child: const Row(
-              mainAxisAlignment: MainAxisAlignment.end,
-              children: [
-                Icon(
-                  Icons.delete,
-                  color: Colors.white,
-                ),
-              ],
-            ),
-          ),
-          confirmDismiss: (direction) async {
-            return _deleteConfirm(context, taskList[index].id);
-          },
-          onDismissed: (_) => (),
-          child: Column(
-            children: [
-              TaskListTile(
-                task: taskList[index],
-              ),
-              if (index != taskList.length - 1)
-                const Divider(
-                  height: 0.2,
-                  thickness: 0.2,
-                  indent: 20,
-                )
-            ],
-          ),
-        );
-      },
+      initialItemCount: taskList.length,
+      itemBuilder: (_, index, animation) => Padding(
+        padding: EdgeInsets.symmetric(horizontal: showTilePadding ? 16 : 0),
+        child: _taskTileProvider(context, index),
+      ),
       padding: const EdgeInsets.symmetric(
         vertical: 0,
       ),

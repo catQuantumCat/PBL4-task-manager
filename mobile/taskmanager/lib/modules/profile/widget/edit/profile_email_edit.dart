@@ -93,7 +93,7 @@ class _ProfileEmailEditState extends State<ProfileEmailEdit> {
         showCancelButton: true,
         showSaveButton: true,
         backgroundColor: context.palette.scaffoldBackgroundDim,
-        showHandle: false,
+        showHandle: true,
         onCancel: () => _onCancel(context),
         onSave: _isSaveEnabled == false ? null : () => _onSave(context),
         header: "Edit email",

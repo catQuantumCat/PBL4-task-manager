@@ -6,14 +6,14 @@ import 'package:taskmanager/common/widget/common_collapsed_textfield.dart';
 class LoginForm extends StatelessWidget {
   const LoginForm({
     super.key,
-    required formkey,
+    formkey,
     required usernameFieldController,
     required passwordFieldController,
   })  : _formkey = formkey,
         _usernameFieldController = usernameFieldController,
         _passwordFieldController = passwordFieldController;
 
-  final GlobalKey<FormState> _formkey;
+  final GlobalKey<FormState>? _formkey;
   final TextEditingController _usernameFieldController;
   final TextEditingController _passwordFieldController;
 
@@ -24,7 +24,7 @@ class LoginForm extends StatelessWidget {
       child: Column(
         children: [
           CommonTextFieldSection(
-            groupLabel: "Your email",
+            groupLabel: "Your username",
             items: [
               CommonCollapsedTextField(
                   validator: (p0) => ValidationUtils.validateField(p0),

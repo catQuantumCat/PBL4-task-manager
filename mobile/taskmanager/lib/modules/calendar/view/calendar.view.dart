@@ -13,6 +13,7 @@ import 'package:taskmanager/main.dart';
 
 import 'package:taskmanager/modules/calendar/bloc/calendar_bloc.dart';
 import 'package:taskmanager/modules/calendar/widget/calendar_empty.widget.dart';
+import 'package:taskmanager/modules/calendar/widget/calendar_menu.button.dart';
 import 'package:taskmanager/modules/calendar/widget/calendar_table.widget.dart';
 
 import 'package:taskmanager/modules/task/view/task_list/task_list.view.dart';
@@ -64,6 +65,7 @@ class CalendarView extends StatelessWidget {
         return Scaffold(
           backgroundColor: context.palette.scaffoldBackground,
           body: CommonTitleAppbar(
+            menuButton: const CalendarMenuButton(),
             title: "Upcoming",
             compactEnabled: true,
             stickyWidget: CalendarTableWidget(

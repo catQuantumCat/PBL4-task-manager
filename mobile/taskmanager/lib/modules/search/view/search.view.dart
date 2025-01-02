@@ -122,6 +122,7 @@ class _SearchViewState extends State<SearchView> {
                       query: state.errorMessage ?? "Something went wrong!");
                 case (StateStatus.success):
                   return TaskListPage(
+                    animatedOnCompletion: false,
                     taskList: state.taskList,
                     allowDissiable: false,
                   );

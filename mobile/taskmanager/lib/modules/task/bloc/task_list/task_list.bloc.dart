@@ -93,6 +93,7 @@ class TaskListBloc extends Bloc<TaskListEvent, TaskListState> {
       emit(state.copyWith(status: StateStatus.failed));
       return;
     }
+
     try {
       _taskRepository.editTask(
           taskWithIndex.toResponse(status: status), taskId);

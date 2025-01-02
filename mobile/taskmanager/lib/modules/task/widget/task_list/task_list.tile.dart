@@ -14,10 +14,9 @@ import 'package:taskmanager/modules/task/widget/task_reactive.checkbox.dart';
 class TaskListTile extends StatefulWidget {
   final TaskModel task;
 
-  const TaskListTile({
-    super.key,
-    required this.task,
-  });
+  final Future<void> Function(TaskModel)? taskCompleteHandler;
+
+  const TaskListTile({super.key, required this.task, this.taskCompleteHandler});
 
   @override
   State<TaskListTile> createState() => _TaskListTileState();
@@ -25,47 +24,52 @@ class TaskListTile extends StatefulWidget {
 
 class _TaskListTileState extends State<TaskListTile> {
   late bool _taskStatus;
-  late final TaskListBloc _bloc;
 
   @override
   void initState() {
     super.initState();
     _taskStatus = widget.task.status;
-    _bloc = context.read<TaskListBloc>();
   }
 
   Future<void> _showDetailTaskSheet(BuildContext context) async {
     await CommonBottomSheet.show(
       context: context,
-      child: TaskDetailPage(
-        task: widget.task,
-        taskListBloc: _bloc,
+      child: BlocProvider.value(
+        value: BlocProvider.of<TaskListBloc>(context),
+        child: TaskDetailPage(
+          task: widget.task,
+        ),
       ),
     );
   }
 
-  void changeTaskStatus(value) {
-    _bloc.add(TapCheckboxOneTask(taskId: widget.task.id, taskStatus: value!));
-
+  void changeTaskStatus(value, TaskListBloc bloc) async {
+    bloc.add(TapCheckboxOneTask(taskId: widget.task.id, taskStatus: value!));
     widget.task.editStatus(value);
     setState(() {
       _taskStatus = value;
     });
+
+    if (widget.taskCompleteHandler != null) {
+      await widget.taskCompleteHandler!(widget.task);
+    }
   }
 
   @override
   Widget build(BuildContext context) {
+    final _bloc = context.read<TaskListBloc>();
     return ListTile(
+      contentPadding: EdgeInsets.zero,
       titleAlignment: ListTileTitleAlignment.top,
       tileColor: context.palette.scaffoldBackground,
       onTap: () {
-        _bloc.add(TapOneTask(task: widget.task));
+        context.read<TaskListBloc>().add(TapOneTask(task: widget.task));
         _showDetailTaskSheet(context);
       },
       leading: ReactiveCheckbox(
         taskPriority: widget.task.priority,
         taskStatus: _taskStatus,
-        onChanged: (p0) => changeTaskStatus(p0),
+        onChanged: (p0) async => changeTaskStatus(p0, _bloc),
       ),
       title: Text(
         widget.task.name,

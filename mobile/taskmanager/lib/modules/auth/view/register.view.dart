@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:taskmanager/common/bottomSheet/custom_sheet.dart';
 import 'package:taskmanager/common/constants/state_status.constant.dart';
 import 'package:taskmanager/common/context_extension.dart';
+import 'package:taskmanager/common/utils/validation.utils.dart';
 
 import 'package:taskmanager/data/repositories/user.repository.dart';
 import 'package:taskmanager/main.dart';
@@ -33,24 +34,62 @@ class RegisterPage extends StatelessWidget {
         listener: (context, state) {
           _listenToStateChanges(context, state);
         },
-        child: RegisterView(),
+        child: const RegisterView(),
       ),
     );
   }
 }
 
-class RegisterView extends StatelessWidget {
-  RegisterView({super.key});
+class RegisterView extends StatefulWidget {
+  const RegisterView({super.key});
 
+  @override
+  State<RegisterView> createState() => _RegisterViewState();
+}
+
+class _RegisterViewState extends State<RegisterView> {
   final GlobalKey<FormState> _formkey = GlobalKey<FormState>();
+
+  bool _isValidated = false;
+
   final TextEditingController _emailFieldController = TextEditingController();
+
   final TextEditingController _usernameFieldController =
       TextEditingController();
+
   final TextEditingController _passwordFieldController =
       TextEditingController();
 
+  @override
+  void initState() {
+    super.initState();
+    _emailFieldController.addListener(_validate);
+    _usernameFieldController.addListener(_validate);
+    _passwordFieldController.addListener(_validate);
+  }
+
+  @override
+  void dispose() {
+    _emailFieldController.dispose();
+    _usernameFieldController.dispose();
+    _passwordFieldController.dispose();
+
+    super.dispose();
+  }
+
+  void _validate() {
+    setState(() {
+      _isValidated =
+          (ValidationUtils.validateEmail(_emailFieldController.text) == null &&
+              ValidationUtils.validateField(_usernameFieldController.text) ==
+                  null &&
+              ValidationUtils.validatePassword(_passwordFieldController.text) ==
+                  null);
+    });
+  }
+
   void _onRegisterTapped(BuildContext context) {
-    if (!_formkey.currentState!.validate()) return;
+    if (!_isValidated) return;
 
     context.read<RegisterBloc>().add(
           SubmitRegisterTapped(
@@ -67,51 +106,60 @@ class RegisterView extends StatelessWidget {
       backgroundColor: context.palette.scaffoldBackgroundDim,
       body: SingleChildScrollView(
         child: Builder(builder: (context) {
-          return BlocBuilder<RegisterBloc, RegisterState>(
-            builder: (context, state) {
-              switch (state.status) {
-                case (StateStatus.loading):
-                  return const Center(child: CircularProgressIndicator());
-                default:
-                  return Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 12),
-                        child: Text(
-                          "Register",
-                          style: context.appTextStyles.heading2,
-                        ),
-                      ),
-                      const SizedBox(height: 4),
-                      Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 12),
-                        child: Text(
-                          "Add your username, email, and password.",
-                          style: context.appTextStyles.body1,
-                        ),
-                      ),
-                      const SizedBox(height: 28),
-                      RegisterForm(
-                        formkey: _formkey,
-                        emailFieldController: _emailFieldController,
-                        usernameFieldController: _usernameFieldController,
-                        passwordFieldController: _passwordFieldController,
-                      ),
-                      Row(
-                        children: [
-                          Expanded(
-                            child: CommonFilledButton(
-                              label: "Register",
-                              onPressed: () => _onRegisterTapped(context),
-                            ),
-                          ),
-                        ],
-                      ),
-                    ],
-                  );
+          return BlocListener<RegisterBloc, RegisterState>(
+            listener: (context, state) {
+              if (state.status == StateStatus.failed) {
+                _passwordFieldController.clear();
               }
             },
+            child: BlocBuilder<RegisterBloc, RegisterState>(
+              builder: (context, state) {
+                switch (state.status) {
+                  case (StateStatus.loading):
+                    return const Center(child: CircularProgressIndicator());
+                  default:
+                    return Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 12),
+                          child: Text(
+                            "Register",
+                            style: context.appTextStyles.heading2,
+                          ),
+                        ),
+                        const SizedBox(height: 4),
+                        Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 12),
+                          child: Text(
+                            "Add your username, email, and password.",
+                            style: context.appTextStyles.body1,
+                          ),
+                        ),
+                        const SizedBox(height: 28),
+                        RegisterForm(
+                          formkey: _formkey,
+                          emailFieldController: _emailFieldController,
+                          usernameFieldController: _usernameFieldController,
+                          passwordFieldController: _passwordFieldController,
+                        ),
+                        Row(
+                          children: [
+                            Expanded(
+                              child: CommonFilledButton(
+                                label: "Register",
+                                onPressed: _isValidated
+                                    ? () => _onRegisterTapped(context)
+                                    : null,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ],
+                    );
+                }
+              },
+            ),
           );
         }),
       ),

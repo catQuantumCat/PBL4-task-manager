@@ -14,8 +14,10 @@ class CommonFilledButton extends StatelessWidget {
       style: const ButtonStyle().copyWith(
         padding: const WidgetStatePropertyAll<EdgeInsetsGeometry>(
             EdgeInsets.symmetric(vertical: 12)),
-        backgroundColor:
-            WidgetStatePropertyAll<Color>(context.palette.primaryColor),
+        backgroundColor: onPressed != null
+            ? WidgetStatePropertyAll<Color>(context.palette.primaryColor)
+            : WidgetStatePropertyAll<Color>(
+                context.palette.disabledButtonLabel),
         shape: WidgetStatePropertyAll<OutlinedBorder>(RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(UIConstant.cornerRadiusMedium),
         )),
