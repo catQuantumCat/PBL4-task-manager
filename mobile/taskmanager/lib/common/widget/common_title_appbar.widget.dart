@@ -10,10 +10,12 @@ class CommonTitleAppbar extends StatefulWidget {
       List<Widget> section = const [],
       Widget? child,
       bool compactEnabled = false,
+      Widget? menuButton,
       Color? titleBackgroundColor})
       : _stickyWidget = stickyWidget,
         _title = title,
         _compactEnabled = compactEnabled,
+        _menuButton = menuButton,
         _section = section,
         _child = child,
         _titleBackgroundColor = titleBackgroundColor;
@@ -25,6 +27,8 @@ class CommonTitleAppbar extends StatefulWidget {
   final Widget? _child;
   final List<Widget> _section;
   final Color? _titleBackgroundColor;
+
+  final Widget? _menuButton;
 
   @override
   State<CommonTitleAppbar> createState() => _CommonTitleAppbarState();
@@ -72,12 +76,7 @@ class _CommonTitleAppbarState extends State<CommonTitleAppbar> {
             centerTitle: true,
             scrolledUnderElevation: 0,
             actions: [
-              IconButton(
-                  onPressed: () {},
-                  icon: const Icon(
-                    Icons.more_horiz,
-                    size: 32,
-                  ))
+              if (widget._menuButton != null) widget._menuButton!,
             ],
             primary: true,
             expandedHeight: widget._compactEnabled ? null : 96,
@@ -114,18 +113,8 @@ class _CommonTitleAppbarState extends State<CommonTitleAppbar> {
                 child: widget._child,
               ),
             )
-
-          // SliverToBoxAdapter(
-          //   child: SizedBox(
-          //     height: (MediaQuery.of(context).size.height / 2) + 48,
-          //     child: widget._child,
-          //   ),
-
           else
             ...widget._section,
-
-          // NestedScrollView(
-          //   headerSliverBuilder: headerSliverBuilder, body: body),
         ],
       ),
     );

@@ -15,12 +15,10 @@ import 'package:taskmanager/modules/task/widget/task_detail/task_detail.widget.d
 
 class TaskDetailPage extends StatelessWidget {
   const TaskDetailPage(
-      {super.key, required TaskModel task, required TaskListBloc taskListBloc})
-      : _task = task,
-        _taskListBloc = taskListBloc;
+      {super.key, required TaskModel task})
+      : _task = task;
 
   final TaskModel _task;
-  final TaskListBloc _taskListBloc;
 
   @override
   Widget build(BuildContext context) {
@@ -30,7 +28,7 @@ class TaskDetailPage extends StatelessWidget {
           create: (providerContext) {
             return TaskDetailBloc(
                 taskRepository: getIt<TaskRepository>(),
-                taskListBloc: _taskListBloc)
+                taskListBloc: context.read<TaskListBloc>())
               ..add(HomeDetailTaskOpen(task: _task));
           },
         ),

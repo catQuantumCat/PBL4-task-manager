@@ -22,7 +22,9 @@ class CalendarBloc extends Bloc<CalendarEvent, CalendarState> {
   Future<void> _onOpen(CalendarOpen event, Emitter<CalendarState> emit) async {
     await emit.forEach(_taskRepo.getTaskStream(), onData: (taskList) {
       final filteredTask = taskList
-          .where((task) => isSameDay(task.deadTime, state.selectedDate))
+          .where((task) =>
+              isSameDay(task.deadTime, state.selectedDate) &&
+              task.status == false)
           .toList();
 
       return state.copyWith(
@@ -41,7 +43,9 @@ class CalendarBloc extends Bloc<CalendarEvent, CalendarState> {
         selectedDate: event.selectedDate,
         filteredTask: _taskRepo
             .getTaskList()
-            .where((task) => isSameDay(task.deadTime, event.selectedDate))
+            .where((task) =>
+                isSameDay(task.deadTime, event.selectedDate) &&
+                task.status == false)
             .toList(),
       ),
     );

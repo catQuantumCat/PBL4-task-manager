@@ -13,7 +13,9 @@ class CustomSheet extends StatelessWidget {
       void Function()? onCancel,
       void Function()? onSave,
       Color backgroundColor = Colors.white})
-      : assert(body is ScrollView || body is SingleChildScrollView, 'The body must be a ScrollView or SingleChildScrollView to ensure proper scrolling behavior.'),
+      :
+        // assert(body is ScrollView || body is SingleChildScrollView,
+        //       'The body must be a ScrollView or SingleChildScrollView to ensure proper scrolling behavior.'),
         _body = body,
         _header = header,
         _showHandle = showHandle,

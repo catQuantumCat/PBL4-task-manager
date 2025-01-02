@@ -28,10 +28,12 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
         return state.copyWith(
             status: StateStatus.success,
             todayList: newList
-                .where((task) => task.deadTime.isSameDate(today))
+                .where((task) =>
+                    (task.deadTime.isSameDate(today) && task.status == false))
                 .toList(),
             overdueList: newList
-                .where((task) => task.deadTime.isPast(of: today))
+                .where((task) =>
+                    task.deadTime.isPast(of: today) && task.status == false)
                 .toList());
       },
       onError: (error, stackTrace) {
