@@ -3,6 +3,7 @@ import 'dart:convert';
 class TaskDTO {
   final String name;
   final String? description;
+  final int priority;
   final DateTime createTime;
   final DateTime deadTime;
   final bool status;
@@ -10,6 +11,7 @@ class TaskDTO {
   TaskDTO({
     required this.name,
     this.description,
+    required this.priority,
     required this.createTime,
     required this.deadTime,
     required this.status,
@@ -19,6 +21,7 @@ class TaskDTO {
     int? id,
     String? name,
     String? description,
+    int? priority,
     DateTime? createTime,
     DateTime? deadTime,
     bool? status,
@@ -26,6 +29,7 @@ class TaskDTO {
     return TaskDTO(
       name: name ?? this.name,
       description: description ?? this.description,
+      priority: priority ?? this.priority,
       createTime: createTime ?? this.createTime,
       deadTime: deadTime ?? this.deadTime,
       status: status ?? this.status,
@@ -36,8 +40,9 @@ class TaskDTO {
     return <String, dynamic>{
       'name': name,
       'description': description,
-      'createTime': createTime.toIso8601String(),
-      'deadTime': deadTime.toIso8601String(),
+      'priority': priority,
+      'createTime': createTime.toIso8601String().split('.').first,
+      'deadTime': deadTime.toIso8601String().split('.').first,
       'status': status,
     };
   }

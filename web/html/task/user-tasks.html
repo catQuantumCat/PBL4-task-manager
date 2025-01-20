@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>User Tasks</title>
+    <link rel="stylesheet" href="../../css/task/user-tasks.css">
+</head>
+<body onload="getAllTask()">
+    <a href="javascript:history.back()" class="back-arrow" title="Go Back">&#8592;</a>
+    
+    <div class="container">
+        <h1 id="username">Lisk Task</h1>
+
+        <table>
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Name</th>
+                    <th>Description</th>
+                    <th>Priority</th>
+                    <th>Create Time</th>
+                    <th>Dead Time</th>
+                    <th>Status</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                
+            </tbody>
+        </table>
+
+        <div class="button-container">
+            <button onclick="addTask()" id="add-task-btn" class="add-task-btn">Add Task</button>
+        </div>
+    </div>
+
+</body>
+<script type="module" src="../../js/task/user-task.js"></script>
+</html>

@@ -1,12 +1,21 @@
 using System;
 using System.Collections.Generic;
+using System.IdentityModel.Tokens.Jwt;
 using System.Linq;
 using System.Threading.Tasks;
 using backend.Data;
+using backend.Dtos;
 using backend.Dtos.Mission;
+using backend.Extensions;
+using backend.Helper;
+using backend.Interfaces;
 using backend.Mappers;
+using backend.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http.HttpResults;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Identity.Client;
 
 namespace backend.Controllers
@@ -15,31 +24,73 @@ namespace backend.Controllers
     [ApiController]
     public class MissionController : ControllerBase
     {
-        private readonly ApplicationDBContext _context;
-        public MissionController(ApplicationDBContext context)
+        private readonly IMissionRepository _missionRepo;
+        private readonly ITokenService _tokenService;
+        private readonly UserManager<AppUser> _userManager;
+        public MissionController(IMissionRepository missionRepo, ITokenService tokenService, UserManager<AppUser> userManager)
         {
-            _context = context; 
+            _tokenService = tokenService;
+            _missionRepo = missionRepo;
+            _userManager = userManager;
         }
 
         [HttpGet]
-        public IActionResult GetAll()
+        [Authorize]
+        public async Task<IActionResult> GetAll([FromQuery] QueryObject query)
         {
-            var mission = _context.Missions.ToList()
-            .Select(s => s.toMissionDto()).ToList();
+            var token = Request.Headers["Authorization"].ToString().Replace("Bearer ", "");
+            if (_tokenService.isTokenExpired(token))
+            {
+                return Unauthorized("Token is expired") ;
+            }
+            
+            var userId = await _tokenService.getAppUserIdFromToken(token);
+            
+            if(string.IsNullOrEmpty(userId))
+            {
+                return BadRequest("Invalid access token");
+            }
 
+            if(userId.Equals("UA"))
+            {
+                return Unauthorized();
+            }
+
+            var mission = await _missionRepo.GetByAppUserIdWithQueryAsync(userId, query);
+            
             var result = new 
             {
                 Count = mission.Count,
-                Data = mission
+                Data = mission.Select(s => s.toMissionDto()).ToList()
             };
 
             return Ok(result);
         }
 
-        [HttpGet("{id}")]
-        public IActionResult GetById([FromRoute] int id)
+        [HttpPost("GetByUsername")]
+        public async Task<IActionResult> GetByUsername([FromBody] string username)
         {
-            var mission = _context.Missions.Find(id);
+            var user = await _userManager.FindByNameAsync(username);
+            
+            if(user == null)
+            {
+                return NotFound();
+            }
+            
+            var mission = await _missionRepo.GetByAppUserIdAsync(user.Id);
+
+            var result = mission.Select(s => s.toMissionDto()).ToList();
+
+            return Ok(result);   
+        }
+
+
+
+        [HttpGet("{id}")]
+        [Authorize]
+        public async Task<IActionResult> GetById([FromRoute] int id)
+        {
+            var mission = await _missionRepo.GetByIdAsync(id);
 
             if(mission == null)
             {
@@ -50,48 +101,152 @@ namespace backend.Controllers
         }
 
         [HttpPost]
-        public IActionResult Create([FromBody] CreateRequestMissionDto missionDto)
+        [Authorize]
+        public async Task<IActionResult> Create([FromBody] CreateRequestMissionDto missionDto)
         {
-            var missionModel = missionDto.toMissionFromCreateDto();
-            _context.Missions.Add(missionModel);
-            _context.SaveChanges();
+            var token = Request.Headers["Authorization"].ToString().Replace("Bearer ", "");
+            if (_tokenService.isTokenExpired(token))
+            {
+                return Unauthorized("Token is expired") ;
+            }
+            var username = User.GetUsername();
+            var appUser = await _userManager.FindByNameAsync(username);
+            var missionModel = missionDto.toMissionFromCreateDto(appUser);
+            await _missionRepo.CreateAsync(missionModel);
             return CreatedAtAction(nameof(GetById), new { id = missionModel.Id }, missionModel.toMissionDto());
         }
 
+        [HttpPost]
+        [Route("createAdmin")]
+        public async Task<IActionResult> CreateMissionAdmin([FromBody] CreateRequestMissionDto missionDto)
+        {
+            var username = Request.Query["username"];
+            var appUser = await _userManager.FindByNameAsync(username);
+            var missionModel = missionDto.toMissionFromCreateDto(appUser);
+            await _missionRepo.CreateAsync(missionModel);
+            return CreatedAtAction(nameof(GetById), new { id = missionModel.Id }, missionModel.toMissionDto());
+        }
+        
         [HttpPut]
         [Route("{id}")]
-        public IActionResult Update([FromRoute] int id, [FromBody] UpdateRequestMissionDto updateRequestMissionDto)
+        [Authorize]
+        public async Task<IActionResult> Update([FromRoute] int id, [FromBody] UpdateRequestMissionDto updateRequestMissionDto)
         {
-            var missionModel = _context.Missions.FirstOrDefault(x => x.Id == id);
+            var token = Request.Headers["Authorization"].ToString().Replace("Bearer ", "");
+            if (_tokenService.isTokenExpired(token))
+            {
+                return Unauthorized("Token is expired") ;
+            }
+
+            var userId = await _tokenService.getAppUserIdFromToken(token);
+            
+            if(string.IsNullOrEmpty(userId))
+            {
+                return BadRequest("Invalid access token");
+            }
+
+            if(userId.Equals("UA"))
+            {
+                return Unauthorized();
+            }
+
+            var mission = await _missionRepo.GetByAppUserIdAsync(userId);
+            if(mission.Count == 0)
+            {
+                return BadRequest("This user doesn't have any missions to update");
+            }
+
+            var updateMission = mission.FirstOrDefault(x => x.Id == id);
+            if(updateMission == null)
+            {
+                return NotFound();
+            }
+            
+            var missionModel = await _missionRepo.UpdateAsync(id, updateRequestMissionDto);
             
             if(missionModel == null)
             {
                 return NotFound();
             }
 
-            missionModel.MissionName = updateRequestMissionDto.name;
-            missionModel.Description = updateRequestMissionDto.description;
-            missionModel.DeadDate = updateRequestMissionDto.deadTime;
-            missionModel.Status = updateRequestMissionDto.status;
+            return Ok(missionModel.toMissionDto());
+        }
 
-            _context.SaveChanges();
+        [HttpPut]
+        [Route("updateAdmin/{id}")]
+        public async Task<IActionResult> UpdateMissionAdmin([FromRoute] int id, [FromBody] UpdateRequestMissionDto updateRequestMissionDto)
+        {
+            var updateMission = await _missionRepo.GetByIdAsync(id);
+            if(updateMission == null)
+            {
+                return NotFound();
+            }
+            
+            var missionModel = await _missionRepo.UpdateAsync(id, updateRequestMissionDto);
+            
+            if(missionModel == null)
+            {
+                return NotFound();
+            }
 
             return Ok(missionModel.toMissionDto());
         }
 
         [HttpDelete]
         [Route("{id}")]
-        public IActionResult Delete([FromRoute] int id)
+        [Authorize]
+        public async Task<IActionResult> Delete([FromRoute] int id)
         {
-            var missionModel = _context.Missions.FirstOrDefault(x => x.Id == id);
+            var token = Request.Headers["Authorization"].ToString().Replace("Bearer ", "");
+            if (_tokenService.isTokenExpired(token))
+            {
+                return Unauthorized("Token is expired") ;
+            }
+
+            var userId = await _tokenService.getAppUserIdFromToken(token);
+            
+            if(string.IsNullOrEmpty(userId))
+            {
+                return BadRequest("Invalid access token");
+            }
+
+            if(userId.Equals("UA"))
+            {
+                return Unauthorized();
+            }
+
+            var mission = await _missionRepo.GetByAppUserIdAsync(userId);
+            if(mission.Count == 0)
+            {
+                return BadRequest("This user doesn't have any missions to delete");
+            }
+
+            var updateMission = mission.FirstOrDefault(x => x.Id == id);
+            if(updateMission == null)
+            {
+                return NotFound();
+            }
+
+            var missionModel = await _missionRepo.DeleteAsync(id);  
 
             if(missionModel == null)
             {
                 return NotFound();
             }
 
-            _context.Missions.Remove(missionModel);
-            _context.SaveChanges();
+            return NoContent(); 
+        }
+
+        [HttpDelete]
+        [Route("deleteAdmin/{id}")]
+        public async Task<IActionResult> DeleteMissionAdmin([FromRoute] int id)
+        {
+            var missionModel = await _missionRepo.DeleteAsync(id);  
+
+            if(missionModel == null)
+            {
+                return NotFound();
+            }
 
             return NoContent(); 
         }

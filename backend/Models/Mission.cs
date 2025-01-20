@@ -6,15 +6,17 @@ using System.Threading.Tasks;
 
 namespace backend.Models
 {
+    [Table("Mission")]
     public class Mission
     {
         public int Id { get; set; }
         public string MissionName { get; set; } = string.Empty;
         public string? Description { get; set; } = string.Empty;
+        public int? Priority { get; set; } = 0;
         public DateTime CreateDate { get; set; } = DateTime.Now;
         public DateTime DeadDate { get; set; } = DateTime.Now;
         public bool Status { get; set; }
-        public int? UserId { get; set; }
-        public User? User { get; set; }
+        public string AppUserId { get; set; }
+        public AppUser AppUser { get; set; }
     }
 }

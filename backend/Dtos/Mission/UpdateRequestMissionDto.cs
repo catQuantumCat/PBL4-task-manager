@@ -8,7 +8,8 @@ namespace backend.Dtos.Mission
     public class UpdateRequestMissionDto
     {
         public string name { get; set; } = string.Empty;
-        public string description { get; set; } = string.Empty;
+        public string? description { get; set; }
+        public int? priority { get; set; } = 0;
         public DateTime deadTime { get; set; } = DateTime.Now;
         public bool status { get; set; } = false;
     }

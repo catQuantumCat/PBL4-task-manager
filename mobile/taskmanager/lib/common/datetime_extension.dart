@@ -6,6 +6,12 @@ extension DatetimeExtension on DateTime {
     return copyWith(hour: time.hour, minute: time.minute);
   }
 
+  // String dateToString({bool withTime = false}) {
+  //   return withTime == true
+  //       ? DateFormat("MMM d HH:mm").format(this)
+  //       : DateFormat("MMM d - EEEE").format(this);
+  // }
+
   String relativeToToday() {
     final DateTime today = DateTime.now();
     if (DateUtils.isSameDay(this, today)) {
@@ -25,5 +31,15 @@ extension DatetimeExtension on DateTime {
 
   bool isSameDate(DateTime incomingDate) {
     return DateUtils.isSameDay(this, incomingDate);
+  }
+
+  bool isPast({required DateTime of}) {
+    final futureDate = of;
+
+    if (futureDate.year > year) return true;
+    if (futureDate.month > month) return true;
+    if (futureDate.day > day) return true;
+
+    return false;
   }
 }
